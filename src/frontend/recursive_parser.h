@@ -1,8 +1,6 @@
 /**
  * @file
  * @brief Definition of calculator that uses recursive parser
- *
- * This is a AST building copy of https://github.com/viafanasyev/recursive-parser
  */
 #ifndef RECURSIVE_PARSER_CALCULATOR_H
 #define RECURSIVE_PARSER_CALCULATOR_H
@@ -24,8 +22,6 @@ private:
     std::map<const char*, std::shared_ptr<Token>, keyCompare> symbols;
 
 public:
-    SymbolTable();
-
     void addFunction(const char* name, const std::shared_ptr<FunctionToken>& functionToken) noexcept;
     void addVariable(char* name) noexcept;
 

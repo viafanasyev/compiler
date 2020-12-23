@@ -9,7 +9,6 @@
 
 void outputAST(const std::shared_ptr<ASTNode>& root, const char* fileName) {
     root->visualize(fileName);
-    root->texify(fileName);
 }
 
 int main(int argc, char* argv[]) {

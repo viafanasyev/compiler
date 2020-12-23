@@ -8,6 +8,7 @@
 #include <cassert>
 #include <cstdarg>
 #include <memory>
+#include <vector>
 #include "tokenizer.h"
 
 class ASTNode {
@@ -27,7 +28,8 @@ public:
 
     ASTNode(const std::shared_ptr<Token>& token_, const std::shared_ptr<ASTNode>& child) {
         assert(((token_->getType() == TokenType::OPERATOR) && (dynamic_cast<OperatorToken*>(token_.get())->getArity() == 1)) ||
-               ((token_->getType() == TokenType::FUNCTION) && (dynamic_cast<FunctionToken*>(token_.get())->getArity() == 1)));
+               ((token_->getType() == TokenType::FUNCTION) && (dynamic_cast<FunctionToken*>(token_.get())->getArity() == 1)) ||
+                (token_->getType() == TokenType::BLOCK));
 
         token = token_;
         childrenNumber = 1;
@@ -44,6 +46,17 @@ public:
         children = new std::shared_ptr<ASTNode>[2];
         children[0] = leftChild;
         children[1] = rightChild;
+    }
+
+    ASTNode(const std::shared_ptr<Token>& token_, const std::vector<std::shared_ptr<ASTNode>>& children_) {
+        assert(token_->getType() == TokenType::STATEMENTS);
+
+        token = token_;
+        childrenNumber = children_.size();
+        children = new std::shared_ptr<ASTNode>[childrenNumber];
+        for (size_t i = 0; i < childrenNumber; ++i) {
+            children[i] = children_[i];
+        }
     }
 
     ASTNode(ASTNode&& astNode) noexcept {

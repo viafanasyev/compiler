@@ -115,6 +115,22 @@ void ASTNode::dotPrint(FILE* dotFile, int& nodeId) const {
             children[i]->dotPrint(dotFile, childrenNodeId);
         }
         nodeId = childrenNodeId;
+    } else if (token->getType() == TokenType::STATEMENTS) {
+        fprintf(dotFile, "%d [label=\"statements\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
+        int childrenNodeId = nodeId + 1;
+        for (size_t i = 0; i < childrenNumber; ++i) {
+            fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
+            children[i]->dotPrint(dotFile, childrenNodeId);
+        }
+        nodeId = childrenNodeId;
+    } else if (token->getType() == TokenType::BLOCK) {
+        fprintf(dotFile, "%d [label=\"block\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
+        int childrenNodeId = nodeId + 1;
+        for (size_t i = 0; i < childrenNumber; ++i) {
+            fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
+            children[i]->dotPrint(dotFile, childrenNodeId);
+        }
+        nodeId = childrenNodeId;
     } else {
         throw std::logic_error("Unsupported token type");
     }

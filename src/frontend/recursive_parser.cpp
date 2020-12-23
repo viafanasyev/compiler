@@ -2,31 +2,24 @@
  * @file
  * @brief Implementation of recursive parser
  *
- * It parses mathematical expressions using next grammar:
+ * It parses programs using next grammar:
  *
- *     G = E '\0'
- *     E = T ([+|-] T)*
- *     T = F ([*|/] F)*
- *     F = P (^ P)*
- *     P = '(' E ')' | N | ID | ID '(' E ')'
- *     N = [0-9]+
+ *     G = Statements '\0'
+ *     Statements = (Statement)*
+ *     Statement = Expression ';' | Block
+ *     Block = '{' Statements '}'
+ *     Expression = Term ([+|-] Term)*
+ *     Term = Factor ([*|/] Factor)*
+ *     Factor = Parenthesised (^ Parenthesised)*
+ *     Parenthesised = '(' Expression ')' | Number | ID
+ *     Number = [0-9]+
  *     ID = [a-zA-Z]+
- *
- * This is an AST building copy of https://github.com/viafanasyev/recursive-parser
  */
 #include <cstdlib>
 #include <cctype>
 #include <vector>
 #include "recursive_parser.h"
 #include "SyntaxError.h"
-
-SymbolTable::SymbolTable() {
-    addFunction("sin", std::make_shared<SinFunction>());
-    addFunction("cos", std::make_shared<CosFunction>());
-    addFunction("tg" , std::make_shared<TgFunction >());
-    addFunction("ctg", std::make_shared<CtgFunction>());
-    addFunction("ln" , std::make_shared<LnFunction >());
-}
 
 void SymbolTable::addFunction(const char* name, const std::shared_ptr<FunctionToken>& functionToken) noexcept {
     symbols[name] = functionToken;
@@ -45,29 +38,67 @@ std::shared_ptr<Token> SymbolTable::getSymbolByName(char* name) noexcept {
 
 SymbolTable symbolTable;
 
+std::shared_ptr<ASTNode> getStatements(const char* expression, int& pos);
+std::shared_ptr<ASTNode> getStatement(const char* expression, int& pos);
+std::shared_ptr<ASTNode> getBlock(const char* expression, int& pos);
 std::shared_ptr<ASTNode> getExpression(const char* expression, int& pos);
-
 std::shared_ptr<ASTNode> getTerm(const char* expression, int& pos);
-
 std::shared_ptr<ASTNode> getFactor(const char* expression, int& pos);
-
 std::shared_ptr<ASTNode> getParenthesised(const char* expression, int& pos);
-
 std::shared_ptr<ASTNode> getNumber(const char* expression, int& pos);
-
-std::shared_ptr<Token> getId(const char* expression, int& pos);
+std::shared_ptr<ASTNode> getId(const char* expression, int& pos);
 
 void skipSpaces(const char* expression, int& pos);
 
 std::shared_ptr<ASTNode> buildASTRecursively(const char* expression) {
     int pos = 0;
     skipSpaces(expression, pos);
-    std::shared_ptr<ASTNode> root = getExpression(expression, pos);
+    std::shared_ptr<ASTNode> root = getStatements(expression, pos);
+    skipSpaces(expression, pos);
     if (expression[pos] != '\0') {
         throw SyntaxError(pos, "Invalid symbol");
     }
     ++pos;
     return root;
+}
+
+std::shared_ptr<ASTNode> getStatements(const char* expression, int& pos) {
+    skipSpaces(expression, pos);
+    std::vector<std::shared_ptr<ASTNode>> statements;
+    while (expression[pos] != '}' && expression[pos] != '\0') {
+        statements.push_back(getStatement(expression, pos));
+        skipSpaces(expression, pos);
+    }
+    return std::make_shared<ASTNode>(std::make_shared<Statements>(), statements);
+}
+
+std::shared_ptr<ASTNode> getStatement(const char* expression, int& pos) {
+    skipSpaces(expression, pos);
+    std::shared_ptr<ASTNode> statement = nullptr;
+    if (expression[pos] == '{') {
+        statement = getBlock(expression, pos);
+    } else {
+        statement = getExpression(expression, pos);
+        skipSpaces(expression, pos);
+        if (expression[pos] != ';') throw SyntaxError(pos, "Expected ';'");
+        ++pos;
+    }
+    return statement;
+}
+
+std::shared_ptr<ASTNode> getBlock(const char* expression, int& pos) {
+    skipSpaces(expression, pos);
+    if (expression[pos] != '{') throw SyntaxError(pos, "Expected '{'");
+    ++pos;
+
+    skipSpaces(expression, pos);
+    auto statements = getStatements(expression, pos);
+
+    skipSpaces(expression, pos);
+    if (expression[pos] != '}') throw SyntaxError(pos, "Expected '}'");
+    ++pos;
+
+    return std::make_shared<ASTNode>(std::make_shared<Block>(), statements);
 }
 
 std::shared_ptr<ASTNode> getExpression(const char* expression, int& pos) {
@@ -140,23 +171,10 @@ std::shared_ptr<ASTNode> getFactor(const char* expression, int& pos) {
 }
 
 std::shared_ptr<ASTNode> getParenthesised(const char* expression, int& pos) {
-    std::shared_ptr<Token> idToken = nullptr;
     if (expression[pos] != '(') {
-        if (isdigit(expression[pos])) {
-            return getNumber(expression, pos);
-        } else if (isalpha(expression[pos])) {
-            idToken = getId(expression, pos);
-            skipSpaces(expression, pos);
-            if (expression[pos] != '(') {
-                if (idToken->getType() == TokenType::FUNCTION) {
-                    throw SyntaxError(pos, "Expected open parenthesis");
-                } else {
-                    return std::make_shared<ASTNode>(idToken);
-                }
-            }
-        } else {
-            throw SyntaxError(pos, "Invalid symbol");
-        }
+        if (isdigit(expression[pos])) return getNumber(expression, pos);
+        if (isalpha(expression[pos])) return getId(expression, pos);
+        throw SyntaxError(pos, "Expected number, identifier or open parenthesis");
     }
     assert(expression[pos] == '(');
     ++pos;
@@ -169,10 +187,6 @@ std::shared_ptr<ASTNode> getParenthesised(const char* expression, int& pos) {
     }
     ++pos;
 
-    if (idToken != nullptr) {
-        assert(idToken->getType() == TokenType::FUNCTION);
-        result = std::make_shared<ASTNode>(idToken, result);
-    }
     return result;
 }
 
@@ -188,7 +202,7 @@ std::shared_ptr<ASTNode> getNumber(const char* expression, int &pos) {
     return std::make_shared<ASTNode>(std::make_shared<ConstantValueToken>(result));
 }
 
-std::shared_ptr<Token> getId(const char* expression, int& pos) {
+std::shared_ptr<ASTNode> getId(const char* expression, int& pos) {
     int startPos = pos;
     while (isalpha(expression[pos])) {
         ++pos;
@@ -204,7 +218,7 @@ std::shared_ptr<Token> getId(const char* expression, int& pos) {
     std::shared_ptr<Token> id = symbolTable.getSymbolByName(name);
     free(name);
 
-    return id;
+    return std::make_shared<ASTNode>(id);
 }
 
 void skipSpaces(const char* expression, int& pos) {

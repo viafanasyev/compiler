@@ -18,6 +18,8 @@ enum TokenType {
     OPERATOR,
     VARIABLE,
     FUNCTION,
+    STATEMENTS,
+    BLOCK,
 };
 
 static const char* const TokenTypeStrings[] = {
@@ -26,6 +28,8 @@ static const char* const TokenTypeStrings[] = {
     "OPERATOR",
     "VARIABLE",
     "FUNCTION",
+    "STATEMENTS",
+    "BLOCK",
 };
 
 class Token {
@@ -263,38 +267,16 @@ public:
     }
 };
 
-enum FunctionType {
-    SIN,
-    COS,
-    TG,
-    CTG,
-    LN,
-};
-
-static const char* const FunctionTypeStrings[] = {
-    "SIN",
-    "COS",
-    "TG",
-    "CTG",
-    "LN",
-};
-
 class FunctionToken : public Token {
 
 private:
     const size_t arity;
-    const FunctionType functionType;
 
 public:
-    FunctionToken(size_t arity_, FunctionType functionType_) :
-        Token(FUNCTION), arity(arity_), functionType(functionType_) { }
+    explicit FunctionToken(size_t arity_) : Token(FUNCTION), arity(arity_) { }
 
     size_t getArity() const {
         return arity;
-    }
-
-    FunctionType getFunctionType() const {
-        return functionType;
     }
 
     virtual const char* getName() const = 0;
@@ -302,64 +284,25 @@ public:
     void print() const override;
 };
 
-class SinFunction : public FunctionToken {
+class Statements : public Token {
 
 public:
-    SinFunction() : FunctionToken(1, SIN) { }
+    Statements() : Token(STATEMENTS) { }
 
-    const char * getName() const override {
-        return "sin";
-    }
+    void print() const override;
 
-    double calculate(size_t argc, ...) const override;
+    double calculate(size_t argc __attribute__((unused)), ...) const override;
 };
 
-class CosFunction : public FunctionToken {
+
+class Block : public Token {
 
 public:
-    CosFunction() : FunctionToken(1, COS) { }
+    Block() : Token(BLOCK) { }
 
-    const char * getName() const override {
-        return "cos";
-    }
+    void print() const override;
 
-    double calculate(size_t argc, ...) const override;
-};
-
-class TgFunction : public FunctionToken {
-
-public:
-    TgFunction() : FunctionToken(1, TG) { }
-
-    const char * getName() const override {
-        return "tg";
-    }
-
-    double calculate(size_t argc, ...) const override;
-};
-
-class CtgFunction : public FunctionToken {
-
-public:
-    CtgFunction() : FunctionToken(1, CTG) { }
-
-    const char * getName() const override {
-        return "ctg";
-    }
-
-    double calculate(size_t argc, ...) const override;
-};
-
-class LnFunction : public FunctionToken {
-
-public:
-    LnFunction() : FunctionToken(1, LN) { }
-
-    const char * getName() const override {
-        return "ln";
-    }
-
-    double calculate(size_t argc, ...) const override;
+    double calculate(size_t argc __attribute__((unused)), ...) const override;
 };
 
 /**

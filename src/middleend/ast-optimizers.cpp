@@ -137,6 +137,10 @@ std::shared_ptr<ASTNode>& TrivialMultiplicationOptimizer::optimizeCurrent(std::s
 }
 
 std::shared_ptr<ASTNode>& ConstantCompressor::optimizeCurrent(std::shared_ptr<ASTNode>& node) const {
+    if (node->getToken()->getType() == TokenType::STATEMENTS || node->getToken()->getType() == TokenType::BLOCK) {
+        return node;
+    }
+
     const auto children = node->getChildren();
     const size_t childrenNumber = node->getChildrenNumber();
     if (childrenNumber == 0) {

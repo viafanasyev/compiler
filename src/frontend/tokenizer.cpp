@@ -107,6 +107,22 @@ double PowerOperator::calculate(size_t argc, ...) const {
     return pow(leftOperand, rightOperand);
 }
 
+void Statements::print() const {
+    Token::print();
+}
+
+double Statements::calculate(size_t argc __attribute__((unused)), ...) const {
+    throw std::logic_error("Statements can't be calculated");
+}
+
+void Block::print() const {
+    Token::print();
+}
+
+double Block::calculate(size_t argc __attribute__((unused)), ...) const {
+    throw std::logic_error("Block can't be calculated");
+}
+
 std::map<char*, std::shared_ptr<VariableToken>, VariableToken::keyCompare> VariableToken::symbolTable;
 
 std::shared_ptr<VariableToken> VariableToken::getVariableByName(char* name) {
@@ -128,52 +144,7 @@ double VariableToken::calculate(size_t argc __attribute__((unused)), ...) const 
 
 void FunctionToken::print() const {
     Token::print();
-    printf(" ARITY=%zu, TYPE=%s", arity, FunctionTypeStrings[functionType]);
-}
-
-double SinFunction::calculate(size_t argc, ...) const {
-    assert(argc == 1);
-    va_list operands;
-    va_start(operands, argc);
-    double operand = va_arg(operands, double);
-    va_end(operands);
-    return sin(operand);
-}
-
-double CosFunction::calculate(size_t argc, ...) const {
-    assert(argc == 1);
-    va_list operands;
-    va_start(operands, argc);
-    double operand = va_arg(operands, double);
-    va_end(operands);
-    return cos(operand);
-}
-
-double TgFunction::calculate(size_t argc, ...) const {
-    assert(argc == 1);
-    va_list operands;
-    va_start(operands, argc);
-    double operand = va_arg(operands, double);
-    va_end(operands);
-    return tan(operand);
-}
-
-double CtgFunction::calculate(size_t argc, ...) const {
-    assert(argc == 1);
-    va_list operands;
-    va_start(operands, argc);
-    double operand = va_arg(operands, double);
-    va_end(operands);
-    return 1. / tan(operand);
-}
-
-double LnFunction::calculate(size_t argc, ...) const {
-    assert(argc == 1);
-    va_list operands;
-    va_start(operands, argc);
-    double operand = va_arg(operands, double);
-    va_end(operands);
-    return log(operand);
+    printf(" ARITY=%zu, NAME=%s", arity, getName());
 }
 
 static bool addNextToken(char*& expression, std::vector<std::shared_ptr<Token>>& tokens);
