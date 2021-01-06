@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['line_121',['line',['../class_test.html#a20d74fc8a519ab7d3483bb91026c8be7',1,'Test']]]
+  ['getinstance_124',['getInstance',['../class_test_runner.html#ab92ba345c5bc9c3e5284aca8f6961cd9',1,'TestRunner']]]
 ];

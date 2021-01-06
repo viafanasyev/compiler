@@ -18,8 +18,7 @@ enum TokenType {
     OPERATOR,
     VARIABLE,
     FUNCTION,
-    STATEMENTS,
-    BLOCK,
+    SEMICOLON,
 };
 
 static const char* const TokenTypeStrings[] = {
@@ -28,21 +27,25 @@ static const char* const TokenTypeStrings[] = {
     "OPERATOR",
     "VARIABLE",
     "FUNCTION",
-    "STATEMENTS",
-    "BLOCK",
+    "SEMICOLON",
 };
 
 class Token {
 
 private:
     const TokenType type;
+    const size_t originPos;
 
 public:
-    explicit Token(TokenType type_) : type(type_) { }
+    Token(TokenType type_, size_t originPos_) : type(type_), originPos(originPos_) { }
     virtual ~Token() = default;
 
     TokenType getType() const {
         return type;
+    }
+
+    size_t getOriginPos() const {
+        return originPos;
     }
 
     virtual void print() const;
@@ -56,7 +59,7 @@ private:
     const double value;
 
 public:
-    explicit ConstantValueToken(double value_) : Token(CONSTANT_VALUE), value(value_) { }
+    ConstantValueToken(size_t originPos_, double value_) : Token(CONSTANT_VALUE, originPos_), value(value_) { }
 
     double getValue() const {
         return value;
@@ -67,13 +70,20 @@ public:
     double calculate(size_t argc, ...) const override;
 };
 
+enum ParenthesisType {
+    ROUND,
+    CURLY,
+};
+
 class ParenthesisToken : public Token {
 
 private:
     const bool open;
+    const ParenthesisType parenthesisType;
 
 public:
-    explicit ParenthesisToken(bool open_) : Token(PARENTHESIS), open(open_) { }
+    ParenthesisToken(size_t originPos_, bool open_, ParenthesisType parenthesisType_) :
+        Token(PARENTHESIS, originPos_), open(open_), parenthesisType(parenthesisType_) { }
 
     bool isOpen() const {
         return open;
@@ -81,6 +91,10 @@ public:
 
     bool isClose() const {
         return !open;
+    }
+
+    ParenthesisType getParenthesisType() const {
+        return parenthesisType;
     }
 
     void print() const override;
@@ -117,8 +131,8 @@ private:
     const OperatorType operatorType;
 
 public:
-    OperatorToken(size_t arity_, size_t precedence_, bool leftAssociative_, OperatorType operatorType_) :
-        Token(OPERATOR), arity(arity_), precedence(precedence_), leftAssociative(leftAssociative_), operatorType(operatorType_) { }
+    OperatorToken(size_t originPos_, size_t arity_, size_t precedence_, bool leftAssociative_, OperatorType operatorType_) :
+        Token(OPERATOR, originPos_), arity(arity_), precedence(precedence_), leftAssociative(leftAssociative_), operatorType(operatorType_) { }
 
     size_t getArity() const {
         return arity;
@@ -148,7 +162,7 @@ public:
 class AdditionOperator : public OperatorToken {
 
 public:
-    AdditionOperator() : OperatorToken(2, 1, true, ADDITION) { }
+    explicit AdditionOperator(size_t originPos_) : OperatorToken(originPos_, 2, 1, true, ADDITION) { }
 
     const char* getSymbol() const override {
         return "+";
@@ -160,7 +174,7 @@ public:
 class SubtractionOperator : public OperatorToken {
 
 public:
-    SubtractionOperator() : OperatorToken(2, 1, true, SUBTRACTION) { }
+    explicit SubtractionOperator(size_t originPos_) : OperatorToken(originPos_, 2, 1, true, SUBTRACTION) { }
 
     const char* getSymbol() const override {
         return "-";
@@ -172,7 +186,7 @@ public:
 class MultiplicationOperator : public OperatorToken {
 
 public:
-    MultiplicationOperator() : OperatorToken(2, 2, true, MULTIPLICATION) { }
+    explicit MultiplicationOperator(size_t originPos_) : OperatorToken(originPos_, 2, 2, true, MULTIPLICATION) { }
 
     const char* getSymbol() const override {
         return "*";
@@ -184,7 +198,7 @@ public:
 class DivisionOperator : public OperatorToken {
 
 public:
-    DivisionOperator() : OperatorToken(2, 2, true, DIVISION) { }
+    explicit DivisionOperator(size_t originPos_) : OperatorToken(originPos_, 2, 2, true, DIVISION) { }
 
     const char* getSymbol() const override {
         return "/";
@@ -196,7 +210,7 @@ public:
 class ArithmeticNegationOperator : public OperatorToken {
 
 public:
-    ArithmeticNegationOperator() : OperatorToken(1, 1000, false, ARITHMETIC_NEGATION) { }
+    explicit ArithmeticNegationOperator(size_t originPos_) : OperatorToken(originPos_, 1, 1000, false, ARITHMETIC_NEGATION) { }
 
     const char* getSymbol() const override {
         return "-";
@@ -208,7 +222,7 @@ public:
 class UnaryAdditionOperator : public OperatorToken {
 
 public:
-    UnaryAdditionOperator() : OperatorToken(1, 1000, false, UNARY_ADDITION) { }
+    explicit UnaryAdditionOperator(size_t originPos_) : OperatorToken(originPos_, 1, 1000, false, UNARY_ADDITION) { }
 
     const char* getSymbol() const override {
         return "+";
@@ -220,7 +234,7 @@ public:
 class PowerOperator : public OperatorToken {
 
 public:
-    PowerOperator() : OperatorToken(2, 3, false, POWER) { } // Power is right-associative like in math
+    explicit PowerOperator(size_t originPos_) : OperatorToken(originPos_, 2, 3, false, POWER) { } // Power is right-associative like in math
 
     const char* getSymbol() const override {
         return "^";
@@ -232,16 +246,12 @@ public:
 class VariableToken : public Token {
 
 private:
-    struct keyCompare {
-        bool operator()(char* a, char* b) const {
-            return strcmp(a, b) < 0;
-        }
-    };
-
-    static std::map<char*, std::shared_ptr<VariableToken>, keyCompare> symbolTable;
     char* name;
 
-    explicit VariableToken(const char* name_) : Token(VARIABLE) {
+public:
+    static constexpr size_t MAX_NAME_LENGTH = 256u;
+
+    VariableToken(size_t originPos_, const char* name_) : Token(VARIABLE, originPos_) {
         name = (char*)calloc(MAX_NAME_LENGTH, sizeof(char));
         for (unsigned int i = 0; i < MAX_NAME_LENGTH; ++i) {
             name[i] = name_[i];
@@ -249,22 +259,17 @@ private:
         }
     }
 
-public:
     ~VariableToken() override {
         free(name);
     }
 
-    static constexpr size_t MAX_NAME_LENGTH = 256u;
-
-    static std::shared_ptr<VariableToken> getVariableByName(char* name);
+    char* getName() const {
+        return name;
+    }
 
     void print() const override;
 
     double calculate(size_t argc __attribute__((unused)), ...) const override;
-
-    char* getName() const {
-        return name;
-    }
 };
 
 class FunctionToken : public Token {
@@ -273,7 +278,7 @@ private:
     const size_t arity;
 
 public:
-    explicit FunctionToken(size_t arity_) : Token(FUNCTION), arity(arity_) { }
+    FunctionToken(size_t originPos_, size_t arity_) : Token(FUNCTION, originPos_), arity(arity_) { }
 
     size_t getArity() const {
         return arity;
@@ -284,21 +289,9 @@ public:
     void print() const override;
 };
 
-class Statements : public Token {
-
+class SemicolonToken : public Token {
 public:
-    Statements() : Token(STATEMENTS) { }
-
-    void print() const override;
-
-    double calculate(size_t argc __attribute__((unused)), ...) const override;
-};
-
-
-class Block : public Token {
-
-public:
-    Block() : Token(BLOCK) { }
+    explicit SemicolonToken(size_t originPos_) : Token(SEMICOLON, originPos_) { }
 
     void print() const override;
 

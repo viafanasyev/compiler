@@ -11,47 +11,29 @@
 #include <vector>
 #include "tokenizer.h"
 
+enum NodeType {
+    CONSTANT_VALUE_NODE,
+    VARIABLE_NODE,
+    OPERATOR_NODE,
+    FUNCTION_CALL_NODE,
+    STATEMENTS_NODE,
+    BLOCK_NODE,
+};
+
 class ASTNode {
 
 private:
     std::shared_ptr<ASTNode>* children = nullptr;
     size_t childrenNumber = 0;
-    std::shared_ptr<Token> token;
+    NodeType type;
 
 public:
-    explicit ASTNode(const std::shared_ptr<Token>& token_) {
-        assert((token_->getType() == TokenType::CONSTANT_VALUE) || (token_->getType() == TokenType::VARIABLE));
-
-        token = token_;
+    explicit ASTNode(NodeType type_) : type(type_) {
         childrenNumber = 0;
+        children = nullptr;
     }
 
-    ASTNode(const std::shared_ptr<Token>& token_, const std::shared_ptr<ASTNode>& child) {
-        assert(((token_->getType() == TokenType::OPERATOR) && (dynamic_cast<OperatorToken*>(token_.get())->getArity() == 1)) ||
-               ((token_->getType() == TokenType::FUNCTION) && (dynamic_cast<FunctionToken*>(token_.get())->getArity() == 1)) ||
-                (token_->getType() == TokenType::BLOCK));
-
-        token = token_;
-        childrenNumber = 1;
-        children = new std::shared_ptr<ASTNode>[1];
-        children[0] = child;
-    }
-
-    ASTNode(const std::shared_ptr<Token>& token_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) {
-        assert(token_->getType() == TokenType::OPERATOR);
-        assert(dynamic_cast<OperatorToken*>(token_.get())->getArity() == 2);
-
-        token = token_;
-        childrenNumber = 2;
-        children = new std::shared_ptr<ASTNode>[2];
-        children[0] = leftChild;
-        children[1] = rightChild;
-    }
-
-    ASTNode(const std::shared_ptr<Token>& token_, const std::vector<std::shared_ptr<ASTNode>>& children_) {
-        assert(token_->getType() == TokenType::STATEMENTS);
-
-        token = token_;
+    ASTNode(NodeType type_, const std::vector<std::shared_ptr<ASTNode>>& children_) : type(type_) {
         childrenNumber = children_.size();
         children = new std::shared_ptr<ASTNode>[childrenNumber];
         for (size_t i = 0; i < childrenNumber; ++i) {
@@ -59,24 +41,26 @@ public:
         }
     }
 
+    ASTNode(NodeType type_, const std::shared_ptr<ASTNode>& child) : type(type_) {
+        childrenNumber = 1;
+        children = new std::shared_ptr<ASTNode>[1];
+        children[0] = child;
+    }
+
+    ASTNode(NodeType type_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) : type(type_) {
+        childrenNumber = 2;
+        children = new std::shared_ptr<ASTNode>[2];
+        children[0] = leftChild;
+        children[1] = rightChild;
+    }
+
     ASTNode(ASTNode&& astNode) noexcept {
-        token = astNode.token;
+        type = astNode.type;
         childrenNumber = astNode.childrenNumber;
         children = new std::shared_ptr<ASTNode>[childrenNumber];
         for (size_t i = 0; i < childrenNumber; ++i) {
             children[i] = astNode.children[i];
         }
-    }
-
-    void swap(ASTNode& astNode) {
-        std::swap(token, astNode.token);
-        std::swap(childrenNumber, astNode.childrenNumber);
-        std::swap(children, astNode.children);
-    }
-
-    ASTNode& operator=(ASTNode astNode) {
-        swap(astNode);
-        return *this;
     }
 
     ~ASTNode() {
@@ -91,24 +75,142 @@ public:
         return childrenNumber;
     }
 
-    std::shared_ptr<Token> getToken() const {
+    NodeType getType() const {
+        return type;
+    }
+
+    void visualize(const char* fileName) const;
+
+protected:
+    virtual void dotPrint(FILE* dotFile, int& nodeId) const = 0;
+
+    /**
+     * This method is created for code like below to be possible
+     * (because C++ `protected` modifier doesn't allow this, unlike in other OOP languages)
+     *
+     *     class Parent {
+     *     protected:
+     *         virtual void foo() = 0;
+     *     };
+     *
+     *     class Child {
+     *     protected:
+     *         void foo() override {
+     *             Parent *p;
+     *             ...
+     *             p->foo();
+     *         }
+     *     };
+     *
+     *  Use `dotPrint(child, dotFile, nodeId)` instead of `child->dotPrint(dotFile, nodeId)`.
+     */
+    static void dotPrint(const std::shared_ptr<ASTNode>& node, FILE* dotFile, int& nodeId) {
+        node->dotPrint(dotFile, nodeId);
+    }
+};
+
+class ConstantValueNode : public ASTNode {
+
+private:
+    double value;
+
+public:
+    explicit ConstantValueNode(double value_) : ASTNode(CONSTANT_VALUE_NODE), value(value_) { }
+
+    double getValue() const {
+        return value;
+    }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
+
+class VariableNode : public ASTNode {
+
+private:
+    char* name;
+
+public:
+    static constexpr size_t MAX_NAME_LENGTH = 256u;
+
+    explicit VariableNode(const char* name_) : ASTNode(VARIABLE_NODE) {
+        name = (char*)calloc(MAX_NAME_LENGTH, sizeof(char));
+        for (unsigned int i = 0; i < MAX_NAME_LENGTH; ++i) {
+            name[i] = name_[i];
+            if (name[i] == '\0') break;
+        }
+    }
+
+    const char* getName() const {
+        return name;
+    }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
+
+class OperatorNode : public ASTNode {
+
+private:
+    std::shared_ptr<OperatorToken> token;
+
+public:
+    OperatorNode(const std::shared_ptr<OperatorToken>& token_, const std::vector<std::shared_ptr<ASTNode>>& children_) :
+        ASTNode(OPERATOR_NODE, children_), token(token_) {
+        assert(token_->getType() == OPERATOR && dynamic_cast<OperatorToken*>(token_.get())->getArity() == children_.size());
+    }
+
+    OperatorNode(const std::shared_ptr<OperatorToken>& token_, const std::shared_ptr<ASTNode>& child) :
+        ASTNode(OPERATOR_NODE, child), token(token_) {
+        assert(token_->getType() == OPERATOR && dynamic_cast<OperatorToken*>(token_.get())->getArity() == 1);
+    }
+
+    OperatorNode(const std::shared_ptr<OperatorToken>& token_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) :
+        ASTNode(OPERATOR_NODE, leftChild, rightChild), token(token_) {
+        assert(token_->getType() == OPERATOR && dynamic_cast<OperatorToken*>(token_.get())->getArity() == 2);
+    }
+
+    const std::shared_ptr<OperatorToken>& getToken() const {
         return token;
     }
 
-    void print(int depth = 0) const;
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
 
-    void visualize(const char* fileName) const;
-    void texify(const char* fileName) const;
-
-    double calculate() const;
+class FunctionCallNode : public ASTNode {
 
 private:
-    enum TexBraceType { NONE, ROUND, CURLY };
+    const char* name;
 
-    void dotPrint(FILE* dotFile, int& nodeId) const;
-    void texPrint(FILE* texFile, TexBraceType braceType = NONE) const;
+public:
+    FunctionCallNode(const char* name_, const std::vector<std::shared_ptr<ASTNode>>& children_) :
+        ASTNode(FUNCTION_CALL_NODE, children_), name(name_) { }
 
-    static TexBraceType getChildBraceType(const OperatorToken* parentOperator, const Token* child, bool isRightChild);
+    const char* getName() const {
+        return name;
+    }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
+
+class StatementsNode : public ASTNode {
+
+public:
+    explicit StatementsNode(const std::vector<std::shared_ptr<ASTNode>>& children_) : ASTNode(STATEMENTS_NODE, children_) { }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
+
+class BlockNode : public ASTNode {
+
+public:
+    explicit BlockNode(const std::shared_ptr<StatementsNode>& nestedStatements) : ASTNode(BLOCK_NODE, nestedStatements) { }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
 };
 
 std::shared_ptr<ASTNode> buildAST(char* expression);

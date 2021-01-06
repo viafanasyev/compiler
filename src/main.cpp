@@ -23,7 +23,7 @@ int main(int argc, char* argv[]) {
     optimizer->addOptimizer(std::make_shared<TrivialOperationsOptimizer>());
 
     try {
-        auto ASTRoot = buildASTRecursively(argv[1]);
+        std::shared_ptr<ASTNode> ASTRoot = buildASTRecursively(argv[1]);
         ASTRoot = optimizer->optimize(ASTRoot);
         outputAST(ASTRoot, "expression");
     } catch (const std::invalid_argument& ex) {

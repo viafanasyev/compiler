@@ -17,6 +17,8 @@ protected:
 public:
     SyntaxError(int position_, const char* cause_);
 
+    explicit SyntaxError(const char* cause_);
+
     ~SyntaxError() override;
 
     const char* what() const noexcept override;

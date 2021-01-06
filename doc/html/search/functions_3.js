@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['getinstance_120',['getInstance',['../class_test_runner.html#ab92ba345c5bc9c3e5284aca8f6961cd9',1,'TestRunner']]]
+  ['failcurrenttest_122',['failCurrentTest',['../class_test_runner.html#ac7b64e84fbc3be012003ef5458f8a2bb',1,'TestRunner']]],
+  ['filename_123',['fileName',['../class_test.html#af55b687c1498a727553a74bb6ac39df1',1,'Test']]]
 ];

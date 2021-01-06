@@ -15,212 +15,198 @@
  *     Number = [0-9]+
  *     ID = [a-zA-Z]+
  */
-#include <cstdlib>
-#include <cctype>
 #include <vector>
 #include "recursive_parser.h"
 #include "SyntaxError.h"
 
-void SymbolTable::addFunction(const char* name, const std::shared_ptr<FunctionToken>& functionToken) noexcept {
-    symbols[name] = functionToken;
+std::shared_ptr<StatementsNode> getStatements(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ASTNode> getStatement(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<BlockNode> getBlock(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ASTNode> getTerm(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ConstantValueNode> getNumber(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<VariableNode> getId(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+
+static inline bool isOpenCurlyParenthesisToken(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::PARENTHESIS) return false;
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
+    return parenthesisToken->isOpen() && (parenthesisToken->getParenthesisType() == ParenthesisType::CURLY);
 }
 
-void SymbolTable::addVariable(char* name) noexcept {
-    symbols[name] = VariableToken::getVariableByName(name);
+static inline bool isCloseCurlyParenthesisToken(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::PARENTHESIS) return false;
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
+    return parenthesisToken->isClose() && (parenthesisToken->getParenthesisType() == ParenthesisType::CURLY);
 }
 
-std::shared_ptr<Token> SymbolTable::getSymbolByName(char* name) noexcept {
-    if (symbols.count(name) == 0) {
-        addVariable(name);
+static inline bool isOpenRoundParenthesisToken(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::PARENTHESIS) return false;
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
+    return parenthesisToken->isOpen() && (parenthesisToken->getParenthesisType() == ParenthesisType::ROUND);
+}
+
+static inline bool isCloseRoundParenthesisToken(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::PARENTHESIS) return false;
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
+    return parenthesisToken->isClose() && (parenthesisToken->getParenthesisType() == ParenthesisType::ROUND);
+}
+
+static inline bool isExpressionOperator(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::OPERATOR) return false;
+    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
+    return operatorToken->getOperatorType() == OperatorType::ADDITION || operatorToken->getOperatorType() == OperatorType::SUBTRACTION;
+}
+
+static inline bool isTermOperator(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::OPERATOR) return false;
+    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
+    return operatorToken->getOperatorType() == OperatorType::MULTIPLICATION || operatorToken->getOperatorType() == OperatorType::DIVISION;
+}
+
+static inline bool isFactorOperator(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::OPERATOR) return false;
+    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
+    return operatorToken->getOperatorType() == OperatorType::POWER;
+}
+
+std::shared_ptr<StatementsNode> buildASTRecursively(char* expression) {
+    auto tokens = tokenize(expression);
+    size_t pos = 0;
+
+    std::shared_ptr<StatementsNode> root = getStatements(tokens, pos);
+    if (pos < tokens.size()) {
+        throw SyntaxError(tokens[pos]->getOriginPos(), "Invalid symbol");
     }
-    return symbols.at(name);
-}
-
-SymbolTable symbolTable;
-
-std::shared_ptr<ASTNode> getStatements(const char* expression, int& pos);
-std::shared_ptr<ASTNode> getStatement(const char* expression, int& pos);
-std::shared_ptr<ASTNode> getBlock(const char* expression, int& pos);
-std::shared_ptr<ASTNode> getExpression(const char* expression, int& pos);
-std::shared_ptr<ASTNode> getTerm(const char* expression, int& pos);
-std::shared_ptr<ASTNode> getFactor(const char* expression, int& pos);
-std::shared_ptr<ASTNode> getParenthesised(const char* expression, int& pos);
-std::shared_ptr<ASTNode> getNumber(const char* expression, int& pos);
-std::shared_ptr<ASTNode> getId(const char* expression, int& pos);
-
-void skipSpaces(const char* expression, int& pos);
-
-std::shared_ptr<ASTNode> buildASTRecursively(const char* expression) {
-    int pos = 0;
-    skipSpaces(expression, pos);
-    std::shared_ptr<ASTNode> root = getStatements(expression, pos);
-    skipSpaces(expression, pos);
-    if (expression[pos] != '\0') {
-        throw SyntaxError(pos, "Invalid symbol");
-    }
-    ++pos;
     return root;
 }
 
-std::shared_ptr<ASTNode> getStatements(const char* expression, int& pos) {
-    skipSpaces(expression, pos);
+std::shared_ptr<StatementsNode> getStatements(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
     std::vector<std::shared_ptr<ASTNode>> statements;
-    while (expression[pos] != '}' && expression[pos] != '\0') {
-        statements.push_back(getStatement(expression, pos));
-        skipSpaces(expression, pos);
+    while (pos < tokens.size() && !isCloseCurlyParenthesisToken(tokens[pos])) {
+        statements.push_back(getStatement(tokens, pos));
     }
-    return std::make_shared<ASTNode>(std::make_shared<Statements>(), statements);
+    return std::make_shared<StatementsNode>(statements);
 }
 
-std::shared_ptr<ASTNode> getStatement(const char* expression, int& pos) {
-    skipSpaces(expression, pos);
+std::shared_ptr<ASTNode> getStatement(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
     std::shared_ptr<ASTNode> statement = nullptr;
-    if (expression[pos] == '{') {
-        statement = getBlock(expression, pos);
+    if (pos >= tokens.size()) throw SyntaxError("Expected statement, but got EOF");
+    if (isOpenCurlyParenthesisToken(tokens[pos])) {
+        statement = getBlock(tokens, pos);
     } else {
-        statement = getExpression(expression, pos);
-        skipSpaces(expression, pos);
-        if (expression[pos] != ';') throw SyntaxError(pos, "Expected ';'");
+        statement = getExpression(tokens, pos);
+        if (pos >= tokens.size()) throw SyntaxError("Expected ';', but got EOF");
+        if (tokens[pos]->getType() != TokenType::SEMICOLON) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected ';'");
         ++pos;
     }
     return statement;
 }
 
-std::shared_ptr<ASTNode> getBlock(const char* expression, int& pos) {
-    skipSpaces(expression, pos);
-    if (expression[pos] != '{') throw SyntaxError(pos, "Expected '{'");
+std::shared_ptr<BlockNode> getBlock(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected '{', but got EOF");
+    if (!isOpenCurlyParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected '{'");
     ++pos;
 
-    skipSpaces(expression, pos);
-    auto statements = getStatements(expression, pos);
+    auto statements = getStatements(tokens, pos);
 
-    skipSpaces(expression, pos);
-    if (expression[pos] != '}') throw SyntaxError(pos, "Expected '}'");
+    if (pos >= tokens.size()) throw SyntaxError("Expected '}', but got EOF");
+    if (!isCloseCurlyParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected '}'");
     ++pos;
 
-    return std::make_shared<ASTNode>(std::make_shared<Block>(), statements);
+    return std::make_shared<BlockNode>(statements);
 }
 
-std::shared_ptr<ASTNode> getExpression(const char* expression, int& pos) {
-    std::shared_ptr<ASTNode> result = getTerm(expression, pos);
-    skipSpaces(expression, pos);
+std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    std::shared_ptr<ASTNode> result = getTerm(tokens, pos);
     std::shared_ptr<ASTNode> term = nullptr;
-    std::shared_ptr<OperatorToken> token;
-    while (expression[pos] == '+' || expression[pos] == '-') {
-        if (expression[pos] == '+') {
-            token = std::make_shared<AdditionOperator>();
-        } else {
-            token = std::make_shared<SubtractionOperator>();
-        }
+    std::shared_ptr<OperatorToken> token = nullptr;
+    while (pos < tokens.size() && isExpressionOperator(tokens[pos])) {
+        assert(tokens[pos]->getType() == TokenType::OPERATOR);
+        token = std::dynamic_pointer_cast<OperatorToken>(tokens[pos]);
         ++pos;
-        skipSpaces(expression, pos);
 
-        term = getTerm(expression, pos);
-        skipSpaces(expression, pos);
+        term = getTerm(tokens, pos);
 
-        result = std::make_shared<ASTNode>(token, result, term);
+        result = std::make_shared<OperatorNode>(token, result, term);
     }
     return result;
 }
 
-std::shared_ptr<ASTNode> getTerm(const char* expression, int& pos) {
-    std::shared_ptr<ASTNode> result = getFactor(expression, pos);
-    skipSpaces(expression, pos);
+std::shared_ptr<ASTNode> getTerm(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    std::shared_ptr<ASTNode> result = getFactor(tokens, pos);
     std::shared_ptr<ASTNode> factor = nullptr;
-    std::shared_ptr<OperatorToken> token;
-    while (expression[pos] == '*' || expression[pos] == '/') {
-        if (expression[pos] == '*') {
-            token = std::make_shared<MultiplicationOperator>();
-        } else {
-            token = std::make_shared<DivisionOperator>();
-        }
+    std::shared_ptr<OperatorToken> token = nullptr;
+    while (pos < tokens.size() && isTermOperator(tokens[pos])) {
+        assert(tokens[pos]->getType() == TokenType::OPERATOR);
+        token = std::dynamic_pointer_cast<OperatorToken>(tokens[pos]);
         ++pos;
-        skipSpaces(expression, pos);
 
-        factor = getFactor(expression, pos);
-        skipSpaces(expression, pos);
+        factor = getFactor(tokens, pos);
 
-        result = std::make_shared<ASTNode>(token, result, factor);
+        result = std::make_shared<OperatorNode>(token, result, factor);
     }
     return result;
 }
 
-std::shared_ptr<ASTNode> getFactor(const char* expression, int& pos) {
-    std::shared_ptr<ASTNode> result = getParenthesised(expression, pos);
-    skipSpaces(expression, pos);
+std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    std::shared_ptr<ASTNode> result = getParenthesised(tokens, pos);
     std::shared_ptr<ASTNode> operand = nullptr;
     std::vector<std::shared_ptr<ASTNode>> operands;
-    while (expression[pos] == '^') {
+    std::vector<std::shared_ptr<OperatorToken>> operators;
+    while (pos < tokens.size() && isFactorOperator(tokens[pos])) {
+        assert(tokens[pos]->getType() == TokenType::OPERATOR);
+        operators.push_back(std::dynamic_pointer_cast<OperatorToken>(tokens[pos]));
         ++pos;
-        skipSpaces(expression, pos);
 
-        operand = getParenthesised(expression, pos);
-        skipSpaces(expression, pos);
+        operand = getParenthesised(tokens, pos);
 
         operands.push_back(operand);
     }
     if (!operands.empty()) { // Calculating right-to-left because '^' is right-associative
         size_t i = operands.size() - 1;
         while (i > 0) {
-            operands[i - 1] = std::make_shared<ASTNode>(std::make_shared<PowerOperator>(), operands[i - 1], operands[i]);
+            operands[i - 1] = std::make_shared<OperatorNode>(operators[i], operands[i - 1], operands[i]);
             --i;
         }
-        result = std::make_shared<ASTNode>(std::make_shared<PowerOperator>(), result, operands[0]);
+        result = std::make_shared<OperatorNode>(operators[0], result, operands[0]);
     }
     return result;
 }
 
-std::shared_ptr<ASTNode> getParenthesised(const char* expression, int& pos) {
-    if (expression[pos] != '(') {
-        if (isdigit(expression[pos])) return getNumber(expression, pos);
-        if (isalpha(expression[pos])) return getId(expression, pos);
-        throw SyntaxError(pos, "Expected number, identifier or open parenthesis");
+std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected number, identifier or '(', but got EOF");
+
+    if (!isOpenRoundParenthesisToken(tokens[pos])) {
+        if (tokens[pos]->getType() == TokenType::CONSTANT_VALUE) return getNumber(tokens, pos);
+        if (tokens[pos]->getType() == TokenType::VARIABLE) return getId(tokens, pos);
+        throw SyntaxError(tokens[pos]->getOriginPos(), "Expected number, identifier or '('");
     }
-    assert(expression[pos] == '(');
+    assert(isOpenRoundParenthesisToken(tokens[pos]));
     ++pos;
-    skipSpaces(expression, pos);
 
-    std::shared_ptr<ASTNode> result = getExpression(expression, pos);
+    std::shared_ptr<ASTNode> result = getExpression(tokens, pos);
 
-    if (expression[pos] != ')') {
-        throw SyntaxError(pos, "Expected closing parenthesis");
-    }
+    if (pos >= tokens.size()) throw SyntaxError("Expected ')', but got EOF");
+    if (!isCloseRoundParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected ')'");
     ++pos;
 
     return result;
 }
 
-std::shared_ptr<ASTNode> getNumber(const char* expression, int &pos) {
-    int result = 0;
-    const int startPos = pos;
-    while (isdigit(expression[pos])) {
-        result = result * 10 + (expression[pos++] - '0');
-    }
-    if (pos == startPos) {
-        throw SyntaxError(pos, "Expected number");
-    }
-    return std::make_shared<ASTNode>(std::make_shared<ConstantValueToken>(result));
+std::shared_ptr<ConstantValueNode> getNumber(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected number, but got EOF");
+    if (tokens[pos]->getType() != TokenType::CONSTANT_VALUE) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected number");
+    const double value = dynamic_cast<ConstantValueToken*>(tokens[pos].get())->getValue();
+    ++pos;
+    return std::make_shared<ConstantValueNode>(value);
 }
 
-std::shared_ptr<ASTNode> getId(const char* expression, int& pos) {
-    int startPos = pos;
-    while (isalpha(expression[pos])) {
-        ++pos;
-    }
-    if (pos == startPos) {
-        throw SyntaxError(pos, "Expected id");
-    }
-
-    char* name = (char*)calloc(pos - startPos + 1, sizeof(char));
-    for (int i = startPos; i < pos; ++i) {
-        name[i - startPos] = expression[i];
-    }
-    std::shared_ptr<Token> id = symbolTable.getSymbolByName(name);
-    free(name);
-
-    return std::make_shared<ASTNode>(id);
-}
-
-void skipSpaces(const char* expression, int& pos) {
-    while (std::isspace(expression[pos])) ++pos;
+std::shared_ptr<VariableNode> getId(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected id, but got EOF");
+    if (tokens[pos]->getType() != TokenType::VARIABLE) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected id");
+    const char* name = dynamic_cast<VariableToken*>(tokens[pos].get())->getName();
+    ++pos;
+    return std::make_shared<VariableNode>(name);
 }

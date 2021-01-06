@@ -73,9 +73,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a0a06844ac555a3e0f5c1f2efc60b9cd8"><td class="memItemLeft" align="right" valign="top"><a id="a0a06844ac555a3e0f5c1f2efc60b9cd8"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ConstantValueToken</b> (double value_)</td></tr>
-<tr class="separator:a0a06844ac555a3e0f5c1f2efc60b9cd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adc09fb4102f03f11b0192d9f41b76520"><td class="memItemLeft" align="right" valign="top"><a id="adc09fb4102f03f11b0192d9f41b76520"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ConstantValueToken</b> (size_t originPos_, double value_)</td></tr>
+<tr class="separator:adc09fb4102f03f11b0192d9f41b76520"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aac606e20f0cb4b20409856dcd436633d"><td class="memItemLeft" align="right" valign="top"><a id="aac606e20f0cb4b20409856dcd436633d"></a>
 double&#160;</td><td class="memItemRight" valign="bottom"><b>getValue</b> () const</td></tr>
 <tr class="separator:aac606e20f0cb4b20409856dcd436633d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -86,12 +86,15 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>print</b> () const ov
 double&#160;</td><td class="memItemRight" valign="bottom"><b>calculate</b> (size_t argc,...) const override</td></tr>
 <tr class="separator:a96fbf3a06221b59d9aba6a3cac5e384c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_class_token"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_class_token')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="class_token.html">Token</a></td></tr>
-<tr class="memitem:a7f6ca971bf3bbb7b6e709b93fb452029 inherit pub_methods_class_token"><td class="memItemLeft" align="right" valign="top"><a id="a7f6ca971bf3bbb7b6e709b93fb452029"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>Token</b> (TokenType type_)</td></tr>
-<tr class="separator:a7f6ca971bf3bbb7b6e709b93fb452029 inherit pub_methods_class_token"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5e9ba75d535be446a653b76540625b5b inherit pub_methods_class_token"><td class="memItemLeft" align="right" valign="top"><a id="a5e9ba75d535be446a653b76540625b5b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>Token</b> (TokenType type_, size_t originPos_)</td></tr>
+<tr class="separator:a5e9ba75d535be446a653b76540625b5b inherit pub_methods_class_token"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a31eae18f897e22a446c82e864dfbf5d4 inherit pub_methods_class_token"><td class="memItemLeft" align="right" valign="top"><a id="a31eae18f897e22a446c82e864dfbf5d4"></a>
 TokenType&#160;</td><td class="memItemRight" valign="bottom"><b>getType</b> () const</td></tr>
 <tr class="separator:a31eae18f897e22a446c82e864dfbf5d4 inherit pub_methods_class_token"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a71938d975a234c9ea9b9455908309fc1 inherit pub_methods_class_token"><td class="memItemLeft" align="right" valign="top"><a id="a71938d975a234c9ea9b9455908309fc1"></a>
+size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getOriginPos</b> () const</td></tr>
+<tr class="separator:a71938d975a234c9ea9b9455908309fc1 inherit pub_methods_class_token"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/frontend/<a class="el" href="tokenizer_8h_source.html">tokenizer.h</a></li>

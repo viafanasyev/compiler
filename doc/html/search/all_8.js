@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['parenthesistoken_36',['ParenthesisToken',['../class_parenthesis_token.html',1,'']]],
-  ['poweroperator_37',['PowerOperator',['../class_power_operator.html',1,'']]]
+  ['operatornode_35',['OperatorNode',['../class_operator_node.html',1,'']]],
+  ['operatortoken_36',['OperatorToken',['../class_operator_token.html',1,'']]],
+  ['optimizer_37',['Optimizer',['../class_optimizer.html',1,'']]]
 ];

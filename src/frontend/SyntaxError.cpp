@@ -8,9 +8,16 @@
 
 SyntaxError::SyntaxError(int position_, const char* cause_) {
     position = position_;
-    size_t messageLen = strlen(cause_) + 4 + MAX_INT_LENGTH;
-    message = (char*)calloc(messageLen + 1, sizeof(char));
+    size_t messageLen = strlen(cause_) + 4 + MAX_INT_LENGTH + 1;
+    message = (char*)calloc(messageLen, sizeof(char));
     snprintf(message, messageLen, "%s at %d", cause_, position_);
+}
+
+SyntaxError::SyntaxError(const char* cause_) {
+    position = -1;
+    size_t messageLen = strlen(cause_) + 1;
+    message = (char*)calloc(messageLen, sizeof(char));
+    snprintf(message, messageLen, "%s", cause_);
 }
 
 SyntaxError::~SyntaxError() {

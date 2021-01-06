@@ -11,23 +11,6 @@
 #include "ast.h"
 #include "tokenizer.h"
 
-class SymbolTable {
-private:
-    struct keyCompare {
-        bool operator()(const char* a, const char* b) const {
-            return strcmp(a, b) < 0;
-        }
-    };
-
-    std::map<const char*, std::shared_ptr<Token>, keyCompare> symbols;
-
-public:
-    void addFunction(const char* name, const std::shared_ptr<FunctionToken>& functionToken) noexcept;
-    void addVariable(char* name) noexcept;
-
-    std::shared_ptr<Token> getSymbolByName(char* name) noexcept;
-};
-
-std::shared_ptr<ASTNode> buildASTRecursively(const char* expression);
+std::shared_ptr<StatementsNode> buildASTRecursively(char* expression);
 
 #endif // RECURSIVE_PARSER_CALCULATOR_H

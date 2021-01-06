@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['sinfunction_87',['SinFunction',['../class_sin_function.html',1,'']]],
-  ['subtractionoperator_88',['SubtractionOperator',['../class_subtraction_operator.html',1,'']]],
-  ['symboltable_89',['SymbolTable',['../class_symbol_table.html',1,'']]],
-  ['syntaxerror_90',['SyntaxError',['../class_syntax_error.html',1,'']]]
+  ['semicolontoken_90',['SemicolonToken',['../class_semicolon_token.html',1,'']]],
+  ['statementsnode_91',['StatementsNode',['../class_statements_node.html',1,'']]],
+  ['subtractionoperator_92',['SubtractionOperator',['../class_subtraction_operator.html',1,'']]],
+  ['syntaxerror_93',['SyntaxError',['../class_syntax_error.html',1,'']]]
 ];

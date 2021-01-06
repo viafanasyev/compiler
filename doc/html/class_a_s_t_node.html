@@ -63,54 +63,114 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="class_a_s_t_node-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">ASTNode Class Reference</div>  </div>
+<div class="title">ASTNode Class Reference<span class="mlabels"><span class="mlabel">abstract</span></span></div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p>Inherited by <a class="el" href="class_block_node.html">BlockNode</a>, <a class="el" href="class_constant_value_node.html">ConstantValueNode</a>, <a class="el" href="class_function_call_node.html">FunctionCallNode</a>, <a class="el" href="class_operator_node.html">OperatorNode</a>, <a class="el" href="class_statements_node.html">StatementsNode</a>, and <a class="el" href="class_variable_node.html">VariableNode</a>.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:afad926de656fb81a2b8561eb2917bc69"><td class="memItemLeft" align="right" valign="top"><a id="afad926de656fb81a2b8561eb2917bc69"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token_)</td></tr>
-<tr class="separator:afad926de656fb81a2b8561eb2917bc69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a076be4f5e49ad8548ce3d5fe4cf95249"><td class="memItemLeft" align="right" valign="top"><a id="a076be4f5e49ad8548ce3d5fe4cf95249"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;child)</td></tr>
-<tr class="separator:a076be4f5e49ad8548ce3d5fe4cf95249"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa8b0ffe71156fa3fbafd41daf3255271"><td class="memItemLeft" align="right" valign="top"><a id="aa8b0ffe71156fa3fbafd41daf3255271"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;leftChild, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;rightChild)</td></tr>
-<tr class="separator:aa8b0ffe71156fa3fbafd41daf3255271"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a359af3f3d34430d946bbf5a966ae416a"><td class="memItemLeft" align="right" valign="top"><a id="a359af3f3d34430d946bbf5a966ae416a"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_)</td></tr>
+<tr class="separator:a359af3f3d34430d946bbf5a966ae416a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad4afef84ead34de5e86d6c9987f5e682"><td class="memItemLeft" align="right" valign="top"><a id="ad4afef84ead34de5e86d6c9987f5e682"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&gt; &amp;children_)</td></tr>
+<tr class="separator:ad4afef84ead34de5e86d6c9987f5e682"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3e6a0d274e074e9b191be0bddcc212a7"><td class="memItemLeft" align="right" valign="top"><a id="a3e6a0d274e074e9b191be0bddcc212a7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;child)</td></tr>
+<tr class="separator:a3e6a0d274e074e9b191be0bddcc212a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46ebec2dd4c6707c40cfbfd055edc098"><td class="memItemLeft" align="right" valign="top"><a id="a46ebec2dd4c6707c40cfbfd055edc098"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;leftChild, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;rightChild)</td></tr>
+<tr class="separator:a46ebec2dd4c6707c40cfbfd055edc098"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1068dff73f198284cf3ed307d3e1a562"><td class="memItemLeft" align="right" valign="top"><a id="a1068dff73f198284cf3ed307d3e1a562"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (<a class="el" href="class_a_s_t_node.html">ASTNode</a> &amp;&amp;astNode) noexcept</td></tr>
 <tr class="separator:a1068dff73f198284cf3ed307d3e1a562"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af4d5d765a53222a655e73bb227a3bbc2"><td class="memItemLeft" align="right" valign="top"><a id="af4d5d765a53222a655e73bb227a3bbc2"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>swap</b> (<a class="el" href="class_a_s_t_node.html">ASTNode</a> &amp;astNode)</td></tr>
-<tr class="separator:af4d5d765a53222a655e73bb227a3bbc2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4e29933df03103ac2314a475452920e5"><td class="memItemLeft" align="right" valign="top"><a id="a4e29933df03103ac2314a475452920e5"></a>
-<a class="el" href="class_a_s_t_node.html">ASTNode</a> &amp;&#160;</td><td class="memItemRight" valign="bottom"><b>operator=</b> (<a class="el" href="class_a_s_t_node.html">ASTNode</a> astNode)</td></tr>
-<tr class="separator:a4e29933df03103ac2314a475452920e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95396de0437b8ae84c8b82decc3f92a4"><td class="memItemLeft" align="right" valign="top"><a id="a95396de0437b8ae84c8b82decc3f92a4"></a>
 std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>getChildren</b> () const</td></tr>
 <tr class="separator:a95396de0437b8ae84c8b82decc3f92a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a446d0a9c63481196b0df1457fb018844"><td class="memItemLeft" align="right" valign="top"><a id="a446d0a9c63481196b0df1457fb018844"></a>
 size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getChildrenNumber</b> () const</td></tr>
 <tr class="separator:a446d0a9c63481196b0df1457fb018844"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a32e6adbfc8c17b2965a1608ee6c14b1b"><td class="memItemLeft" align="right" valign="top"><a id="a32e6adbfc8c17b2965a1608ee6c14b1b"></a>
-std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getToken</b> () const</td></tr>
-<tr class="separator:a32e6adbfc8c17b2965a1608ee6c14b1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7aa0aa4998c5bf4a012de1049d47da25"><td class="memItemLeft" align="right" valign="top"><a id="a7aa0aa4998c5bf4a012de1049d47da25"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>print</b> (int depth=0) const</td></tr>
-<tr class="separator:a7aa0aa4998c5bf4a012de1049d47da25"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adea1417dfe42623f46a21bad795b52a1"><td class="memItemLeft" align="right" valign="top"><a id="adea1417dfe42623f46a21bad795b52a1"></a>
+NodeType&#160;</td><td class="memItemRight" valign="bottom"><b>getType</b> () const</td></tr>
+<tr class="separator:adea1417dfe42623f46a21bad795b52a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6184b7df58059a96ba4571492772ffea"><td class="memItemLeft" align="right" valign="top"><a id="a6184b7df58059a96ba4571492772ffea"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visualize</b> (const char *fileName) const</td></tr>
 <tr class="separator:a6184b7df58059a96ba4571492772ffea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a39c7471cd5a02bada72b47af049afd3b"><td class="memItemLeft" align="right" valign="top"><a id="a39c7471cd5a02bada72b47af049afd3b"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>texify</b> (const char *fileName) const</td></tr>
-<tr class="separator:a39c7471cd5a02bada72b47af049afd3b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9a0e539904c2ce59a89799347c2e3168"><td class="memItemLeft" align="right" valign="top"><a id="a9a0e539904c2ce59a89799347c2e3168"></a>
-double&#160;</td><td class="memItemRight" valign="bottom"><b>calculate</b> () const</td></tr>
-<tr class="separator:a9a0e539904c2ce59a89799347c2e3168"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a020da9858580d7b4724d3202ee9fde9f"><td class="memItemLeft" align="right" valign="top"><a id="a020da9858580d7b4724d3202ee9fde9f"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>dotPrint</b> (FILE *dotFile, int &amp;nodeId) const =0</td></tr>
+<tr class="separator:a020da9858580d7b4724d3202ee9fde9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
+Static Protected Member Functions</h2></td></tr>
+<tr class="memitem:aae760e6b1a6643a2c7de55e74613b855"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_s_t_node.html#aae760e6b1a6643a2c7de55e74613b855">dotPrint</a> (const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;node, FILE *dotFile, int &amp;nodeId)</td></tr>
+<tr class="separator:aae760e6b1a6643a2c7de55e74613b855"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="aae760e6b1a6643a2c7de55e74613b855"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aae760e6b1a6643a2c7de55e74613b855">&#9670;&nbsp;</a></span>dotPrint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void ASTNode::dotPrint </td>
+          <td>(</td>
+          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;&#160;</td>
+          <td class="paramname"><em>node</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">FILE *&#160;</td>
+          <td class="paramname"><em>dotFile</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int &amp;&#160;</td>
+          <td class="paramname"><em>nodeId</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>This method is created for code like below to be possible (because C++ <code>protected</code> modifier doesn't allow this, unlike in other OOP languages) </p><pre class="fragment">class Parent {
+protected:
+    virtual void foo() = 0;
+};
+
+class Child {
+protected:
+    void foo() override {
+        Parent *p;
+        ...
+        p-&gt;foo();
+    }
+};
+</pre><p>Use <code>dotPrint(child, dotFile, nodeId)</code> instead of <code>child-&gt;dotPrint(dotFile, nodeId)</code>. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/frontend/<a class="el" href="ast_8h_source.html">ast.h</a></li>
 <li>src/frontend/<a class="el" href="ast_8cpp.html">ast.cpp</a></li>

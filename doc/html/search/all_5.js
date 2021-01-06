@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['line_30',['line',['../class_test.html#a20d74fc8a519ab7d3483bb91026c8be7',1,'Test']]],
-  ['lnfunction_31',['LnFunction',['../class_ln_function.html',1,'']]]
+  ['getinstance_31',['getInstance',['../class_test_runner.html#ab92ba345c5bc9c3e5284aca8f6961cd9',1,'TestRunner']]]
 ];
