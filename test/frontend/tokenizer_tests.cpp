@@ -3,9 +3,9 @@
  * @brief Tests for tokenizer functions
  */
 #include <cstring>
-#include <stdexcept>
 #include <vector>
 #include "../testlib.h"
+#include "../../src/frontend/SyntaxError.h"
 #include "../../src/frontend/tokenizer.h"
 
 #define ASSERT_CONSTANT_VALUE_TOKEN(token, value) do {                                                                 \
@@ -163,8 +163,10 @@ TEST(tokenize, invalidToken) {
     try {
         tokenize(expression);
         ASSERT_TRUE(false);
-    } catch (std::invalid_argument& ex) {
-        ASSERT_TRUE(strcmp(ex.what(), "Invalid symbol found: '_'") == 0);
+    } catch (const SyntaxError& ex) {
+        ASSERT_TRUE(strcmp(ex.what(), "Invalid symbol '_' found at 1:3") == 0);
+        ASSERT_EQUALS(ex.at().line, 1);
+        ASSERT_EQUALS(ex.at().column, 3);
     }
 }
 
@@ -173,8 +175,10 @@ TEST(tokenize, invalidConstant) {
     try {
         tokenize(expression);
         ASSERT_TRUE(false);
-    } catch (std::invalid_argument& ex) {
-        ASSERT_TRUE(strcmp(ex.what(), "Invalid symbol found: '.'") == 0);
+    } catch (const SyntaxError& ex) {
+        ASSERT_TRUE(strcmp(ex.what(), "Invalid symbol '.' found at 1:4") == 0);
+        ASSERT_EQUALS(ex.at().line, 1);
+        ASSERT_EQUALS(ex.at().column, 4);
     }
 }
 

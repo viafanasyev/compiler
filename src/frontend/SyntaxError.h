@@ -5,17 +5,18 @@
 #define AST_BUILDER_SYNTAXERROR_H
 
 #include <exception>
+#include "tokenizer.h"
 
 class SyntaxError : public std::exception {
 private:
-    static constexpr int MAX_INT_LENGTH = 10;
+    static constexpr int MAX_LONG_LENGTH = 19;
 
 protected:
-    int position;
+    TokenOrigin position;
     char* message;
 
 public:
-    SyntaxError(int position_, const char* cause_);
+    SyntaxError(TokenOrigin position_, const char* cause_);
 
     explicit SyntaxError(const char* cause_);
 
@@ -23,7 +24,7 @@ public:
 
     const char* what() const noexcept override;
 
-    int at() const noexcept;
+    TokenOrigin at() const noexcept;
 };
 
 #endif // AST_BUILDER_SYNTAXERROR_H

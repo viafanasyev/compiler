@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <cmath>
 #include "tokenizer.h"
+#include "SyntaxError.h"
 
 void Token::print() const {
     printf("%s", TokenTypeStrings[type]);
@@ -122,33 +123,39 @@ void SemicolonToken::print() const {
     printf(" SEMICOLON");
 }
 
-static bool addNextToken(char*& expression, const char* expressionStart, std::vector<std::shared_ptr<Token>>& tokens);
+static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std::vector<std::shared_ptr<Token>>& tokens);
 
 /**
  * Splits the expression into Token objects.
  * @param expression expression to tokenize
  * @return vector of parsed tokens.
- * @throws std::invalid_argument if invalid symbol met.
+ * @throws SyntaxError if invalid symbol met.
  */
 std::vector<std::shared_ptr<Token>> tokenize(char* expression) {
     assert(expression != nullptr);
 
-    const char* expressionStart = expression;
+    TokenOrigin currentTokenOrigin = {1, 1};
     std::vector<std::shared_ptr<Token>> tokens;
-    while (addNextToken(expression, expressionStart, tokens))
+    while (addNextToken(expression, currentTokenOrigin, tokens))
         ;
     return tokens;
 }
 
-static bool addNextToken(char*& expression, const char* expressionStart, std::vector<std::shared_ptr<Token>>& tokens) {
+static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std::vector<std::shared_ptr<Token>>& tokens) {
     assert(expression != nullptr);
 
     while (std::isspace(*expression)) {
+        if (*expression == '\n') {
+            currentTokenOrigin.column = 1;
+            ++currentTokenOrigin.line;
+        } else {
+            ++currentTokenOrigin.column;
+        }
         ++expression;
     }
     if (*expression == '\0') return false;
 
-    size_t currentTokenOrigin = expression - expressionStart;
+    const char* currentTokenStart = expression;
     if (*expression == ';') {
         tokens.emplace_back(new SemicolonToken(currentTokenOrigin));
         ++expression;
@@ -247,9 +254,10 @@ static bool addNextToken(char*& expression, const char* expressionStart, std::ve
         free(name);
     } else {
         char message[26];
-        snprintf(message, sizeof(message), "Invalid symbol found: '%c'", *expression);
-        throw std::invalid_argument(message);
+        snprintf(message, sizeof(message), "Invalid symbol '%c' found", *expression);
+        throw SyntaxError(currentTokenOrigin, message);
     }
 
+    currentTokenOrigin.column += expression - currentTokenStart;
     return true;
 }

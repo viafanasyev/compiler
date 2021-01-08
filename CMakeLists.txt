@@ -16,8 +16,10 @@ add_executable(
         src/middleend/ast-optimizers.cpp
         src/frontend/recursive_parser.h
         src/frontend/recursive_parser.cpp
+        src/frontend/SyntaxError.h
         src/frontend/SyntaxError.cpp
-        src/frontend/SyntaxError.h)
+        src/MappedFile.h
+        src/MappedFile.cpp)
 
 add_executable(
         tests
@@ -27,5 +29,7 @@ add_executable(
         test/frontend/tokenizer_tests.cpp
         src/frontend/tokenizer.h
         src/frontend/tokenizer.cpp
+        src/frontend/SyntaxError.h
+        src/frontend/SyntaxError.cpp
         src/frontend/ast.h
         src/frontend/ast.cpp)
