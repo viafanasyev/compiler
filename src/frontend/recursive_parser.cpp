@@ -11,10 +11,11 @@
  *     IfStatement = 'if' '(' ComparisonExpression ')' Statement ('else' Statement)?
  *     WhileStatement = 'while' '(' ComparisonExpression ')' Statement
  *     ComparisonExpression = Expression [< > == <= >=] Expression
- *     Expression = Term ([+ -] Term)*
+ *     Expression = Term ([+ -] Term)* | Assignment
  *     Term = Factor ([* /] Factor)*
  *     Factor = Parenthesised (^ Parenthesised)*
  *     Parenthesised = '(' Expression ')' | Number | ID
+ *     Assignment = ID '=' Expression
  *     Number = [0-9]+
  *     ID = [a-z A-Z]+
  */
@@ -32,6 +33,7 @@ std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>
 std::shared_ptr<ASTNode> getTerm(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<OperatorNode> getAssignment(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ConstantValueNode> getNumber(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<VariableNode> getId(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 
@@ -187,6 +189,17 @@ std::shared_ptr<ComparisonOperatorNode> getComparisonExpression(const std::vecto
 }
 
 std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected expression, but got EOF");
+
+    if (
+        tokens[pos]->getType() == TokenType::VARIABLE &&
+        pos + 1 < tokens.size() &&
+        tokens[pos + 1]->getType() == TokenType::OPERATOR &&
+        std::dynamic_pointer_cast<OperatorToken>(tokens[pos + 1])->getOperatorType() == OperatorType::ASSIGNMENT
+    ) {
+        return getAssignment(tokens, pos);
+    }
+
     std::shared_ptr<ASTNode> result = getTerm(tokens, pos);
     std::shared_ptr<ASTNode> term = nullptr;
     std::shared_ptr<OperatorToken> token = nullptr;
@@ -261,6 +274,26 @@ std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Toke
     ++pos;
 
     return result;
+}
+
+std::shared_ptr<OperatorNode> getAssignment(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected assignment, but got EOF");
+    if (tokens[pos]->getType() != TokenType::VARIABLE) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected identifier, but got EOF");
+    auto id = getId(tokens, pos);
+
+    if (pos >= tokens.size()) throw SyntaxError("Expected '=', but got EOF");
+    std::shared_ptr<OperatorToken> operatorToken = nullptr;
+    if (
+        tokens[pos]->getType() != TokenType::OPERATOR ||
+        (operatorToken = std::dynamic_pointer_cast<OperatorToken>(tokens[pos]))->getOperatorType() != OperatorType::ASSIGNMENT
+    ) {
+        throw SyntaxError(tokens[pos]->getOriginPos(), "Expected '='");
+    }
+    ++pos;
+
+    auto assignedExpression = getExpression(tokens, pos);
+
+    return std::make_shared<OperatorNode>(operatorToken, id, assignedExpression);
 }
 
 std::shared_ptr<ConstantValueNode> getNumber(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {

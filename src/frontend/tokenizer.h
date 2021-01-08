@@ -112,6 +112,7 @@ enum OperatorType {
     ARITHMETIC_NEGATION,
     UNARY_ADDITION,
     POWER,
+    ASSIGNMENT,
 };
 
 static const char* const OperatorTypeStrings[] = {
@@ -122,6 +123,7 @@ static const char* const OperatorTypeStrings[] = {
     "ARITHMETIC_NEGATION",
     "UNARY_ADDITION",
     "POWER",
+    "ASSIGNMENT",
 };
 
 class OperatorToken : public Token {
@@ -245,6 +247,18 @@ public:
     }
 
     double calculate(size_t argc, ...) const override;
+};
+
+class AssignmentOperator : public OperatorToken {
+
+public:
+    explicit AssignmentOperator(size_t originPos_) : OperatorToken(originPos_, 2, 0, false, ASSIGNMENT) { }
+
+    const char* getSymbol() const override {
+        return "=";
+    }
+
+    double calculate(size_t argc __attribute__((unused)), ...) const override;
 };
 
 enum ComparisonOperatorType {

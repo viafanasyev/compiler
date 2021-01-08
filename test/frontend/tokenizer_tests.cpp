@@ -433,4 +433,21 @@ TEST(tokenize, variableNameStartsWithWhile) {
     ASSERT_PARENTHESIS_TOKEN(tokens[10], false, CURLY);
 }
 
+TEST(tokenize, simpleAssignmentExpression) {
+    char* expression = (char*)"x = y = = z == a";
+
+    std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
+
+    ASSERT_EQUALS(tokens.size(), 8);
+    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[1], 2, 0, ASSIGNMENT);
+    ASSERT_VARIABLE_TOKEN(tokens[2], "y");
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 0, ASSIGNMENT);
+    ASSERT_OPERATOR_TOKEN(tokens[4], 2, 0, ASSIGNMENT);
+    ASSERT_VARIABLE_TOKEN(tokens[5], "z");
+    ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[6], EQUAL);
+    ASSERT_VARIABLE_TOKEN(tokens[7], "a");
+}
+
 // TODO: Add AST and TeX tests for expressions like (a1^a2)^a3, a1^a2^a3 and (x - y) ^ -(x + y)
+// TODO: Add AST tests for assignment operations. "x = y + 5 + z = 6 * a - (b = c = 3);" and "x + y = a + b;" shouldn't compile, but "x + (y = a + b);" should
