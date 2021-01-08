@@ -6,14 +6,17 @@
  *
  *     G = Statements '\0'
  *     Statements = (Statement)*
- *     Statement = Expression ';' | Block
+ *     Statement = Expression ';' | Block | IfStatement | WhileStatement
  *     Block = '{' Statements '}'
- *     Expression = Term ([+|-] Term)*
- *     Term = Factor ([*|/] Factor)*
+ *     IfStatement = 'if' '(' ComparisonExpression ')' Statement ('else' Statement)?
+ *     WhileStatement = 'while' '(' ComparisonExpression ')' Statement
+ *     ComparisonExpression = Expression [< > == <= >=] Expression
+ *     Expression = Term ([+ -] Term)*
+ *     Term = Factor ([* /] Factor)*
  *     Factor = Parenthesised (^ Parenthesised)*
  *     Parenthesised = '(' Expression ')' | Number | ID
  *     Number = [0-9]+
- *     ID = [a-zA-Z]+
+ *     ID = [a-z A-Z]+
  */
 #include <vector>
 #include "recursive_parser.h"
@@ -22,6 +25,9 @@
 std::shared_ptr<StatementsNode> getStatements(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getStatement(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<BlockNode> getBlock(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ASTNode> getIfStatement(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<WhileNode> getWhileStatement(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ComparisonOperatorNode> getComparisonExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getTerm(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
@@ -95,6 +101,10 @@ std::shared_ptr<ASTNode> getStatement(const std::vector<std::shared_ptr<Token>>&
     if (pos >= tokens.size()) throw SyntaxError("Expected statement, but got EOF");
     if (isOpenCurlyParenthesisToken(tokens[pos])) {
         statement = getBlock(tokens, pos);
+    } else if (tokens[pos]->getType() == TokenType::IF) {
+        statement = getIfStatement(tokens, pos);
+    } else if (tokens[pos]->getType() == TokenType::WHILE) {
+        statement = getWhileStatement(tokens, pos);
     } else {
         statement = getExpression(tokens, pos);
         if (pos >= tokens.size()) throw SyntaxError("Expected ';', but got EOF");
@@ -116,6 +126,64 @@ std::shared_ptr<BlockNode> getBlock(const std::vector<std::shared_ptr<Token>>& t
     ++pos;
 
     return std::make_shared<BlockNode>(statements);
+}
+
+std::shared_ptr<ASTNode> getIfStatement(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected 'if', but got EOF");
+    if (tokens[pos]->getType() != TokenType::IF) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected 'if'");
+    ++pos;
+
+    if (pos >= tokens.size()) throw SyntaxError("Expected '(', but got EOF");
+    if (!isOpenRoundParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected '('");
+    ++pos;
+
+    auto condition = getComparisonExpression(tokens, pos);
+
+    if (pos >= tokens.size()) throw SyntaxError("Expected ')', but got EOF");
+    if (!isCloseRoundParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected ')'");
+    ++pos;
+
+    auto body = getStatement(tokens, pos);
+
+    if (pos < tokens.size() && tokens[pos]->getType() == TokenType::ELSE) {
+        ++pos;
+        auto elseBody = getStatement(tokens, pos);
+        return std::make_shared<IfElseNode>(condition, body, elseBody);
+    }
+    return std::make_shared<IfNode>(condition, body);
+}
+
+std::shared_ptr<WhileNode> getWhileStatement(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected 'while', but got EOF");
+    if (tokens[pos]->getType() != TokenType::WHILE) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected 'while'");
+    ++pos;
+
+    if (pos >= tokens.size()) throw SyntaxError("Expected '(', but got EOF");
+    if (!isOpenRoundParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected '('");
+    ++pos;
+
+    auto condition = getComparisonExpression(tokens, pos);
+
+    if (pos >= tokens.size()) throw SyntaxError("Expected ')', but got EOF");
+    if (!isCloseRoundParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected ')'");
+    ++pos;
+
+    auto body = getStatement(tokens, pos);
+
+    return std::make_shared<WhileNode>(condition, body);
+}
+
+std::shared_ptr<ComparisonOperatorNode> getComparisonExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    std::shared_ptr<ASTNode> lhs = getExpression(tokens, pos);
+
+    if (pos >= tokens.size()) throw SyntaxError("Expected comparison operator, but got EOF");
+    if (tokens[pos]->getType() != COMPARISON_OPERATOR) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected comparison operator");
+    auto operatorToken = std::dynamic_pointer_cast<ComparisonOperatorToken>(tokens[pos]);
+    ++pos;
+
+    std::shared_ptr<ASTNode> rhs = getExpression(tokens, pos);
+
+    return std::make_shared<ComparisonOperatorNode>(operatorToken, lhs, rhs);
 }
 
 std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {

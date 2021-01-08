@@ -5,11 +5,8 @@
 #include <cassert>
 #include <cstdio>
 #include <cstring>
-#include <stack>
 #include <stdexcept>
-#include <vector>
 #include "ast.h"
-#include "tokenizer.h"
 
 void ASTNode::visualize(const char* fileName) const {
     assert(fileName != nullptr);
@@ -58,6 +55,18 @@ void OperatorNode::dotPrint(FILE* dotFile, int& nodeId) const {
     nodeId = childrenNodeId;
 }
 
+void ComparisonOperatorNode::dotPrint(FILE* dotFile, int& nodeId) const {
+    fprintf(dotFile, "%d [label=\"comp op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, token->getSymbol());
+    int childrenNodeId = nodeId + 1;
+    auto children = getChildren();
+    assert(getChildrenNumber() == 2);
+    for (size_t i = 0; i < 2; ++i) {
+        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
+        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+    }
+    nodeId = childrenNodeId;
+}
+
 void FunctionCallNode::dotPrint(FILE* dotFile, int& nodeId) const {
     size_t arity = getChildrenNumber();
     if (arity == 1) {
@@ -90,6 +99,42 @@ void BlockNode::dotPrint(FILE* dotFile, int& nodeId) const {
     int childrenNodeId = nodeId + 1;
     auto children = getChildren();
     for (size_t i = 0; i < getChildrenNumber(); ++i) {
+        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
+        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+    }
+    nodeId = childrenNodeId;
+}
+
+void IfNode::dotPrint(FILE* dotFile, int& nodeId) const {
+    fprintf(dotFile, "%d [label=\"if\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
+    int childrenNodeId = nodeId + 1;
+    auto children = getChildren();
+    assert(getChildrenNumber() == 2);
+    for (size_t i = 0; i < 2; ++i) {
+        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
+        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+    }
+    nodeId = childrenNodeId;
+}
+
+void IfElseNode::dotPrint(FILE* dotFile, int& nodeId) const {
+    fprintf(dotFile, "%d [label=\"if-else\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
+    int childrenNodeId = nodeId + 1;
+    auto children = getChildren();
+    assert(getChildrenNumber() == 3);
+    for (size_t i = 0; i < 3; ++i) {
+        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
+        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+    }
+    nodeId = childrenNodeId;
+}
+
+void WhileNode::dotPrint(FILE* dotFile, int& nodeId) const {
+    fprintf(dotFile, "%d [label=\"while\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
+    int childrenNodeId = nodeId + 1;
+    auto children = getChildren();
+    assert(getChildrenNumber() == 2);
+    for (size_t i = 0; i < 2; ++i) {
         fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
         ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
     }

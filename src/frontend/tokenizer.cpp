@@ -20,18 +20,9 @@ void ConstantValueToken::print() const {
     printf(" VALUE=%lf", value);
 }
 
-double ConstantValueToken::calculate(size_t argc, ...) const {
-    assert(argc == 0);
-    return value;
-}
-
 void ParenthesisToken::print() const {
     Token::print();
     printf(" %s", open ? "OPEN" : "CLOSE");
-}
-
-double ParenthesisToken::calculate(size_t argc __attribute__((unused)), ...) const {
-    throw std::logic_error("Parenthesis can't be calculated");
 }
 
 void OperatorToken::print() const {
@@ -107,13 +98,14 @@ double PowerOperator::calculate(size_t argc, ...) const {
     return pow(leftOperand, rightOperand);
 }
 
+void ComparisonOperatorToken::print() const {
+    Token::print();
+    printf(" TYPE=%s", ComparisonOperatorTypeStrings[operatorType]);
+}
+
 void VariableToken::print() const {
     Token::print();
     printf(" NAME=%s", name);
-}
-
-double VariableToken::calculate(size_t argc __attribute__((unused)), ...) const {
-    throw std::logic_error("Variable can't be calculated");
 }
 
 void FunctionToken::print() const {
@@ -124,10 +116,6 @@ void FunctionToken::print() const {
 void SemicolonToken::print() const {
     Token::print();
     printf(" SEMICOLON");
-}
-
-double SemicolonToken::calculate(size_t argc __attribute__((unused)), ...) const {
-    throw std::logic_error("Semicolon can't be calculated");
 }
 
 static bool addNextToken(char*& expression, const char* expressionStart, std::vector<std::shared_ptr<Token>>& tokens);
@@ -156,26 +144,27 @@ static bool addNextToken(char*& expression, const char* expressionStart, std::ve
     }
     if (*expression == '\0') return false;
 
+    size_t currentTokenOrigin = expression - expressionStart;
     if (*expression == ';') {
-        tokens.emplace_back(new SemicolonToken(expression - expressionStart));
+        tokens.emplace_back(new SemicolonToken(currentTokenOrigin));
         ++expression;
     } else if (*expression == '(') {
-        tokens.emplace_back(new ParenthesisToken(expression - expressionStart, true, ParenthesisType::ROUND));
+        tokens.emplace_back(new ParenthesisToken(currentTokenOrigin, true, ParenthesisType::ROUND));
         ++expression;
     } else if (*expression == ')') {
-        tokens.emplace_back(new ParenthesisToken(expression - expressionStart, false, ParenthesisType::ROUND));
+        tokens.emplace_back(new ParenthesisToken(currentTokenOrigin, false, ParenthesisType::ROUND));
         ++expression;
     } else if (*expression == '{') {
-        tokens.emplace_back(new ParenthesisToken(expression - expressionStart, true, ParenthesisType::CURLY));
+        tokens.emplace_back(new ParenthesisToken(currentTokenOrigin, true, ParenthesisType::CURLY));
         ++expression;
     } else if (*expression == '}') {
-        tokens.emplace_back(new ParenthesisToken(expression - expressionStart, false, ParenthesisType::CURLY));
+        tokens.emplace_back(new ParenthesisToken(currentTokenOrigin, false, ParenthesisType::CURLY));
         ++expression;
     } else if (*expression == '*') {
-        tokens.emplace_back(new MultiplicationOperator(expression - expressionStart));
+        tokens.emplace_back(new MultiplicationOperator(currentTokenOrigin));
         ++expression;
     } else if (*expression == '/') {
-        tokens.emplace_back(new DivisionOperator(expression - expressionStart));
+        tokens.emplace_back(new DivisionOperator(currentTokenOrigin));
         ++expression;
     } else if ((*expression == '+') || (*expression == '-')) {
         Token* previousToken = nullptr;
@@ -193,32 +182,59 @@ static bool addNextToken(char*& expression, const char* expressionStart, std::ve
 
         if (isBinary) {
             if (*expression == '+') {
-                tokens.emplace_back(new AdditionOperator(expression - expressionStart));
+                tokens.emplace_back(new AdditionOperator(currentTokenOrigin));
             } else {
-                tokens.emplace_back(new SubtractionOperator(expression - expressionStart));
+                tokens.emplace_back(new SubtractionOperator(currentTokenOrigin));
             }
         } else {
             if (*expression == '+') {
-                tokens.emplace_back(new UnaryAdditionOperator(expression - expressionStart));
+                tokens.emplace_back(new UnaryAdditionOperator(currentTokenOrigin));
             } else {
-                tokens.emplace_back(new ArithmeticNegationOperator(expression - expressionStart));
+                tokens.emplace_back(new ArithmeticNegationOperator(currentTokenOrigin));
             }
         }
 
         ++expression;
     } else if (*expression == '^') {
-        tokens.emplace_back(new PowerOperator(expression - expressionStart));
+        tokens.emplace_back(new PowerOperator(currentTokenOrigin));
         ++expression;
+    } else if (*expression == '<') {
+        ++expression;
+        if (*expression == '=') {
+            tokens.emplace_back(new LessOrEqualComparisonOperator(currentTokenOrigin));
+            ++expression;
+        } else {
+            tokens.emplace_back(new LessComparisonOperator(currentTokenOrigin));
+        }
+    } else if (*expression == '>') {
+        ++expression;
+        if (*expression == '=') {
+            tokens.emplace_back(new GreaterOrEqualComparisonOperator(currentTokenOrigin));
+            ++expression;
+        } else {
+            tokens.emplace_back(new GreaterComparisonOperator(currentTokenOrigin));
+        }
+    } else if (strncmp(expression, "==", 2) == 0) {
+        tokens.emplace_back(new EqualComparisonOperator(currentTokenOrigin));
+        expression += 2;
     } else if (isdigit(*expression)) {
         double tokenValue = strtod(expression, &expression);
-        tokens.emplace_back(new ConstantValueToken(expression - expressionStart, tokenValue));
+        tokens.emplace_back(new ConstantValueToken(currentTokenOrigin, tokenValue));
     } else if (isalpha(*expression)) { // Variable name starts with letter
         char* name = (char*)calloc(VariableToken::MAX_NAME_LENGTH, sizeof(char));
         unsigned int i = 0;
         do {
             name[i++] = *expression++;
         } while (i < VariableToken::MAX_NAME_LENGTH && (isalpha(*expression) || isdigit(*expression))); // Other symbols in the name can be letters or digits
-        tokens.emplace_back(new VariableToken(expression - expressionStart - i, name));
+        if (strcmp(name, "if") == 0) {
+            tokens.emplace_back(new IfToken(currentTokenOrigin));
+        } else if (strcmp(name, "else") == 0) {
+            tokens.emplace_back(new ElseToken(currentTokenOrigin));
+        } else if (strcmp(name, "while") == 0) {
+            tokens.emplace_back(new WhileToken(currentTokenOrigin));
+        } else {
+            tokens.emplace_back(new VariableToken(currentTokenOrigin, name));
+        }
         free(name);
     } else {
         char message[26];

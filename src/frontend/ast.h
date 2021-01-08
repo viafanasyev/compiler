@@ -15,9 +15,13 @@ enum NodeType {
     CONSTANT_VALUE_NODE,
     VARIABLE_NODE,
     OPERATOR_NODE,
+    COMPARISON_OPERATOR_NODE,
     FUNCTION_CALL_NODE,
     STATEMENTS_NODE,
     BLOCK_NODE,
+    IF_NODE,
+    IF_ELSE_NODE,
+    WHILE_NODE,
 };
 
 class ASTNode {
@@ -178,6 +182,25 @@ protected:
     void dotPrint(FILE *dotFile, int &nodeId) const override;
 };
 
+class ComparisonOperatorNode : public ASTNode {
+
+private:
+    std::shared_ptr<ComparisonOperatorToken> token;
+
+public:
+    ComparisonOperatorNode(const std::shared_ptr<ComparisonOperatorToken>& token_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) :
+        ASTNode(COMPARISON_OPERATOR_NODE, leftChild, rightChild), token(token_) {
+        assert(token_->getType() == COMPARISON_OPERATOR);
+    }
+
+    const std::shared_ptr<ComparisonOperatorToken>& getToken() const {
+        return token;
+    }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
+
 class FunctionCallNode : public ASTNode {
 
 private:
@@ -213,8 +236,34 @@ protected:
     void dotPrint(FILE *dotFile, int &nodeId) const override;
 };
 
-std::shared_ptr<ASTNode> buildAST(char* expression);
+class IfNode : public ASTNode {
 
-std::shared_ptr<ASTNode> buildAST(const std::vector<std::shared_ptr<Token> >& infixNotationTokens);
+public:
+    IfNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& body) :
+        ASTNode(IF_NODE, condition, body) { }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
+
+class IfElseNode : public ASTNode {
+
+public:
+    IfElseNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& ifBody, const std::shared_ptr<ASTNode>& elseBody) :
+        ASTNode(IF_ELSE_NODE, {condition, ifBody, elseBody}) { }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
+
+class WhileNode : public ASTNode {
+
+public:
+    WhileNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& body) :
+        ASTNode(WHILE_NODE, condition, body) { }
+
+protected:
+    void dotPrint(FILE *dotFile, int &nodeId) const override;
+};
 
 #endif // AST_BUILDER_AST_H

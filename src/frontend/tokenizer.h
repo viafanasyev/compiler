@@ -16,18 +16,26 @@ enum TokenType {
     CONSTANT_VALUE,
     PARENTHESIS,
     OPERATOR,
+    COMPARISON_OPERATOR,
     VARIABLE,
     FUNCTION,
     SEMICOLON,
+    IF,
+    ELSE,
+    WHILE,
 };
 
 static const char* const TokenTypeStrings[] = {
     "CONSTANT_VALUE",
     "PARENTHESIS",
     "OPERATOR",
+    "COMPARISON_OPERATOR",
     "VARIABLE",
     "FUNCTION",
     "SEMICOLON",
+    "IF",
+    "ELSE",
+    "WHILE",
 };
 
 class Token {
@@ -49,8 +57,6 @@ public:
     }
 
     virtual void print() const;
-
-    virtual double calculate(size_t argc, ...) const = 0;
 };
 
 class ConstantValueToken : public Token {
@@ -66,8 +72,6 @@ public:
     }
 
     void print() const override;
-
-    double calculate(size_t argc, ...) const override;
 };
 
 enum ParenthesisType {
@@ -98,8 +102,6 @@ public:
     }
 
     void print() const override;
-
-    double calculate(size_t argc __attribute__((unused)), ...) const override;
 };
 
 enum OperatorType {
@@ -157,6 +159,8 @@ public:
     virtual const char* getSymbol() const = 0;
 
     void print() const override;
+
+    virtual double calculate(size_t argc, ...) const = 0;
 };
 
 class AdditionOperator : public OperatorToken {
@@ -243,6 +247,90 @@ public:
     double calculate(size_t argc, ...) const override;
 };
 
+enum ComparisonOperatorType {
+    LESS,
+    LESS_OR_EQUAL,
+    GREATER,
+    GREATER_OR_EQUAL,
+    EQUAL,
+};
+
+static const char* const ComparisonOperatorTypeStrings[] = {
+    "LESS",
+    "LESS_OR_EQUAL",
+    "GREATER",
+    "GREATER_OR_EQUAL",
+    "EQUAL",
+};
+
+class ComparisonOperatorToken : public Token {
+
+private:
+    const ComparisonOperatorType operatorType;
+
+public:
+    ComparisonOperatorToken(size_t originPos_, ComparisonOperatorType operatorType_) :
+        Token(COMPARISON_OPERATOR, originPos_), operatorType(operatorType_) { }
+
+    ComparisonOperatorType getOperatorType() const {
+        return operatorType;
+    }
+
+    virtual const char* getSymbol() const = 0;
+
+    void print() const override;
+};
+
+class LessComparisonOperator : public ComparisonOperatorToken {
+
+public:
+    explicit LessComparisonOperator(size_t originPos_) : ComparisonOperatorToken(originPos_, LESS) { }
+
+    const char * getSymbol() const override {
+        return "<";
+    }
+};
+
+class LessOrEqualComparisonOperator : public ComparisonOperatorToken {
+
+public:
+    explicit LessOrEqualComparisonOperator(size_t originPos_) : ComparisonOperatorToken(originPos_, LESS_OR_EQUAL) { }
+
+    const char * getSymbol() const override {
+        return "<=";
+    }
+};
+
+class GreaterComparisonOperator : public ComparisonOperatorToken {
+
+public:
+    explicit GreaterComparisonOperator(size_t originPos_) : ComparisonOperatorToken(originPos_, GREATER) { }
+
+    const char * getSymbol() const override {
+        return ">";
+    }
+};
+
+class GreaterOrEqualComparisonOperator : public ComparisonOperatorToken {
+
+public:
+    explicit GreaterOrEqualComparisonOperator(size_t originPos_) : ComparisonOperatorToken(originPos_, GREATER_OR_EQUAL) { }
+
+    const char * getSymbol() const override {
+        return ">=";
+    }
+};
+
+class EqualComparisonOperator : public ComparisonOperatorToken {
+
+public:
+    explicit EqualComparisonOperator(size_t originPos_) : ComparisonOperatorToken(originPos_, EQUAL) { }
+
+    const char * getSymbol() const override {
+        return "==";
+    }
+};
+
 class VariableToken : public Token {
 
 private:
@@ -268,8 +356,6 @@ public:
     }
 
     void print() const override;
-
-    double calculate(size_t argc __attribute__((unused)), ...) const override;
 };
 
 class FunctionToken : public Token {
@@ -294,8 +380,21 @@ public:
     explicit SemicolonToken(size_t originPos_) : Token(SEMICOLON, originPos_) { }
 
     void print() const override;
+};
 
-    double calculate(size_t argc __attribute__((unused)), ...) const override;
+class IfToken : public Token {
+public:
+    explicit IfToken(size_t originPos_) : Token(IF, originPos_) { }
+};
+
+class ElseToken : public Token {
+public:
+    explicit ElseToken(size_t originPos_) : Token(ELSE, originPos_) { }
+};
+
+class WhileToken : public Token {
+public:
+    explicit WhileToken(size_t originPos_) : Token(WHILE, originPos_) { }
 };
 
 /**
