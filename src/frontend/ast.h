@@ -145,6 +145,10 @@ public:
         }
     }
 
+    ~VariableNode() {
+        free(name);
+    }
+
     const char* getName() const {
         return name;
     }
