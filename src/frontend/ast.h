@@ -31,13 +31,17 @@ private:
     size_t childrenNumber = 0;
     NodeType type;
 
+    static size_t nextNodeId;
+
 public:
-    explicit ASTNode(NodeType type_) : type(type_) {
+    const size_t nodeId;
+
+    explicit ASTNode(NodeType type_) : type(type_), nodeId(nextNodeId++) {
         childrenNumber = 0;
         children = nullptr;
     }
 
-    ASTNode(NodeType type_, const std::vector<std::shared_ptr<ASTNode>>& children_) : type(type_) {
+    ASTNode(NodeType type_, const std::vector<std::shared_ptr<ASTNode>>& children_) : type(type_), nodeId(nextNodeId++) {
         childrenNumber = children_.size();
         children = new std::shared_ptr<ASTNode>[childrenNumber];
         for (size_t i = 0; i < childrenNumber; ++i) {
@@ -45,26 +49,17 @@ public:
         }
     }
 
-    ASTNode(NodeType type_, const std::shared_ptr<ASTNode>& child) : type(type_) {
+    ASTNode(NodeType type_, const std::shared_ptr<ASTNode>& child) : type(type_), nodeId(nextNodeId++) {
         childrenNumber = 1;
         children = new std::shared_ptr<ASTNode>[1];
         children[0] = child;
     }
 
-    ASTNode(NodeType type_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) : type(type_) {
+    ASTNode(NodeType type_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) : type(type_), nodeId(nextNodeId++) {
         childrenNumber = 2;
         children = new std::shared_ptr<ASTNode>[2];
         children[0] = leftChild;
         children[1] = rightChild;
-    }
-
-    ASTNode(ASTNode&& astNode) noexcept {
-        type = astNode.type;
-        childrenNumber = astNode.childrenNumber;
-        children = new std::shared_ptr<ASTNode>[childrenNumber];
-        for (size_t i = 0; i < childrenNumber; ++i) {
-            children[i] = astNode.children[i];
-        }
     }
 
     ~ASTNode() {
@@ -83,10 +78,14 @@ public:
         return type;
     }
 
+    size_t getNodeId() const {
+        return nodeId;
+    }
+
     void visualize(const char* fileName) const;
 
 protected:
-    virtual void dotPrint(FILE* dotFile, int& nodeId) const = 0;
+    virtual void dotPrint(FILE* dotFile) const = 0;
 
     /**
      * This method is created for code like below to be possible
@@ -106,10 +105,10 @@ protected:
      *         }
      *     };
      *
-     *  Use `dotPrint(child, dotFile, nodeId)` instead of `child->dotPrint(dotFile, nodeId)`.
+     *  Use `dotPrint(child, dotFile)` instead of `child->dotPrint(dotFile)`.
      */
-    static void dotPrint(const std::shared_ptr<ASTNode>& node, FILE* dotFile, int& nodeId) {
-        node->dotPrint(dotFile, nodeId);
+    static void dotPrint(const std::shared_ptr<ASTNode>& node, FILE* dotFile) {
+        node->dotPrint(dotFile);
     }
 };
 
@@ -126,7 +125,7 @@ public:
     }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class VariableNode : public ASTNode {
@@ -154,7 +153,7 @@ public:
     }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class OperatorNode : public ASTNode {
@@ -183,7 +182,7 @@ public:
     }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class ComparisonOperatorNode : public ASTNode {
@@ -202,7 +201,7 @@ public:
     }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class FunctionCallNode : public ASTNode {
@@ -219,7 +218,7 @@ public:
     }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class StatementsNode : public ASTNode {
@@ -228,7 +227,7 @@ public:
     explicit StatementsNode(const std::vector<std::shared_ptr<ASTNode>>& children_) : ASTNode(STATEMENTS_NODE, children_) { }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class BlockNode : public ASTNode {
@@ -237,7 +236,7 @@ public:
     explicit BlockNode(const std::shared_ptr<StatementsNode>& nestedStatements) : ASTNode(BLOCK_NODE, nestedStatements) { }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class IfNode : public ASTNode {
@@ -247,7 +246,7 @@ public:
         ASTNode(IF_NODE, condition, body) { }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class IfElseNode : public ASTNode {
@@ -257,7 +256,7 @@ public:
         ASTNode(IF_ELSE_NODE, {condition, ifBody, elseBody}) { }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 class WhileNode : public ASTNode {
@@ -267,7 +266,7 @@ public:
         ASTNode(WHILE_NODE, condition, body) { }
 
 protected:
-    void dotPrint(FILE *dotFile, int &nodeId) const override;
+    void dotPrint(FILE* dotFile) const override;
 };
 
 #endif // AST_BUILDER_AST_H

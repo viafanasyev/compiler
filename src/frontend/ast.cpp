@@ -8,6 +8,8 @@
 #include <stdexcept>
 #include "ast.h"
 
+size_t ASTNode::nextNodeId = 0;
+
 void ASTNode::visualize(const char* fileName) const {
     assert(fileName != nullptr);
 
@@ -17,8 +19,7 @@ void ASTNode::visualize(const char* fileName) const {
 
     FILE* graphvizTextFile = fopen(dotFileName, "w");
     fprintf(graphvizTextFile, "digraph AST {\n");
-    int nodeId = 0;
-    dotPrint(graphvizTextFile, nodeId);
+    dotPrint(graphvizTextFile);
     fprintf(graphvizTextFile, "}\n");
     fclose(graphvizTextFile);
 
@@ -27,116 +28,98 @@ void ASTNode::visualize(const char* fileName) const {
     system(command);
 }
 
-void ConstantValueNode::dotPrint(FILE* dotFile, int& nodeId) const {
-    fprintf(dotFile, "%d [label=\"const\nvalue: %lg\", shape=box, style=filled, color=\"grey\", fillcolor=\"#FFFEC9\"];\n", nodeId, value);
-    ++nodeId;
+void ConstantValueNode::dotPrint(FILE* dotFile) const {
+    fprintf(dotFile, "%zu [label=\"const\nvalue: %lg\", shape=box, style=filled, color=\"grey\", fillcolor=\"#FFFEC9\"];\n", nodeId, value);
 }
 
-void VariableNode::dotPrint(FILE* dotFile, int& nodeId) const {
-    fprintf(dotFile, "%d [label=\"var\nname: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#99FF9D\"];\n", nodeId, name);
-    ++nodeId;
+void VariableNode::dotPrint(FILE* dotFile) const {
+    fprintf(dotFile, "%zu [label=\"var\nname: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#99FF9D\"];\n", nodeId, name);
 }
 
-void OperatorNode::dotPrint(FILE* dotFile, int& nodeId) const {
+void OperatorNode::dotPrint(FILE* dotFile) const {
     size_t arity = getChildrenNumber();
     if (arity == 1) {
-        fprintf(dotFile, "%d [label=\"unary op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, token->getSymbol());
+        fprintf(dotFile, "%zu [label=\"unary op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, token->getSymbol());
     } else if (arity == 2) {
-        fprintf(dotFile, "%d [label=\"binary op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, token->getSymbol());
+        fprintf(dotFile, "%zu [label=\"binary op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, token->getSymbol());
     } else {
         throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
     }
-    int childrenNodeId = nodeId + 1;
     auto children = getChildren();
     for (size_t i = 0; i < arity; ++i) {
-        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
-        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+        fprintf(dotFile, "%zu->%zu\n", nodeId, children[i]->nodeId);
+        ASTNode::dotPrint(children[i], dotFile);
     }
-    nodeId = childrenNodeId;
 }
 
-void ComparisonOperatorNode::dotPrint(FILE* dotFile, int& nodeId) const {
-    fprintf(dotFile, "%d [label=\"comp op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, token->getSymbol());
-    int childrenNodeId = nodeId + 1;
+void ComparisonOperatorNode::dotPrint(FILE* dotFile) const {
+    fprintf(dotFile, "%zu [label=\"comp op\nop: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, token->getSymbol());
     auto children = getChildren();
     assert(getChildrenNumber() == 2);
     for (size_t i = 0; i < 2; ++i) {
-        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
-        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+        fprintf(dotFile, "%zu->%zu\n", nodeId, children[i]->nodeId);
+        ASTNode::dotPrint(children[i], dotFile);
     }
-    nodeId = childrenNodeId;
 }
 
-void FunctionCallNode::dotPrint(FILE* dotFile, int& nodeId) const {
+void FunctionCallNode::dotPrint(FILE* dotFile) const {
     size_t arity = getChildrenNumber();
     if (arity == 1) {
-        fprintf(dotFile, "%d [label=\"unary func\nfunc: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, name);
+        fprintf(dotFile, "%zu [label=\"unary func\nfunc: %s\", shape=box, style=filled, color=\"grey\", fillcolor=\"#C9E7FF\"];\n", nodeId, name);
     } else {
         throw std::logic_error("Unsupported arity of function. Only unary are supported yet");
     }
-    int childrenNodeId = nodeId + 1;
     auto children = getChildren();
     for (size_t i = 0; i < arity; ++i) {
-        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
-        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+        fprintf(dotFile, "%zu->%zu\n", nodeId, children[i]->nodeId);
+        ASTNode::dotPrint(children[i], dotFile);
     }
-    nodeId = childrenNodeId;
 }
 
-void StatementsNode::dotPrint(FILE* dotFile, int& nodeId) const {
-    fprintf(dotFile, "%d [label=\"statements\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
-    int childrenNodeId = nodeId + 1;
+void StatementsNode::dotPrint(FILE* dotFile) const {
+    fprintf(dotFile, "%zu [label=\"statements\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
     auto children = getChildren();
     for (size_t i = 0; i < getChildrenNumber(); ++i) {
-        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
-        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+        fprintf(dotFile, "%zu->%zu\n", nodeId, children[i]->nodeId);
+        ASTNode::dotPrint(children[i], dotFile);
     }
-    nodeId = childrenNodeId;
 }
 
-void BlockNode::dotPrint(FILE* dotFile, int& nodeId) const {
-    fprintf(dotFile, "%d [label=\"block\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
-    int childrenNodeId = nodeId + 1;
+void BlockNode::dotPrint(FILE* dotFile) const {
+    fprintf(dotFile, "%zu [label=\"block\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
     auto children = getChildren();
     for (size_t i = 0; i < getChildrenNumber(); ++i) {
-        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
-        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+        fprintf(dotFile, "%zu->%zu\n", nodeId, children[i]->nodeId);
+        ASTNode::dotPrint(children[i], dotFile);
     }
-    nodeId = childrenNodeId;
 }
 
-void IfNode::dotPrint(FILE* dotFile, int& nodeId) const {
-    fprintf(dotFile, "%d [label=\"if\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
-    int childrenNodeId = nodeId + 1;
+void IfNode::dotPrint(FILE* dotFile) const {
+    fprintf(dotFile, "%zu [label=\"if\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
     auto children = getChildren();
     assert(getChildrenNumber() == 2);
     for (size_t i = 0; i < 2; ++i) {
-        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
-        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+        fprintf(dotFile, "%zu->%zu\n", nodeId, children[i]->nodeId);
+        ASTNode::dotPrint(children[i], dotFile);
     }
-    nodeId = childrenNodeId;
 }
 
-void IfElseNode::dotPrint(FILE* dotFile, int& nodeId) const {
-    fprintf(dotFile, "%d [label=\"if-else\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
-    int childrenNodeId = nodeId + 1;
+void IfElseNode::dotPrint(FILE* dotFile) const {
+    fprintf(dotFile, "%zu [label=\"if-else\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
     auto children = getChildren();
     assert(getChildrenNumber() == 3);
     for (size_t i = 0; i < 3; ++i) {
-        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
-        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+        fprintf(dotFile, "%zu->%zu\n", nodeId, children[i]->nodeId);
+        ASTNode::dotPrint(children[i], dotFile);
     }
-    nodeId = childrenNodeId;
 }
 
-void WhileNode::dotPrint(FILE* dotFile, int& nodeId) const {
-    fprintf(dotFile, "%d [label=\"while\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
-    int childrenNodeId = nodeId + 1;
+void WhileNode::dotPrint(FILE* dotFile) const {
+    fprintf(dotFile, "%zu [label=\"while\", shape=box, style=filled, color=\"grey\", fillcolor=\"grey\"];\n", nodeId);
     auto children = getChildren();
     assert(getChildrenNumber() == 2);
     for (size_t i = 0; i < 2; ++i) {
-        fprintf(dotFile, "%d->%d\n", nodeId, childrenNodeId);
-        ASTNode::dotPrint(children[i], dotFile, childrenNodeId);
+        fprintf(dotFile, "%zu->%zu\n", nodeId, children[i]->nodeId);
+        ASTNode::dotPrint(children[i], dotFile);
     }
-    nodeId = childrenNodeId;
 }
