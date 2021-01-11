@@ -11,6 +11,8 @@
 #include <vector>
 #include "tokenizer.h"
 
+class CodegenVisitor;
+
 enum NodeType {
     CONSTANT_VALUE_NODE,
     VARIABLE_NODE,
@@ -78,11 +80,9 @@ public:
         return type;
     }
 
-    size_t getNodeId() const {
-        return nodeId;
-    }
-
     void visualize(const char* fileName) const;
+
+    virtual void accept(CodegenVisitor* visitor) const = 0;
 
 protected:
     virtual void dotPrint(FILE* dotFile) const = 0;
@@ -124,6 +124,8 @@ public:
         return value;
     }
 
+    void accept(CodegenVisitor* visitor) const override;
+
 protected:
     void dotPrint(FILE* dotFile) const override;
 };
@@ -132,11 +134,12 @@ class VariableNode : public ASTNode {
 
 private:
     char* name;
+    TokenOrigin originPos;
 
 public:
     static constexpr size_t MAX_NAME_LENGTH = 256u;
 
-    explicit VariableNode(const char* name_) : ASTNode(VARIABLE_NODE) {
+    explicit VariableNode(const char* name_, TokenOrigin originPos_) : ASTNode(VARIABLE_NODE), originPos(originPos_) {
         name = (char*)calloc(MAX_NAME_LENGTH, sizeof(char));
         for (unsigned int i = 0; i < MAX_NAME_LENGTH; ++i) {
             name[i] = name_[i];
@@ -148,9 +151,15 @@ public:
         free(name);
     }
 
-    const char* getName() const {
+    char* getName() const {
         return name;
     }
+
+    TokenOrigin getOriginPos() const {
+        return originPos;
+    }
+
+    void accept(CodegenVisitor* visitor) const override;
 
 protected:
     void dotPrint(FILE* dotFile) const override;
@@ -181,6 +190,8 @@ public:
         return token;
     }
 
+    void accept(CodegenVisitor* visitor) const override;
+
 protected:
     void dotPrint(FILE* dotFile) const override;
 };
@@ -200,6 +211,8 @@ public:
         return token;
     }
 
+    void accept(CodegenVisitor* visitor) const override;
+
 protected:
     void dotPrint(FILE* dotFile) const override;
 };
@@ -217,6 +230,8 @@ public:
         return name;
     }
 
+    void accept(CodegenVisitor* visitor) const override;
+
 protected:
     void dotPrint(FILE* dotFile) const override;
 };
@@ -226,6 +241,8 @@ class StatementsNode : public ASTNode {
 public:
     explicit StatementsNode(const std::vector<std::shared_ptr<ASTNode>>& children_) : ASTNode(STATEMENTS_NODE, children_) { }
 
+    void accept(CodegenVisitor* visitor) const override;
+
 protected:
     void dotPrint(FILE* dotFile) const override;
 };
@@ -234,6 +251,8 @@ class BlockNode : public ASTNode {
 
 public:
     explicit BlockNode(const std::shared_ptr<StatementsNode>& nestedStatements) : ASTNode(BLOCK_NODE, nestedStatements) { }
+
+    void accept(CodegenVisitor* visitor) const override;
 
 protected:
     void dotPrint(FILE* dotFile) const override;
@@ -245,6 +264,8 @@ public:
     IfNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& body) :
         ASTNode(IF_NODE, condition, body) { }
 
+    void accept(CodegenVisitor* visitor) const override;
+
 protected:
     void dotPrint(FILE* dotFile) const override;
 };
@@ -255,6 +276,8 @@ public:
     IfElseNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& ifBody, const std::shared_ptr<ASTNode>& elseBody) :
         ASTNode(IF_ELSE_NODE, {condition, ifBody, elseBody}) { }
 
+    void accept(CodegenVisitor* visitor) const override;
+
 protected:
     void dotPrint(FILE* dotFile) const override;
 };
@@ -264,6 +287,8 @@ class WhileNode : public ASTNode {
 public:
     WhileNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& body) :
         ASTNode(WHILE_NODE, condition, body) { }
+
+    void accept(CodegenVisitor* visitor) const override;
 
 protected:
     void dotPrint(FILE* dotFile) const override;

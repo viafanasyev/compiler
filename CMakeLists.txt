@@ -19,7 +19,11 @@ add_executable(
         src/frontend/SyntaxError.h
         src/frontend/SyntaxError.cpp
         src/MappedFile.h
-        src/MappedFile.cpp)
+        src/MappedFile.cpp
+        src/backend/codegen.h
+        src/backend/codegen.cpp
+        src/backend/SymbolTable.h
+        src/backend/SymbolTable.cpp)
 
 add_executable(
         tests
@@ -32,4 +36,8 @@ add_executable(
         src/frontend/SyntaxError.h
         src/frontend/SyntaxError.cpp
         src/frontend/ast.h
-        src/frontend/ast.cpp)
+        src/frontend/ast.cpp
+        src/backend/codegen.h
+        src/backend/codegen.cpp
+        src/backend/SymbolTable.h
+        src/backend/SymbolTable.cpp)

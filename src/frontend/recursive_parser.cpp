@@ -307,7 +307,7 @@ std::shared_ptr<ConstantValueNode> getNumber(const std::vector<std::shared_ptr<T
 std::shared_ptr<VariableNode> getId(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
     if (pos >= tokens.size()) throw SyntaxError("Expected id, but got EOF");
     if (tokens[pos]->getType() != TokenType::VARIABLE) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected id");
-    const char* name = dynamic_cast<VariableToken*>(tokens[pos].get())->getName();
+    auto variableToken = dynamic_cast<VariableToken*>(tokens[pos].get());
     ++pos;
-    return std::make_shared<VariableNode>(name);
+    return std::make_shared<VariableNode>(variableToken->getName(), variableToken->getOriginPos());
 }

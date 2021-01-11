@@ -273,6 +273,7 @@ enum ComparisonOperatorType {
     GREATER,
     GREATER_OR_EQUAL,
     EQUAL,
+    NOT_EQUAL,
 };
 
 static const char* const ComparisonOperatorTypeStrings[] = {
@@ -281,6 +282,7 @@ static const char* const ComparisonOperatorTypeStrings[] = {
     "GREATER",
     "GREATER_OR_EQUAL",
     "EQUAL",
+    "NOT_EQUAL",
 };
 
 class ComparisonOperatorToken : public Token {
@@ -348,6 +350,16 @@ public:
 
     const char * getSymbol() const override {
         return "==";
+    }
+};
+
+class NotEqualComparisonOperator : public ComparisonOperatorToken {
+
+public:
+    explicit NotEqualComparisonOperator(TokenOrigin originPos_) : ComparisonOperatorToken(originPos_, NOT_EQUAL) { }
+
+    const char * getSymbol() const override {
+        return "!=";
     }
 };
 

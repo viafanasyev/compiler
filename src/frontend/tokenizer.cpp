@@ -233,6 +233,9 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
         } else {
             tokens.emplace_back(new AssignmentOperator(currentTokenOrigin));
         }
+    } else if (strncmp(expression, "!=", 2) == 0) {
+        tokens.emplace_back(new NotEqualComparisonOperator(currentTokenOrigin));
+        expression += 2;
     } else if (isdigit(*expression)) {
         double tokenValue = strtod(expression, &expression);
         tokens.emplace_back(new ConstantValueToken(currentTokenOrigin, tokenValue));
