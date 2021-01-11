@@ -1,0 +1,3 @@
+[submodule "src/stack-machine"]
+	path = src/stack-machine
+	url = git@github.com:viafanasyev/stack-machine.git
