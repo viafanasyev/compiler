@@ -23,7 +23,13 @@ add_executable(
         src/backend/codegen.h
         src/backend/codegen.cpp
         src/backend/SymbolTable.h
-        src/backend/SymbolTable.cpp)
+        src/backend/SymbolTable.cpp
+        src/stack-machine/src/stack-machine-utils.h
+        src/stack-machine/src/stack-machine-utils.cpp
+        src/stack-machine/src/stack-machine.h
+        src/stack-machine/src/stack-machine.cpp
+        src/stack-machine/src/arg-parser.h
+        src/stack-machine/src/arg-parser.cpp)
 
 add_executable(
         tests
