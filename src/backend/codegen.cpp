@@ -88,7 +88,9 @@ void CodegenVisitor::visitIfNode(const IfNode* node) {
     condition->accept(this);
     condJump(condition->getToken()->getOperatorType(), elseLabel, true);
 
+    if (body->getType() != NodeType::BLOCK_NODE) variables.enterBlock();
     body->accept(this);
+    if (body->getType() != NodeType::BLOCK_NODE) variables.leaveBlock();
     visitLabel(elseLabel);
 
     delete elseLabel;
@@ -106,11 +108,15 @@ void CodegenVisitor::visitIfElseNode(const IfElseNode* node) {
     condJump(condition->getToken()->getOperatorType(), elseLabel, true);
 
     auto endLabel = new Label();
+    if (ifBody->getType() != NodeType::BLOCK_NODE) variables.enterBlock();
     ifBody->accept(this);
+    if (ifBody->getType() != NodeType::BLOCK_NODE) variables.leaveBlock();
     uncondJump(endLabel);
     visitLabel(elseLabel);
 
+    if (elseBody->getType() != NodeType::BLOCK_NODE) variables.enterBlock();
     elseBody->accept(this);
+    if (elseBody->getType() != NodeType::BLOCK_NODE) variables.leaveBlock();
     visitLabel(endLabel);
 
     delete elseLabel;
@@ -129,7 +135,9 @@ void CodegenVisitor::visitWhileNode(const WhileNode* node) {
     condition->accept(this);
     condJump(condition->getToken()->getOperatorType(), loopEndLabel, true);
 
+    if (body->getType() != NodeType::BLOCK_NODE) variables.enterBlock();
     body->accept(this);
+    if (body->getType() != NodeType::BLOCK_NODE) variables.leaveBlock();
     uncondJump(loopStartLabel);
 
     visitLabel(loopEndLabel);
