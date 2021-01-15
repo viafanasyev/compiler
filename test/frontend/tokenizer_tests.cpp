@@ -453,5 +453,81 @@ TEST(tokenize, simpleAssignmentExpression) {
     ASSERT_VARIABLE_TOKEN(tokens[7], "a");
 }
 
+TEST(tokenize, plusSignAfterRoundParenthesisIsAddition) {
+    char* expression = (char*)"( +x + y ) +x + y";
+
+    std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
+
+    ASSERT_EQUALS(tokens.size(), 10);
+
+    ASSERT_PARENTHESIS_TOKEN(tokens[0], true, ROUND);
+    ASSERT_OPERATOR_TOKEN(tokens[1], 1, 1000, UNARY_ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 1, ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[4], "y");
+    ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
+    ASSERT_OPERATOR_TOKEN(tokens[6], 2, 1, ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[9], "y");
+}
+
+TEST(tokenize, minusSignAfterRoundParenthesisIsSubtraction) {
+    char* expression = (char*)"( -x - y ) -x - y";
+
+    std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
+
+    ASSERT_EQUALS(tokens.size(), 10);
+
+    ASSERT_PARENTHESIS_TOKEN(tokens[0], true, ROUND);
+    ASSERT_OPERATOR_TOKEN(tokens[1], 1, 1000, ARITHMETIC_NEGATION);
+    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 1, SUBTRACTION);
+    ASSERT_VARIABLE_TOKEN(tokens[4], "y");
+    ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
+    ASSERT_OPERATOR_TOKEN(tokens[6], 2, 1, SUBTRACTION);
+    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, SUBTRACTION);
+    ASSERT_VARIABLE_TOKEN(tokens[9], "y");
+}
+
+TEST(tokenize, plusSignAfterCurlyParenthesisIsUnaryAddition) {
+    char* expression = (char*)"{ +x + y } +x + y";
+
+    std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
+
+    ASSERT_EQUALS(tokens.size(), 10);
+
+    ASSERT_PARENTHESIS_TOKEN(tokens[0], true, CURLY);
+    ASSERT_OPERATOR_TOKEN(tokens[1], 1, 1000, UNARY_ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 1, ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[4], "y");
+    ASSERT_PARENTHESIS_TOKEN(tokens[5], false, CURLY);
+    ASSERT_OPERATOR_TOKEN(tokens[6], 1, 1000, UNARY_ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, ADDITION);
+    ASSERT_VARIABLE_TOKEN(tokens[9], "y");
+}
+
+TEST(tokenize, minusSignAfterCurlyParenthesisIsArithmeticNegation) {
+    char* expression = (char*)"{ -x - y } -x - y";
+
+    std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
+
+    ASSERT_EQUALS(tokens.size(), 10);
+
+    ASSERT_PARENTHESIS_TOKEN(tokens[0], true, CURLY);
+    ASSERT_OPERATOR_TOKEN(tokens[1], 1, 1000, ARITHMETIC_NEGATION);
+    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 1, SUBTRACTION);
+    ASSERT_VARIABLE_TOKEN(tokens[4], "y");
+    ASSERT_PARENTHESIS_TOKEN(tokens[5], false, CURLY);
+    ASSERT_OPERATOR_TOKEN(tokens[6], 1, 1000, ARITHMETIC_NEGATION);
+    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, SUBTRACTION);
+    ASSERT_VARIABLE_TOKEN(tokens[9], "y");
+}
+
 // TODO: Add AST and TeX tests for expressions like (a1^a2)^a3, a1^a2^a3 and (x - y) ^ -(x + y)
 // TODO: Add AST tests for assignment operations. "x = y + 5 + z = 6 * a - (b = c = 3);" and "x + y = a + b;" shouldn't compile, but "x + (y = a + b);" should

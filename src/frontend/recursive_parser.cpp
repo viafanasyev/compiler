@@ -37,48 +37,6 @@ std::shared_ptr<OperatorNode> getAssignment(const std::vector<std::shared_ptr<To
 std::shared_ptr<ConstantValueNode> getNumber(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<VariableNode> getId(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 
-static inline bool isOpenCurlyParenthesisToken(const std::shared_ptr<Token>& token) {
-    if (token->getType() != TokenType::PARENTHESIS) return false;
-    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
-    return parenthesisToken->isOpen() && (parenthesisToken->getParenthesisType() == ParenthesisType::CURLY);
-}
-
-static inline bool isCloseCurlyParenthesisToken(const std::shared_ptr<Token>& token) {
-    if (token->getType() != TokenType::PARENTHESIS) return false;
-    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
-    return parenthesisToken->isClose() && (parenthesisToken->getParenthesisType() == ParenthesisType::CURLY);
-}
-
-static inline bool isOpenRoundParenthesisToken(const std::shared_ptr<Token>& token) {
-    if (token->getType() != TokenType::PARENTHESIS) return false;
-    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
-    return parenthesisToken->isOpen() && (parenthesisToken->getParenthesisType() == ParenthesisType::ROUND);
-}
-
-static inline bool isCloseRoundParenthesisToken(const std::shared_ptr<Token>& token) {
-    if (token->getType() != TokenType::PARENTHESIS) return false;
-    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
-    return parenthesisToken->isClose() && (parenthesisToken->getParenthesisType() == ParenthesisType::ROUND);
-}
-
-static inline bool isExpressionOperator(const std::shared_ptr<Token>& token) {
-    if (token->getType() != TokenType::OPERATOR) return false;
-    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
-    return operatorToken->getOperatorType() == OperatorType::ADDITION || operatorToken->getOperatorType() == OperatorType::SUBTRACTION;
-}
-
-static inline bool isTermOperator(const std::shared_ptr<Token>& token) {
-    if (token->getType() != TokenType::OPERATOR) return false;
-    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
-    return operatorToken->getOperatorType() == OperatorType::MULTIPLICATION || operatorToken->getOperatorType() == OperatorType::DIVISION;
-}
-
-static inline bool isFactorOperator(const std::shared_ptr<Token>& token) {
-    if (token->getType() != TokenType::OPERATOR) return false;
-    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
-    return operatorToken->getOperatorType() == OperatorType::POWER;
-}
-
 std::shared_ptr<StatementsNode> buildASTRecursively(char* expression) {
     auto tokens = tokenize(expression);
     size_t pos = 0;

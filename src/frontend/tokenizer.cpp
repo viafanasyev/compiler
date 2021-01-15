@@ -123,6 +123,48 @@ void SemicolonToken::print() const {
     printf(" SEMICOLON");
 }
 
+bool isOpenCurlyParenthesisToken(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::PARENTHESIS) return false;
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
+    return parenthesisToken->isOpen() && (parenthesisToken->getParenthesisType() == ParenthesisType::CURLY);
+}
+
+bool isCloseCurlyParenthesisToken(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::PARENTHESIS) return false;
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
+    return parenthesisToken->isClose() && (parenthesisToken->getParenthesisType() == ParenthesisType::CURLY);
+}
+
+bool isOpenRoundParenthesisToken(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::PARENTHESIS) return false;
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
+    return parenthesisToken->isOpen() && (parenthesisToken->getParenthesisType() == ParenthesisType::ROUND);
+}
+
+bool isCloseRoundParenthesisToken(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::PARENTHESIS) return false;
+    auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());
+    return parenthesisToken->isClose() && (parenthesisToken->getParenthesisType() == ParenthesisType::ROUND);
+}
+
+bool isExpressionOperator(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::OPERATOR) return false;
+    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
+    return operatorToken->getOperatorType() == OperatorType::ADDITION || operatorToken->getOperatorType() == OperatorType::SUBTRACTION;
+}
+
+bool isTermOperator(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::OPERATOR) return false;
+    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
+    return operatorToken->getOperatorType() == OperatorType::MULTIPLICATION || operatorToken->getOperatorType() == OperatorType::DIVISION;
+}
+
+bool isFactorOperator(const std::shared_ptr<Token>& token) {
+    if (token->getType() != TokenType::OPERATOR) return false;
+    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
+    return operatorToken->getOperatorType() == OperatorType::POWER;
+}
+
 static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std::vector<std::shared_ptr<Token>>& tokens);
 
 /**
@@ -178,17 +220,12 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
         tokens.emplace_back(new DivisionOperator(currentTokenOrigin));
         ++expression;
     } else if ((*expression == '+') || (*expression == '-')) {
-        Token* previousToken = nullptr;
-        if (!tokens.empty()) {
-            previousToken = tokens[tokens.size() - 1].get();
-        }
+        auto previousToken = !tokens.empty() ? tokens[tokens.size() - 1] : nullptr;
 
         bool isBinary = (previousToken != nullptr) && (
             (previousToken->getType() == CONSTANT_VALUE) ||
-            (previousToken->getType() == VARIABLE) || (
-                (previousToken->getType() == PARENTHESIS) &&
-                (dynamic_cast<ParenthesisToken*>(previousToken)->isClose())
-            )
+            (previousToken->getType() == VARIABLE) ||
+            (isCloseRoundParenthesisToken(previousToken))
         );
 
         if (isBinary) {

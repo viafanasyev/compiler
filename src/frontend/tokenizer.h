@@ -429,6 +429,14 @@ public:
     explicit WhileToken(TokenOrigin originPos_) : Token(WHILE, originPos_) { }
 };
 
+bool isOpenCurlyParenthesisToken(const std::shared_ptr<Token>& token);
+bool isCloseCurlyParenthesisToken(const std::shared_ptr<Token>& token);
+bool isOpenRoundParenthesisToken(const std::shared_ptr<Token>& token);
+bool isCloseRoundParenthesisToken(const std::shared_ptr<Token>& token);
+bool isExpressionOperator(const std::shared_ptr<Token>& token);
+bool isTermOperator(const std::shared_ptr<Token>& token);
+bool isFactorOperator(const std::shared_ptr<Token>& token);
+
 /**
  * Splits the expression into Token objects.
  * @param expression expression to tokenize
