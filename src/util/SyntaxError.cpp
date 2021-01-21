@@ -5,6 +5,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
+#include "constants.h"
 #include "SyntaxError.h"
 #include "TokenOrigin.h"
 

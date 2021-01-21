@@ -34,7 +34,8 @@ add_executable(
         src/util/RedefinitionError.h
         src/util/RedefinitionError.cpp
         src/backend/Label.h
-        src/backend/Label.cpp)
+        src/backend/Label.cpp
+        src/util/constants.h)
 
 add_executable(
         tests

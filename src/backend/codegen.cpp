@@ -6,6 +6,7 @@
 #include "codegen.h"
 #include "Label.h"
 #include "SymbolTable.h"
+#include "../util/constants.h"
 #include "../util/SyntaxError.h"
 
 static inline bool returnsNonVoid(const std::shared_ptr<ASTNode>& node, const SymbolTable& symbolTable) {
@@ -396,7 +397,7 @@ void CodegenVisitor::setVarByAddress(size_t address) {
 std::shared_ptr<VariableSymbol> CodegenVisitor::addVariable(char* name, const TokenOrigin& originPos) {
     // Increase AX by variable size
     pushReg("AX");
-    push(SymbolTable::VARIABLE_SIZE_IN_BYTES);
+    push(VARIABLE_SIZE_IN_BYTES);
     fprintf(assemblyFile, "ADD\n");
     popReg("AX");
 

@@ -12,6 +12,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include "../util/constants.h"
 #include "../util/TokenOrigin.h"
 
 enum TokenType {
@@ -370,11 +371,9 @@ private:
     char* name;
 
 public:
-    static constexpr size_t MAX_NAME_LENGTH = 256u;
-
     IdToken(TokenOrigin originPos_, const char* name_) : Token(ID, originPos_) {
-        name = (char*)calloc(MAX_NAME_LENGTH, sizeof(char));
-        for (unsigned int i = 0; i < MAX_NAME_LENGTH; ++i) {
+        name = (char*)calloc(MAX_ID_LENGTH + 1, sizeof(char)); // +1 is for '\0'
+        for (unsigned short i = 0; i < MAX_ID_LENGTH; ++i) {
             name[i] = name_[i];
             if (name[i] == '\0') break;
         }

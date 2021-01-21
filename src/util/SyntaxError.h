@@ -8,9 +8,6 @@
 #include "TokenOrigin.h"
 
 class SyntaxError : public std::exception {
-private:
-    static constexpr int MAX_LONG_LENGTH = 19;
-
 protected:
     TokenOrigin position;
     char* message;

@@ -93,8 +93,6 @@ private:
     SymbolsMap<FunctionSymbol> functions;
 
 public:
-    static constexpr unsigned char VARIABLE_SIZE_IN_BYTES = 8; // TODO: Move similar constants to separate file to prevent copying
-
     SymbolTable();
     ~SymbolTable();
 

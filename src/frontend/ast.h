@@ -11,6 +11,7 @@
 #include <utility>
 #include <vector>
 #include "tokenizer.h"
+#include "../util/constants.h"
 
 class CodegenVisitor;
 
@@ -141,11 +142,9 @@ private:
     TokenOrigin originPos;
 
 public:
-    static constexpr size_t MAX_NAME_LENGTH = 256u;
-
     explicit VariableNode(const char* name_, TokenOrigin originPos_) : ASTNode(VARIABLE_NODE), originPos(originPos_) {
-        name = (char*)calloc(MAX_NAME_LENGTH, sizeof(char));
-        for (unsigned int i = 0; i < MAX_NAME_LENGTH; ++i) {
+        name = (char*)calloc(MAX_ID_LENGTH + 1, sizeof(char)); // +1 is for '\0'
+        for (unsigned short i = 0; i < MAX_ID_LENGTH; ++i) {
             name[i] = name_[i];
             if (name[i] == '\0') break;
         }

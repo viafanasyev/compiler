@@ -7,11 +7,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include "../util/constants.h"
 
 struct Label {
 
 private:
-    static constexpr int MAX_INT_LENGTH = 10;
     static unsigned int nextId;
 
     char* name;

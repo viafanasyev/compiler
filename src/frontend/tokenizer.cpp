@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <cmath>
 #include "tokenizer.h"
+#include "../util/constants.h"
 #include "../util/SyntaxError.h"
 #include "../util/TokenOrigin.h"
 
@@ -276,11 +277,11 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
         double tokenValue = strtod(expression, &expression);
         tokens.emplace_back(new ConstantValueToken(currentTokenOrigin, tokenValue));
     } else if (isalpha(*expression)) { // Name starts with letter
-        char* name = (char*)calloc(IdToken::MAX_NAME_LENGTH, sizeof(char));
-        unsigned int i = 0;
+        char* name = (char*)calloc(MAX_ID_LENGTH + 1, sizeof(char)); // +1 is for '\0'
+        unsigned short i = 0;
         do {
             name[i++] = *expression++;
-        } while (i < IdToken::MAX_NAME_LENGTH && (isalpha(*expression) || isdigit(*expression))); // Other symbols in the name can be letters or digits
+        } while (i < MAX_ID_LENGTH && (isalpha(*expression) || isdigit(*expression))); // Other symbols in the name can be letters or digits
         if (strcmp(name, "if") == 0) {
             tokens.emplace_back(new IfToken(currentTokenOrigin));
         } else if (strcmp(name, "else") == 0) {

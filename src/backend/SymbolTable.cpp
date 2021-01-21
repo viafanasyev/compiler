@@ -7,6 +7,7 @@
 #include <vector>
 #include "SymbolTable.h"
 #include "Label.h"
+#include "../util/constants.h"
 #include "../util/RedefinitionError.h"
 
 static inline char* copyName(const char* name);

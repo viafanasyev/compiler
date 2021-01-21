@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include "ast.h"
 #include "../backend/codegen.h"
+#include "../util/constants.h"
 
 size_t ASTNode::nextNodeId = 0;
 
@@ -64,7 +65,7 @@ void VariableNode::accept(CodegenVisitor* visitor) const {
 }
 
 void VariableNode::dotPrint(FILE* dotFile) const {
-    constexpr size_t maxLabelLen = 11 + MAX_NAME_LENGTH; // (strlen("var\nname: ") = 10) + MAX_NAME_LENGTH + ('\0')
+    constexpr unsigned short maxLabelLen = 11 + MAX_ID_LENGTH; // (strlen("var\nname: ") = 10) + MAX_ID_LENGTH + ('\0')
     char label[maxLabelLen];
     snprintf(label, maxLabelLen, "var\nname: %s", name);
 
@@ -179,7 +180,7 @@ void FunctionDefinitionNode::accept(CodegenVisitor* visitor) const {
 }
 
 void FunctionDefinitionNode::dotPrint(FILE* dotFile) const {
-    constexpr size_t maxLabelLen = 16 + IdToken::MAX_NAME_LENGTH; // (strlen("func def\nname: ") = 15) + MAX_NAME_LENGTH + ('\0')
+    constexpr unsigned short maxLabelLen = 16 + MAX_ID_LENGTH; // (strlen("func def\nname: ") = 15) + MAX_ID_LENGTH + ('\0')
     char label[maxLabelLen];
     snprintf(label, maxLabelLen, "func def\nname: %s", functionName->getName());
 
@@ -193,7 +194,7 @@ void FunctionCallNode::accept(CodegenVisitor* visitor) const {
 }
 
 void FunctionCallNode::dotPrint(FILE* dotFile) const {
-    constexpr size_t maxLabelLen = 17 + IdToken::MAX_NAME_LENGTH; // (strlen("func call\nname: ") = 16) + MAX_NAME_LENGTH + ('\0')
+    constexpr unsigned short maxLabelLen = 17 + MAX_ID_LENGTH; // (strlen("func call\nname: ") = 16) + MAX_ID_LENGTH + ('\0')
     char label[maxLabelLen];
     snprintf(label, maxLabelLen, "func call\nname: %s", functionName->getName());
 
