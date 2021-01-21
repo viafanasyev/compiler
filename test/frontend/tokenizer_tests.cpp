@@ -5,7 +5,7 @@
 #include <cstring>
 #include <vector>
 #include "../testlib.h"
-#include "../../src/frontend/SyntaxError.h"
+#include "../../src/util/SyntaxError.h"
 #include "../../src/frontend/tokenizer.h"
 
 #define ASSERT_CONSTANT_VALUE_TOKEN(token, value) do {                                                                 \
@@ -22,7 +22,7 @@
     auto parenthesisToken = dynamic_cast<ParenthesisToken*>(token.get());                                              \
     ASSERT_NOT_NULL(parenthesisToken);                                                                                 \
     ASSERT_EQUALS(parenthesisToken->isOpen(), open);                                                                   \
-    ASSERT_EQUALS(parenthesisToken->getParenthesisType(), type);                                                                  \
+    ASSERT_EQUALS(parenthesisToken->getParenthesisType(), type);                                                       \
 } while(0)
 
 #define ASSERT_OPERATOR_TOKEN(token, arity, precedence, operatorType) do {                                             \
@@ -43,12 +43,12 @@
     ASSERT_EQUALS(operatorToken->getOperatorType(), operatorType);                                                     \
 } while (0)
 
-#define ASSERT_VARIABLE_TOKEN(token, name) do {                                                                        \
+#define ASSERT_ID_TOKEN(token, name) do {                                                                              \
     ASSERT_NOT_NULL(token);                                                                                            \
-    ASSERT_EQUALS(token->getType(), VARIABLE);                                                                         \
-    auto variableToken = dynamic_cast<VariableToken*>(token.get());                                                    \
-    ASSERT_NOT_NULL(variableToken);                                                                                    \
-    ASSERT_TRUE(strcmp(variableToken->getName(), name) == 0);                                                          \
+    ASSERT_EQUALS(token->getType(), ID);                                                                               \
+    auto idToken = dynamic_cast<IdToken*>(token.get());                                                                \
+    ASSERT_NOT_NULL(idToken);                                                                                          \
+    ASSERT_TRUE(strcmp(idToken->getName(), name) == 0);                                                                \
 } while(0)
 
 #define ASSERT_IF_TOKEN(token) do {                                                                                    \
@@ -58,17 +58,17 @@
     ASSERT_NOT_NULL(operatorToken);                                                                                    \
 } while (0)
 
-#define ASSERT_ELSE_TOKEN(token) do {                                                                                    \
+#define ASSERT_ELSE_TOKEN(token) do {                                                                                  \
     ASSERT_NOT_NULL(token);                                                                                            \
-    ASSERT_EQUALS(token->getType(), ELSE);                                                                               \
-    auto operatorToken = dynamic_cast<ElseToken*>(token.get());                                                          \
+    ASSERT_EQUALS(token->getType(), ELSE);                                                                             \
+    auto operatorToken = dynamic_cast<ElseToken*>(token.get());                                                        \
     ASSERT_NOT_NULL(operatorToken);                                                                                    \
 } while (0)
 
-#define ASSERT_WHILE_TOKEN(token) do {                                                                                    \
+#define ASSERT_WHILE_TOKEN(token) do {                                                                                 \
     ASSERT_NOT_NULL(token);                                                                                            \
-    ASSERT_EQUALS(token->getType(), WHILE);                                                                               \
-    auto operatorToken = dynamic_cast<WhileToken*>(token.get());                                                          \
+    ASSERT_EQUALS(token->getType(), WHILE);                                                                            \
+    auto operatorToken = dynamic_cast<WhileToken*>(token.get());                                                       \
     ASSERT_NOT_NULL(operatorToken);                                                                                    \
 } while (0)
 
@@ -188,13 +188,13 @@ TEST(tokenize, simpleExpressionWithVariables) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 7);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[2], 5);
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 2, MULTIPLICATION);
-    ASSERT_VARIABLE_TOKEN(tokens[4], "const");
+    ASSERT_ID_TOKEN(tokens[4], "const");
     ASSERT_OPERATOR_TOKEN(tokens[5], 2, 1, SUBTRACTION);
-    ASSERT_VARIABLE_TOKEN(tokens[6], "tmp");
+    ASSERT_ID_TOKEN(tokens[6], "tmp");
 }
 
 TEST(tokenize, simpleExpressionWithMultiplePowerOperations) {
@@ -203,17 +203,17 @@ TEST(tokenize, simpleExpressionWithMultiplePowerOperations) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_OPERATOR_TOKEN(tokens[5], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[6], "x");
+    ASSERT_ID_TOKEN(tokens[6], "x");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 3, POWER);
-    ASSERT_VARIABLE_TOKEN(tokens[8], "y");
+    ASSERT_ID_TOKEN(tokens[8], "y");
     ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
-    ASSERT_VARIABLE_TOKEN(tokens[10], "z");
+    ASSERT_ID_TOKEN(tokens[10], "z");
 }
 
 TEST(tokenize, simpleExpressionWithLessComparisonOperator) {
@@ -222,15 +222,15 @@ TEST(tokenize, simpleExpressionWithLessComparisonOperator) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], LESS);
-    ASSERT_VARIABLE_TOKEN(tokens[6], "y");
+    ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[8], "y");
+    ASSERT_ID_TOKEN(tokens[8], "y");
     ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
@@ -241,15 +241,15 @@ TEST(tokenize, simpleExpressionWithLessOrEqualComparisonOperator) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], LESS_OR_EQUAL);
-    ASSERT_VARIABLE_TOKEN(tokens[6], "y");
+    ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[8], "y");
+    ASSERT_ID_TOKEN(tokens[8], "y");
     ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
@@ -260,15 +260,15 @@ TEST(tokenize, simpleExpressionWithGreaterComparisonOperator) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], GREATER);
-    ASSERT_VARIABLE_TOKEN(tokens[6], "y");
+    ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[8], "y");
+    ASSERT_ID_TOKEN(tokens[8], "y");
     ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
@@ -279,15 +279,15 @@ TEST(tokenize, simpleExpressionWithGreaterOrEqualComparisonOperator) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], GREATER_OR_EQUAL);
-    ASSERT_VARIABLE_TOKEN(tokens[6], "y");
+    ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[8], "y");
+    ASSERT_ID_TOKEN(tokens[8], "y");
     ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
@@ -298,15 +298,15 @@ TEST(tokenize, simpleExpressionWithEqualComparisonOperator) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], EQUAL);
-    ASSERT_VARIABLE_TOKEN(tokens[6], "y");
+    ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[8], "y");
+    ASSERT_ID_TOKEN(tokens[8], "y");
     ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
@@ -319,12 +319,12 @@ TEST(tokenize, simpleIfStatement) {
     ASSERT_EQUALS(tokens.size(), 11);
     ASSERT_IF_TOKEN(tokens[0]);
     ASSERT_PARENTHESIS_TOKEN(tokens[1], true, ROUND);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[3], GREATER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 0);
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
     ASSERT_PARENTHESIS_TOKEN(tokens[6], true, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, ADDITION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[9], 1);
     ASSERT_PARENTHESIS_TOKEN(tokens[10], false, CURLY);
@@ -338,18 +338,18 @@ TEST(tokenize, simpleIfElseStatement) {
     ASSERT_EQUALS(tokens.size(), 17);
     ASSERT_IF_TOKEN(tokens[0]);
     ASSERT_PARENTHESIS_TOKEN(tokens[1], true, ROUND);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[3], GREATER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 0);
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
     ASSERT_PARENTHESIS_TOKEN(tokens[6], true, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, ADDITION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[9], 1);
     ASSERT_PARENTHESIS_TOKEN(tokens[10], false, CURLY);
     ASSERT_ELSE_TOKEN(tokens[11]);
     ASSERT_PARENTHESIS_TOKEN(tokens[12], true, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[13], "x");
+    ASSERT_ID_TOKEN(tokens[13], "x");
     ASSERT_OPERATOR_TOKEN(tokens[14], 2, 1, SUBTRACTION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[15], 1);
     ASSERT_PARENTHESIS_TOKEN(tokens[16], false, CURLY);
@@ -361,14 +361,14 @@ TEST(tokenize, variableNameStartsWithIf) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "ifconfig");
+    ASSERT_ID_TOKEN(tokens[0], "ifconfig");
     ASSERT_PARENTHESIS_TOKEN(tokens[1], true, ROUND);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[3], GREATER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 0);
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
     ASSERT_PARENTHESIS_TOKEN(tokens[6], true, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, ADDITION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[9], 1);
     ASSERT_PARENTHESIS_TOKEN(tokens[10], false, CURLY);
@@ -382,18 +382,18 @@ TEST(tokenize, variableNameStartsWithElse) {
     ASSERT_EQUALS(tokens.size(), 17);
     ASSERT_IF_TOKEN(tokens[0]);
     ASSERT_PARENTHESIS_TOKEN(tokens[1], true, ROUND);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[3], GREATER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 0);
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
     ASSERT_PARENTHESIS_TOKEN(tokens[6], true, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, ADDITION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[9], 1);
     ASSERT_PARENTHESIS_TOKEN(tokens[10], false, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[11], "elseif");
+    ASSERT_ID_TOKEN(tokens[11], "elseif");
     ASSERT_PARENTHESIS_TOKEN(tokens[12], true, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[13], "x");
+    ASSERT_ID_TOKEN(tokens[13], "x");
     ASSERT_OPERATOR_TOKEN(tokens[14], 2, 1, SUBTRACTION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[15], 1);
     ASSERT_PARENTHESIS_TOKEN(tokens[16], false, CURLY);
@@ -407,12 +407,12 @@ TEST(tokenize, simpleWhileStatement) {
     ASSERT_EQUALS(tokens.size(), 11);
     ASSERT_WHILE_TOKEN(tokens[0]);
     ASSERT_PARENTHESIS_TOKEN(tokens[1], true, ROUND);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[3], GREATER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 0);
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
     ASSERT_PARENTHESIS_TOKEN(tokens[6], true, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, SUBTRACTION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[9], 1);
     ASSERT_PARENTHESIS_TOKEN(tokens[10], false, CURLY);
@@ -424,14 +424,14 @@ TEST(tokenize, variableNameStartsWithWhile) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "whiled");
+    ASSERT_ID_TOKEN(tokens[0], "whiled");
     ASSERT_PARENTHESIS_TOKEN(tokens[1], true, ROUND);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[3], GREATER);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 0);
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
     ASSERT_PARENTHESIS_TOKEN(tokens[6], true, CURLY);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, SUBTRACTION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[9], 1);
     ASSERT_PARENTHESIS_TOKEN(tokens[10], false, CURLY);
@@ -443,14 +443,14 @@ TEST(tokenize, simpleAssignmentExpression) {
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
     ASSERT_EQUALS(tokens.size(), 8);
-    ASSERT_VARIABLE_TOKEN(tokens[0], "x");
+    ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 0, ASSIGNMENT);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "y");
+    ASSERT_ID_TOKEN(tokens[2], "y");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 0, ASSIGNMENT);
     ASSERT_OPERATOR_TOKEN(tokens[4], 2, 0, ASSIGNMENT);
-    ASSERT_VARIABLE_TOKEN(tokens[5], "z");
+    ASSERT_ID_TOKEN(tokens[5], "z");
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[6], EQUAL);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "a");
+    ASSERT_ID_TOKEN(tokens[7], "a");
 }
 
 TEST(tokenize, plusSignAfterRoundParenthesisIsAddition) {
@@ -462,14 +462,14 @@ TEST(tokenize, plusSignAfterRoundParenthesisIsAddition) {
 
     ASSERT_PARENTHESIS_TOKEN(tokens[0], true, ROUND);
     ASSERT_OPERATOR_TOKEN(tokens[1], 1, 1000, UNARY_ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[4], "y");
+    ASSERT_ID_TOKEN(tokens[4], "y");
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
     ASSERT_OPERATOR_TOKEN(tokens[6], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[9], "y");
+    ASSERT_ID_TOKEN(tokens[9], "y");
 }
 
 TEST(tokenize, minusSignAfterRoundParenthesisIsSubtraction) {
@@ -481,14 +481,14 @@ TEST(tokenize, minusSignAfterRoundParenthesisIsSubtraction) {
 
     ASSERT_PARENTHESIS_TOKEN(tokens[0], true, ROUND);
     ASSERT_OPERATOR_TOKEN(tokens[1], 1, 1000, ARITHMETIC_NEGATION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 1, SUBTRACTION);
-    ASSERT_VARIABLE_TOKEN(tokens[4], "y");
+    ASSERT_ID_TOKEN(tokens[4], "y");
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, ROUND);
     ASSERT_OPERATOR_TOKEN(tokens[6], 2, 1, SUBTRACTION);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, SUBTRACTION);
-    ASSERT_VARIABLE_TOKEN(tokens[9], "y");
+    ASSERT_ID_TOKEN(tokens[9], "y");
 }
 
 TEST(tokenize, plusSignAfterCurlyParenthesisIsUnaryAddition) {
@@ -500,14 +500,14 @@ TEST(tokenize, plusSignAfterCurlyParenthesisIsUnaryAddition) {
 
     ASSERT_PARENTHESIS_TOKEN(tokens[0], true, CURLY);
     ASSERT_OPERATOR_TOKEN(tokens[1], 1, 1000, UNARY_ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[4], "y");
+    ASSERT_ID_TOKEN(tokens[4], "y");
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, CURLY);
     ASSERT_OPERATOR_TOKEN(tokens[6], 1, 1000, UNARY_ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, ADDITION);
-    ASSERT_VARIABLE_TOKEN(tokens[9], "y");
+    ASSERT_ID_TOKEN(tokens[9], "y");
 }
 
 TEST(tokenize, minusSignAfterCurlyParenthesisIsArithmeticNegation) {
@@ -519,14 +519,14 @@ TEST(tokenize, minusSignAfterCurlyParenthesisIsArithmeticNegation) {
 
     ASSERT_PARENTHESIS_TOKEN(tokens[0], true, CURLY);
     ASSERT_OPERATOR_TOKEN(tokens[1], 1, 1000, ARITHMETIC_NEGATION);
-    ASSERT_VARIABLE_TOKEN(tokens[2], "x");
+    ASSERT_ID_TOKEN(tokens[2], "x");
     ASSERT_OPERATOR_TOKEN(tokens[3], 2, 1, SUBTRACTION);
-    ASSERT_VARIABLE_TOKEN(tokens[4], "y");
+    ASSERT_ID_TOKEN(tokens[4], "y");
     ASSERT_PARENTHESIS_TOKEN(tokens[5], false, CURLY);
     ASSERT_OPERATOR_TOKEN(tokens[6], 1, 1000, ARITHMETIC_NEGATION);
-    ASSERT_VARIABLE_TOKEN(tokens[7], "x");
+    ASSERT_ID_TOKEN(tokens[7], "x");
     ASSERT_OPERATOR_TOKEN(tokens[8], 2, 1, SUBTRACTION);
-    ASSERT_VARIABLE_TOKEN(tokens[9], "y");
+    ASSERT_ID_TOKEN(tokens[9], "y");
 }
 
 // TODO: Add AST and TeX tests for expressions like (a1^a2)^a3, a1^a2^a3 and (x - y) ^ -(x + y)

@@ -1,11 +1,11 @@
 /**
  * @file
  */
-#ifndef AST_BUILDER_SYNTAXERROR_H
-#define AST_BUILDER_SYNTAXERROR_H
+#ifndef COMPILER_SYNTAXERROR_H
+#define COMPILER_SYNTAXERROR_H
 
 #include <exception>
-#include "tokenizer.h"
+#include "TokenOrigin.h"
 
 class SyntaxError : public std::exception {
 private:
@@ -27,4 +27,4 @@ public:
     TokenOrigin at() const noexcept;
 };
 
-#endif // AST_BUILDER_SYNTAXERROR_H
+#endif // COMPILER_SYNTAXERROR_H

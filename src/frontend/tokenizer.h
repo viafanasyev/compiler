@@ -1,9 +1,9 @@
 /**
  * @file
- * @brief Definition of tokens that can be parsed and a tokenizer functions
+ * @brief Definition of tokens that can be parsed and tokenizer functions
  */
-#ifndef AST_BUILDER_TOKENIZER_H
-#define AST_BUILDER_TOKENIZER_H
+#ifndef COMPILER_TOKENIZER_H
+#define COMPILER_TOKENIZER_H
 
 #include <cctype>
 #include <climits>
@@ -12,18 +12,21 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include "../util/TokenOrigin.h"
 
 enum TokenType {
     CONSTANT_VALUE,
     PARENTHESIS,
     OPERATOR,
     COMPARISON_OPERATOR,
-    VARIABLE,
-    FUNCTION,
+    ID,
     SEMICOLON,
     IF,
     ELSE,
     WHILE,
+    FUNC,
+    COMMA,
+    RETURN,
 };
 
 static const char* const TokenTypeStrings[] = {
@@ -31,17 +34,15 @@ static const char* const TokenTypeStrings[] = {
     "PARENTHESIS",
     "OPERATOR",
     "COMPARISON_OPERATOR",
-    "VARIABLE",
+    "ID",
     "FUNCTION",
     "SEMICOLON",
     "IF",
     "ELSE",
     "WHILE",
-};
-
-struct TokenOrigin {
-    size_t line;
-    size_t column;
+    "FUNC",
+    "COMMA",
+    "RETURN",
 };
 
 class Token {
@@ -363,7 +364,7 @@ public:
     }
 };
 
-class VariableToken : public Token {
+class IdToken : public Token {
 
 private:
     char* name;
@@ -371,7 +372,7 @@ private:
 public:
     static constexpr size_t MAX_NAME_LENGTH = 256u;
 
-    VariableToken(TokenOrigin originPos_, const char* name_) : Token(VARIABLE, originPos_) {
+    IdToken(TokenOrigin originPos_, const char* name_) : Token(ID, originPos_) {
         name = (char*)calloc(MAX_NAME_LENGTH, sizeof(char));
         for (unsigned int i = 0; i < MAX_NAME_LENGTH; ++i) {
             name[i] = name_[i];
@@ -379,30 +380,13 @@ public:
         }
     }
 
-    ~VariableToken() override {
+    ~IdToken() override {
         free(name);
     }
 
-    char* getName() const {
+    inline char* getName() const {
         return name;
     }
-
-    void print() const override;
-};
-
-class FunctionToken : public Token {
-
-private:
-    const size_t arity;
-
-public:
-    FunctionToken(TokenOrigin originPos_, size_t arity_) : Token(FUNCTION, originPos_), arity(arity_) { }
-
-    size_t getArity() const {
-        return arity;
-    }
-
-    virtual const char* getName() const = 0;
 
     void print() const override;
 };
@@ -429,6 +413,21 @@ public:
     explicit WhileToken(TokenOrigin originPos_) : Token(WHILE, originPos_) { }
 };
 
+class FuncToken : public Token {
+public:
+    explicit FuncToken(TokenOrigin originPos_) : Token(FUNC, originPos_) { }
+};
+
+class CommaToken : public Token {
+public:
+    explicit CommaToken(TokenOrigin originPos_) : Token(COMMA, originPos_) { }
+};
+
+class ReturnToken : public Token {
+public:
+    explicit ReturnToken(TokenOrigin originPos_) : Token(RETURN, originPos_) { }
+};
+
 bool isOpenCurlyParenthesisToken(const std::shared_ptr<Token>& token);
 bool isCloseCurlyParenthesisToken(const std::shared_ptr<Token>& token);
 bool isOpenRoundParenthesisToken(const std::shared_ptr<Token>& token);
@@ -445,4 +444,4 @@ bool isFactorOperator(const std::shared_ptr<Token>& token);
  */
 std::vector<std::shared_ptr<Token>> tokenize(char* expression);
 
-#endif // AST_BUILDER_TOKENIZER_H
+#endif // COMPILER_TOKENIZER_H

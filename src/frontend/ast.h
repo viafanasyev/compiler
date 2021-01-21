@@ -1,13 +1,14 @@
 /**
  * @file
- * @brief Definition of AST node and AST building functions
+ * @brief Definition of AST nodes and AST building functions
  */
-#ifndef AST_BUILDER_AST_H
-#define AST_BUILDER_AST_H
+#ifndef COMPILER_AST_H
+#define COMPILER_AST_H
 
 #include <cassert>
 #include <cstdarg>
 #include <memory>
+#include <utility>
 #include <vector>
 #include "tokenizer.h"
 
@@ -18,12 +19,16 @@ enum NodeType {
     VARIABLE_NODE,
     OPERATOR_NODE,
     COMPARISON_OPERATOR_NODE,
-    FUNCTION_CALL_NODE,
     STATEMENTS_NODE,
     BLOCK_NODE,
     IF_NODE,
     IF_ELSE_NODE,
     WHILE_NODE,
+    PARAMETERS_LIST_NODE,
+    ARGUMENTS_LIST_NODE,
+    FUNCTION_DEFINITION_NODE,
+    FUNCTION_CALL_NODE,
+    RETURN_STATEMENT_NODE,
 };
 
 class ASTNode {
@@ -107,9 +112,8 @@ protected:
      *
      *  Use `dotPrint(child, dotFile)` instead of `child->dotPrint(dotFile)`.
      */
-    static void dotPrint(const std::shared_ptr<ASTNode>& node, FILE* dotFile) {
-        node->dotPrint(dotFile);
-    }
+    static void dotPrintChildren(const ASTNode* node, FILE* dotFile);
+    static void dotPrintCurrent(const ASTNode* node, FILE* dotFile, const char* label, const char* fillColor);
 };
 
 class ConstantValueNode : public ASTNode {
@@ -217,28 +221,10 @@ protected:
     void dotPrint(FILE* dotFile) const override;
 };
 
-class FunctionCallNode : public ASTNode {
-
-private:
-    const char* name;
-
-public:
-    FunctionCallNode(const char* name_, const std::vector<std::shared_ptr<ASTNode>>& children_) :
-        ASTNode(FUNCTION_CALL_NODE, children_), name(name_) { }
-
-    const char* getName() const {
-        return name;
-    }
-
-    void accept(CodegenVisitor* visitor) const override;
-
-protected:
-    void dotPrint(FILE* dotFile) const override;
-};
-
 class StatementsNode : public ASTNode {
 
 public:
+    explicit StatementsNode(const std::shared_ptr<ASTNode>& singleStatement) : ASTNode(STATEMENTS_NODE, singleStatement) { }
     explicit StatementsNode(const std::vector<std::shared_ptr<ASTNode>>& children_) : ASTNode(STATEMENTS_NODE, children_) { }
 
     void accept(CodegenVisitor* visitor) const override;
@@ -294,4 +280,89 @@ protected:
     void dotPrint(FILE* dotFile) const override;
 };
 
-#endif // AST_BUILDER_AST_H
+class ParametersListNode : public ASTNode {
+
+public:
+    explicit ParametersListNode(const std::vector<std::shared_ptr<ASTNode>>& parameters) :
+        ASTNode(PARAMETERS_LIST_NODE, parameters) {
+        for (const auto& parameter : parameters) assert(parameter->getType() == VARIABLE_NODE);
+    }
+
+    ParametersListNode() : ASTNode(PARAMETERS_LIST_NODE) { }
+
+    void accept(CodegenVisitor* visitor) const override;
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+class ArgumentsListNode : public ASTNode {
+
+public:
+    explicit ArgumentsListNode(const std::vector<std::shared_ptr<ASTNode>>& arguments) :
+        ASTNode(ARGUMENTS_LIST_NODE, arguments) { }
+
+    ArgumentsListNode() : ASTNode(ARGUMENTS_LIST_NODE) { }
+
+    void accept(CodegenVisitor* visitor) const override;
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+class FunctionDefinitionNode : public ASTNode {
+
+private:
+    const std::shared_ptr<IdToken> functionName;
+
+public:
+    FunctionDefinitionNode(
+        const std::shared_ptr<IdToken>& functionName_,
+        const std::shared_ptr<ParametersListNode>& parameters,
+        const std::shared_ptr<BlockNode>& definition
+    ) : ASTNode(FUNCTION_DEFINITION_NODE, {parameters, definition}), functionName(functionName_) { }
+
+    void accept(CodegenVisitor* visitor) const override;
+
+    inline std::shared_ptr<IdToken> getFunctionName() const {
+        return functionName;
+    }
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+class FunctionCallNode : public ASTNode {
+
+private:
+    const std::shared_ptr<IdToken> functionName;
+
+public:
+    FunctionCallNode(
+        const std::shared_ptr<IdToken>& functionName_,
+        const std::shared_ptr<ArgumentsListNode>& arguments
+    ) : ASTNode(FUNCTION_CALL_NODE, arguments), functionName(functionName_) { }
+
+    void accept(CodegenVisitor* visitor) const override;
+
+    inline std::shared_ptr<IdToken> getFunctionName() const {
+        return functionName;
+    }
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+class ReturnStatementNode : public ASTNode {
+
+public:
+    explicit ReturnStatementNode(const std::shared_ptr<ASTNode>& returnedExpression) :
+        ASTNode(RETURN_STATEMENT_NODE, returnedExpression) { }
+
+    void accept(CodegenVisitor* visitor) const override;
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+#endif // COMPILER_AST_H

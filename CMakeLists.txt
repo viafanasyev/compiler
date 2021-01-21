@@ -16,8 +16,8 @@ add_executable(
         src/middleend/ast-optimizers.cpp
         src/frontend/recursive_parser.h
         src/frontend/recursive_parser.cpp
-        src/frontend/SyntaxError.h
-        src/frontend/SyntaxError.cpp
+        src/util/SyntaxError.h
+        src/util/SyntaxError.cpp
         src/MappedFile.h
         src/MappedFile.cpp
         src/backend/codegen.h
@@ -29,7 +29,12 @@ add_executable(
         src/stack-machine/src/stack-machine.h
         src/stack-machine/src/stack-machine.cpp
         src/stack-machine/src/arg-parser.h
-        src/stack-machine/src/arg-parser.cpp)
+        src/stack-machine/src/arg-parser.cpp
+        src/util/TokenOrigin.h
+        src/util/RedefinitionError.h
+        src/util/RedefinitionError.cpp
+        src/backend/Label.h
+        src/backend/Label.cpp)
 
 add_executable(
         tests
@@ -39,8 +44,8 @@ add_executable(
         test/frontend/tokenizer_tests.cpp
         src/frontend/tokenizer.h
         src/frontend/tokenizer.cpp
-        src/frontend/SyntaxError.h
-        src/frontend/SyntaxError.cpp
+        src/util/SyntaxError.h
+        src/util/SyntaxError.cpp
         src/frontend/ast.h
         src/frontend/ast.cpp
         src/backend/codegen.h

@@ -1,65 +1,159 @@
 /**
  * @file
+ * @brief Implementation of symbol table and symbols for variables and functions
  */
+#include <cassert>
 #include <cstdlib>
+#include <vector>
 #include "SymbolTable.h"
+#include "Label.h"
+#include "../util/RedefinitionError.h"
+
+static inline char* copyName(const char* name);
+
+VariableSymbol::VariableSymbol(unsigned int address_, const TokenOrigin& originPos_) :
+    address(address_), originPos(originPos_)
+{ }
+
+/** Constructor for non-internal functions */
+FunctionSymbol::FunctionSymbol(const char* functionName, Type returnType_, unsigned char argumentsNumber_, const TokenOrigin& originPos_) :
+        label(std::make_shared<Label>(functionName)),
+        internalName(nullptr),
+        returnType(returnType_),
+        argumentsNumber(argumentsNumber_),
+        originPos(originPos_)
+{ }
+
+/** Constructor for internal functions */
+FunctionSymbol::FunctionSymbol(const char* functionName, Type returnType_, unsigned char argumentsNumber_) :
+        label(nullptr),
+        internalName(copyName(functionName)),
+        returnType(returnType_),
+        argumentsNumber(argumentsNumber_),
+        originPos({ INT64_MAX, INT64_MAX })
+{ }
+
+bool FunctionSymbol::isInternal() const {
+    return internalName != nullptr;
+}
+
+bool FunctionSymbol::isVoid() const {
+    return returnType == VOID;
+}
+
+char* FunctionSymbol::getName() const {
+    return isInternal() ? internalName : label->getName();
+}
+
+SymbolTable::SymbolTable() {
+    variables.push_front(SymbolsMap<VariableSymbol>());
+
+    functions[copyName("read")]  = std::make_shared<FunctionSymbol>("IN",   Type::DOUBLE, 0);
+    functions[copyName("print")] = std::make_shared<FunctionSymbol>("OUT",  Type::VOID,   1);
+    functions[copyName("sqrt")]  = std::make_shared<FunctionSymbol>("SQRT", Type::DOUBLE, 1);
+}
 
 SymbolTable::~SymbolTable() {
-    for (auto& symbol : symbols) {
-        free(symbol.first);
+    for (const auto& block : variables) {
+        for (const auto& symbol : block) {
+            free(symbol.first);
+        }
     }
 
-    while (!savedBlocks.empty()) {
-        delete[] savedBlocks.top().first;
-        savedBlocks.pop();
+    for (const auto& symbol : functions) {
+        free(symbol.first);
     }
 }
 
-VariableSymbol SymbolTable::addVariable(char* name) {
-    if (symbols.count(name) == 0) {
-        char* nameCopy = (char*)calloc(MAX_NAME_LENGTH, sizeof(char));
-        for (size_t i = 0; i < MAX_NAME_LENGTH; ++i) {
-            nameCopy[i] = name[i];
-            if (nameCopy[i] == '\0') break;
-        }
+std::shared_ptr<VariableSymbol> SymbolTable::addVariable(char* name, const TokenOrigin& originPos) {
+    assert(name != nullptr);
 
-        VariableSymbol symbol(symbols.size() * VARIABLE_SIZE_IN_BYTES);
-        symbols[nameCopy] = symbol;
-        return symbol;
-    }
-    return symbols.at(name);
+    if (variables.front().count(name) != 0) throw RedefinitionError(name, originPos, getVariableByName(name)->originPos);
+
+    auto symbol = std::make_shared<VariableSymbol>(nextLocalVariableAddress, originPos);
+    nextLocalVariableAddress += VARIABLE_SIZE_IN_BYTES;
+    variables.front()[copyName(name)] = symbol;
+    return symbol;
 }
 
 bool SymbolTable::hasVariable(char* name) const {
-    return symbols.count(name) != 0;
+    assert(name != nullptr);
+
+    for (const auto& block : variables) {
+        if (block.count(name) != 0) {
+            return true;
+        }
+    }
+    return false;
 }
 
-VariableSymbol SymbolTable::getVariableByName(char* name) const {
-    return symbols.at(name);
+std::shared_ptr<VariableSymbol> SymbolTable::getVariableByName(char* name) const {
+    assert(name != nullptr);
+
+    for (const auto& block : variables) {
+        if (block.count(name) != 0) {
+            return block.at(name);
+        }
+    }
+
+    throw std::out_of_range("Variable not found");
+}
+
+unsigned int SymbolTable::getNextLocalVariableAddress() const {
+    return nextLocalVariableAddress;
+}
+
+std::shared_ptr<FunctionSymbol> SymbolTable::addFunction(char* name, Type returnType, unsigned char argumentsNumber, const TokenOrigin& originPos) {
+    assert(name != nullptr);
+
+    if (hasFunction(name)) throw RedefinitionError(name, originPos, getFunctionByName(name)->originPos);
+
+    auto symbol = std::make_shared<FunctionSymbol>(name, returnType, argumentsNumber, originPos);
+    functions[copyName(name)] = symbol;
+    return symbol;
+}
+
+bool SymbolTable::hasFunction(char* name) const {
+    assert(name != nullptr);
+
+    return functions.count(name) != 0;
+}
+
+std::shared_ptr<FunctionSymbol> SymbolTable::getFunctionByName(char* name) const {
+    assert(name != nullptr);
+
+    return functions.at(name);
+}
+
+void SymbolTable::enterFunction() {
+    enterBlock();
+    nextLocalVariableAddress = 0;
+}
+
+void SymbolTable::leaveFunction() {
+    leaveBlock();
 }
 
 void SymbolTable::enterBlock() {
-    char** currentVariableNames = new char*[symbols.size()];
-    size_t i = 0;
-    for (const auto& symbol : symbols) {
-        currentVariableNames[i++] = symbol.first;
-    }
-    savedBlocks.emplace(currentVariableNames, symbols.size());
+    variables.push_front(SymbolsMap<VariableSymbol>());
 }
 
 void SymbolTable::leaveBlock() {
-    char** savedNames = savedBlocks.top().first;
-    size_t savedNamesNumber = savedBlocks.top().second;
-    savedBlocks.pop();
-
-    std::map<char*, VariableSymbol, keyCompare> savedSymbols;
-    for (size_t i = 0; i < savedNamesNumber; ++i) {
-        if (symbols.count(savedNames[i]) != 0) {
-            savedSymbols[savedNames[i]] = symbols[savedNames[i]];
-        }
+    for (const auto& symbol : variables.front()) {
+        free(symbol.first);
     }
-    symbols.clear();
-    symbols = savedSymbols;
+    variables.pop_front();
 
-    delete[] savedNames;
+    // Restore next variable address
+    unsigned int maxLocalVariableAddress = 0u;
+    for (const auto& symbol : variables.front()) {
+        maxLocalVariableAddress = std::max(maxLocalVariableAddress, symbol.second->address);
+    }
+    nextLocalVariableAddress = maxLocalVariableAddress + VARIABLE_SIZE_IN_BYTES;
+}
+
+static inline char* copyName(const char* name) {
+    char* nameCopy = (char*)calloc(strlen(name) + 1, sizeof(char)); // +1 is for '\0'
+    strcpy(nameCopy, name);
+    return nameCopy;
 }

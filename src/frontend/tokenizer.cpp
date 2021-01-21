@@ -10,7 +10,8 @@
 #include <stdexcept>
 #include <cmath>
 #include "tokenizer.h"
-#include "SyntaxError.h"
+#include "../util/SyntaxError.h"
+#include "../util/TokenOrigin.h"
 
 void Token::print() const {
     printf("%s", TokenTypeStrings[type]);
@@ -108,14 +109,9 @@ void ComparisonOperatorToken::print() const {
     printf(" TYPE=%s", ComparisonOperatorTypeStrings[operatorType]);
 }
 
-void VariableToken::print() const {
+void IdToken::print() const {
     Token::print();
     printf(" NAME=%s", name);
-}
-
-void FunctionToken::print() const {
-    Token::print();
-    printf(" ARITY=%zu, NAME=%s", arity, getName());
 }
 
 void SemicolonToken::print() const {
@@ -201,6 +197,9 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
     if (*expression == ';') {
         tokens.emplace_back(new SemicolonToken(currentTokenOrigin));
         ++expression;
+    } else if (*expression == ',') {
+        tokens.emplace_back(new CommaToken(currentTokenOrigin));
+        ++expression;
     } else if (*expression == '(') {
         tokens.emplace_back(new ParenthesisToken(currentTokenOrigin, true, ParenthesisType::ROUND));
         ++expression;
@@ -224,7 +223,7 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
 
         bool isBinary = (previousToken != nullptr) && (
             (previousToken->getType() == CONSTANT_VALUE) ||
-            (previousToken->getType() == VARIABLE) ||
+            (previousToken->getType() == ID) ||
             (isCloseRoundParenthesisToken(previousToken))
         );
 
@@ -276,20 +275,24 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
     } else if (isdigit(*expression)) {
         double tokenValue = strtod(expression, &expression);
         tokens.emplace_back(new ConstantValueToken(currentTokenOrigin, tokenValue));
-    } else if (isalpha(*expression)) { // Variable name starts with letter
-        char* name = (char*)calloc(VariableToken::MAX_NAME_LENGTH, sizeof(char));
+    } else if (isalpha(*expression)) { // Name starts with letter
+        char* name = (char*)calloc(IdToken::MAX_NAME_LENGTH, sizeof(char));
         unsigned int i = 0;
         do {
             name[i++] = *expression++;
-        } while (i < VariableToken::MAX_NAME_LENGTH && (isalpha(*expression) || isdigit(*expression))); // Other symbols in the name can be letters or digits
+        } while (i < IdToken::MAX_NAME_LENGTH && (isalpha(*expression) || isdigit(*expression))); // Other symbols in the name can be letters or digits
         if (strcmp(name, "if") == 0) {
             tokens.emplace_back(new IfToken(currentTokenOrigin));
         } else if (strcmp(name, "else") == 0) {
             tokens.emplace_back(new ElseToken(currentTokenOrigin));
         } else if (strcmp(name, "while") == 0) {
             tokens.emplace_back(new WhileToken(currentTokenOrigin));
+        } else if (strcmp(name, "func") == 0) {
+            tokens.emplace_back(new FuncToken(currentTokenOrigin));
+        } else if (strcmp(name, "return") == 0) {
+            tokens.emplace_back(new ReturnToken(currentTokenOrigin));
         } else {
-            tokens.emplace_back(new VariableToken(currentTokenOrigin, name));
+            tokens.emplace_back(new IdToken(currentTokenOrigin, name));
         }
         free(name);
     } else {

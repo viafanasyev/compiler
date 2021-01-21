@@ -1,9 +1,9 @@
 /**
  * @file
- * @brief Definition of calculator that uses recursive parser
+ * @brief Definition of recursive parser
  */
-#ifndef RECURSIVE_PARSER_CALCULATOR_H
-#define RECURSIVE_PARSER_CALCULATOR_H
+#ifndef COMPILER_RECURSIVE_PARSER_H
+#define COMPILER_RECURSIVE_PARSER_H
 
 #include <cstring>
 #include <map>
@@ -13,4 +13,4 @@
 
 std::shared_ptr<StatementsNode> buildASTRecursively(char* expression);
 
-#endif // RECURSIVE_PARSER_CALCULATOR_H
+#endif // COMPILER_RECURSIVE_PARSER_H

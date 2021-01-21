@@ -5,7 +5,8 @@
 #include "backend/codegen.h"
 #include "frontend/ast.h"
 #include "frontend/recursive_parser.h"
-#include "frontend/SyntaxError.h"
+#include "util/SyntaxError.h"
+#include "util/RedefinitionError.h"
 #include "MappedFile.h"
 #include "middleend/ast-optimizers.h"
 #include "stack-machine/src/arg-parser.h"
@@ -55,6 +56,9 @@ int main(int argc, char* argv[]) {
         exitCode = -1;
     } catch (const SyntaxError& ex) {
         fprintf(stderr, "Syntax error: %s", ex.what());
+        exitCode = -1;
+    } catch (const RedefinitionError& ex) {
+        fprintf(stderr, "Redefinition error: %s", ex.what());
         exitCode = -1;
     }
     return exitCode;

@@ -6,7 +6,7 @@
 #include <cstdio>
 #include <cstring>
 #include "SyntaxError.h"
-#include "tokenizer.h"
+#include "TokenOrigin.h"
 
 SyntaxError::SyntaxError(TokenOrigin position_, const char* cause_) {
     position = position_;
