@@ -14,6 +14,23 @@
 
 const char* const irFileExtension = ".ir";
 
+enum CompilerRunningMode {
+    PRINT_AST,
+    COMPILE,
+    COMPILE_AND_RUN,
+};
+
+CompilerRunningMode parseCompilerRunningMode(const char* mode) {
+    if (strcmp(mode, "ast") == 0) {
+        return PRINT_AST;
+    } else if (strcmp(mode, "run") == 0) {
+        return COMPILE_AND_RUN;
+    } else {
+        fprintf(stderr, "Unknown running mode. Just compiling\n");
+        return COMPILE;
+    }
+}
+
 void outputAST(const std::shared_ptr<ASTNode>& root, const char* fileName) {
     root->visualize(fileName);
 }
@@ -25,7 +42,7 @@ int main(int argc, char* argv[]) {
     }
     const char* codeFileName = argv[1];
     MappedFile file(codeFileName);
-    bool runAfterCompilation = (argc >= 3) && (strcmp(argv[2], "run") == 0);
+    CompilerRunningMode mode = (argc >= 3) ? parseCompilerRunningMode(argv[2]) : COMPILE;
 
     auto optimizer = std::make_shared<CompositeOptimizer>();
     optimizer->addOptimizer(std::make_shared<UnaryAdditionOptimizer>());
@@ -36,21 +53,26 @@ int main(int argc, char* argv[]) {
     try {
         std::shared_ptr<ASTNode> ASTRoot = buildASTRecursively(file.getTextPtr());
         ASTRoot = optimizer->optimize(ASTRoot);
-        outputAST(ASTRoot, codeFileName);
 
-        char irFileName[maxFileNameLength];
-        replaceExtension(irFileName, codeFileName, irFileExtension);
-        codegen(ASTRoot, irFileName);
+        if (mode == PRINT_AST) {
+            outputAST(ASTRoot, codeFileName);
+        } else if (mode == COMPILE || mode == COMPILE_AND_RUN) {
+            char irFileName[maxFileNameLength];
+            replaceExtension(irFileName, codeFileName, irFileExtension);
+            codegen(ASTRoot, irFileName);
 
-        if (runAfterCompilation) {
             char assemblyFileName[maxFileNameLength];
             replaceExtension(assemblyFileName, codeFileName, assemblyFileExtension);
-
             exitCode = assemble(irFileName, assemblyFileName);
-            if (exitCode == 0) exitCode = run(assemblyFileName);
 
-            if (exitCode != 0) printErrorMessageForExitCode(exitCode);
+            if (mode == COMPILE_AND_RUN && exitCode == 0) {
+                exitCode = run(assemblyFileName);
+            }
+        } else {
+            assert(!"Running mode not implemented");
         }
+
+        if (exitCode != 0) printErrorMessageForExitCode(exitCode);
     } catch (const std::logic_error& ex) {
         fprintf(stderr, "Invalid expression: %s", ex.what());
         exitCode = -1;
