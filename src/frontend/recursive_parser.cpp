@@ -52,7 +52,7 @@ std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>
 std::shared_ptr<ASTNode> getTerm(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
-std::shared_ptr<OperatorNode> getAssignment(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<AssignmentOperatorNode> getAssignment(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<FunctionCallNode> getFunctionCall(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ArgumentsListNode> getArgumentsList(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<VariableNode> getVariable(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
@@ -67,8 +67,7 @@ static inline std::shared_ptr<ASTNode> wrapIntoBlockIfNeeded(const std::shared_p
 static inline bool isAssignment(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
     return  pos + 1 < tokens.size() &&
             tokens[pos]->getType() == TokenType::ID &&
-            tokens[pos + 1]->getType() == TokenType::OPERATOR &&
-            dynamic_cast<OperatorToken*>(tokens[pos + 1].get())->getOperatorType() == OperatorType::ASSIGNMENT;
+            tokens[pos + 1]->getType() == TokenType::ASSIGNMENT_OPERATOR;
 }
 
 std::shared_ptr<StatementsNode> buildASTRecursively(char* expression) {
@@ -279,7 +278,7 @@ std::shared_ptr<VariableDeclarationNode> getVariableDeclaration(const std::vecto
 
     std::shared_ptr<ASTNode> initialValue = nullptr;
     if (pos >= tokens.size()) throw SyntaxError("Expected '=' or ';', but got EOF");
-    if (tokens[pos]->getType() == TokenType::OPERATOR && dynamic_cast<OperatorToken*>(tokens[pos].get())->getOperatorType() == OperatorType::ASSIGNMENT) {
+    if (tokens[pos]->getType() == TokenType::ASSIGNMENT_OPERATOR) {
         ++pos;
         initialValue = getExpression(tokens, pos);
     }
@@ -375,24 +374,19 @@ std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Toke
     return result;
 }
 
-std::shared_ptr<OperatorNode> getAssignment(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+std::shared_ptr<AssignmentOperatorNode> getAssignment(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
     if (pos >= tokens.size()) throw SyntaxError("Expected assignment, but got EOF");
     if (tokens[pos]->getType() != TokenType::ID) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected identifier, but got EOF");
     auto id = getVariable(tokens, pos);
 
     if (pos >= tokens.size()) throw SyntaxError("Expected '=', but got EOF");
-    std::shared_ptr<OperatorToken> operatorToken = nullptr;
-    if (
-        tokens[pos]->getType() != TokenType::OPERATOR ||
-        (operatorToken = std::dynamic_pointer_cast<OperatorToken>(tokens[pos]))->getOperatorType() != OperatorType::ASSIGNMENT
-    ) {
-        throw SyntaxError(tokens[pos]->getOriginPos(), "Expected '='");
-    }
+    std::shared_ptr<AssignmentOperatorToken> assignmentToken = nullptr;
+    if (tokens[pos]->getType() != TokenType::ASSIGNMENT_OPERATOR) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected '='");
     ++pos;
 
     auto assignedExpression = getExpression(tokens, pos);
 
-    return std::make_shared<OperatorNode>(operatorToken, id, assignedExpression);
+    return std::make_shared<AssignmentOperatorNode>(assignmentToken, id, assignedExpression);
 }
 
 

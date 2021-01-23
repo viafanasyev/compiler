@@ -16,8 +16,7 @@ static inline bool returnsNonVoid(const std::shared_ptr<ASTNode>& node, const Sy
     ) || (
         nodeType == NodeType::VARIABLE_NODE
     ) || (
-        nodeType == NodeType::OPERATOR_NODE &&
-        dynamic_cast<OperatorNode*>(node.get())->getToken()->getOperatorType() != OperatorType::ASSIGNMENT
+        nodeType == NodeType::OPERATOR_NODE
     ) || (
         nodeType == NodeType::FUNCTION_CALL_NODE &&
         !symbolTable.getFunctionByName(dynamic_cast<FunctionCallNode*>(node.get())->getFunctionName()->getName())->isVoid()
@@ -58,22 +57,25 @@ void CodegenVisitor::visitOperatorNode(const OperatorNode* node) {
         node->getChildren()[0]->accept(this);
     } else if (arity == 2) {
         auto children = node->getChildren();
-        if (node->getToken()->getOperatorType() == OperatorType::ASSIGNMENT) {
-            auto variableNode = dynamic_cast<VariableNode*>(children[0].get());
-            char* variableName = variableNode->getName();
-            if (!symbolTable.hasVariable(variableName))  throw SyntaxError(variableNode->getOriginPos(), "Undeclared variable");
-
-            children[1]->accept(this);
-
-            setVarByAddress(symbolTable.getVariableByName(variableName)->address);
-        } else {
-            children[0]->accept(this);
-            children[1]->accept(this);
-            arithmeticOperation(node->getToken()->getOperatorType());
-        }
+        children[0]->accept(this);
+        children[1]->accept(this);
+        arithmeticOperation(node->getToken()->getOperatorType());
     } else {
         throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
     }
+}
+
+void CodegenVisitor::visitAssignmentOperatorNode(const AssignmentOperatorNode* node) {
+    assert(node->getChildrenNumber() == 2);
+    auto children = node->getChildren();
+    auto variable = dynamic_cast<VariableNode*>(children[0].get());
+    auto value    = children[1];
+
+    value->accept(this);
+
+    char* variableName = variable->getName();
+    if (!symbolTable.hasVariable(variableName)) throw SyntaxError(variable->getOriginPos(), "Undeclared variable");
+    setVarByAddress(symbolTable.getVariableByName(variableName)->address);
 }
 
 void CodegenVisitor::visitComparisonOperatorNode(const ComparisonOperatorNode* node) {
@@ -343,7 +345,6 @@ void CodegenVisitor::arithmeticOperation(OperatorType op) {
         case DIVISION:            fprintf(assemblyFile, "DIV\n"); return;
         case UNARY_ADDITION:      /* Do nothing */ return;
         case POWER:               fprintf(assemblyFile, "POW\n"); return;
-        case ASSIGNMENT:          throw std::logic_error("Assignment is not an assignment operation");
         default:                  throw std::logic_error("Unsupported arithmetic operation");
     }
 }

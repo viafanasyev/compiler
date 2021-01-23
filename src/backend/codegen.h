@@ -35,6 +35,7 @@ public:
     void visitConstantValueNode(const ConstantValueNode* node);
     void visitVariableNode(const VariableNode* node);
     void visitOperatorNode(const OperatorNode* node);
+    void visitAssignmentOperatorNode(const AssignmentOperatorNode* node);
     void visitComparisonOperatorNode(const ComparisonOperatorNode* node);
     void visitStatementsNode(const StatementsNode* node);
     void visitBlockNode(const BlockNode* node);

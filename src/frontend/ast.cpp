@@ -95,6 +95,16 @@ void OperatorNode::dotPrint(FILE* dotFile) const {
     ASTNode::dotPrintChildren(this, dotFile);
 }
 
+void AssignmentOperatorNode::accept(CodegenVisitor* visitor) const {
+    visitor->visitAssignmentOperatorNode(this);
+}
+
+void AssignmentOperatorNode::dotPrint(FILE* dotFile) const {
+    ASTNode::dotPrintCurrent(this, dotFile, "binary op\nop: =", "#C9E7FF");
+    assert(getChildrenNumber() == 2);
+    ASTNode::dotPrintChildren(this, dotFile);
+}
+
 void ComparisonOperatorNode::accept(CodegenVisitor* visitor) const {
     visitor->visitComparisonOperatorNode(this);
 }

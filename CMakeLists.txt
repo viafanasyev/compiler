@@ -52,4 +52,8 @@ add_executable(
         src/backend/codegen.h
         src/backend/codegen.cpp
         src/backend/SymbolTable.h
-        src/backend/SymbolTable.cpp)
+        src/backend/SymbolTable.cpp
+        src/util/RedefinitionError.h
+        src/util/RedefinitionError.cpp
+        src/backend/Label.h
+        src/backend/Label.cpp)

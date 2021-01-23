@@ -19,6 +19,7 @@ enum TokenType {
     CONSTANT_VALUE,
     PARENTHESIS,
     OPERATOR,
+    ASSIGNMENT_OPERATOR,
     COMPARISON_OPERATOR,
     ID,
     SEMICOLON,
@@ -35,6 +36,7 @@ static const char* const TokenTypeStrings[] = {
     "CONSTANT_VALUE",
     "PARENTHESIS",
     "OPERATOR",
+    "ASSIGNMENT_OPERATOR",
     "COMPARISON_OPERATOR",
     "ID",
     "FUNCTION",
@@ -122,7 +124,6 @@ enum OperatorType {
     ARITHMETIC_NEGATION,
     UNARY_ADDITION,
     POWER,
-    ASSIGNMENT,
 };
 
 static const char* const OperatorTypeStrings[] = {
@@ -133,7 +134,6 @@ static const char* const OperatorTypeStrings[] = {
     "ARITHMETIC_NEGATION",
     "UNARY_ADDITION",
     "POWER",
-    "ASSIGNMENT",
 };
 
 class OperatorToken : public Token {
@@ -259,16 +259,9 @@ public:
     double calculate(size_t argc, ...) const override;
 };
 
-class AssignmentOperator : public OperatorToken {
-
+class AssignmentOperatorToken : public Token {
 public:
-    explicit AssignmentOperator(TokenOrigin originPos_) : OperatorToken(originPos_, 2, 0, false, ASSIGNMENT) { }
-
-    const char* getSymbol() const override {
-        return "=";
-    }
-
-    double calculate(size_t argc __attribute__((unused)), ...) const override;
+    explicit AssignmentOperatorToken(TokenOrigin originPos_) : Token(ASSIGNMENT_OPERATOR, originPos_) { }
 };
 
 enum ComparisonOperatorType {

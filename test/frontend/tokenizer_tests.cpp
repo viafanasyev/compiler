@@ -35,6 +35,13 @@
     ASSERT_EQUALS(operatorToken->getOperatorType(), operatorType);                                                     \
 } while (0)
 
+#define ASSERT_ASSIGNMENT_OPERATOR_TOKEN(token) do {                                                                   \
+    ASSERT_NOT_NULL(token);                                                                                            \
+    ASSERT_EQUALS(token->getType(), ASSIGNMENT_OPERATOR);                                                              \
+    auto operatorToken = dynamic_cast<AssignmentOperatorToken*>(token.get());                                          \
+    ASSERT_NOT_NULL(operatorToken);                                                                                    \
+} while (0)
+
 #define ASSERT_COMPARISON_OPERATOR_TOKEN(token, operatorType) do {                                                     \
     ASSERT_NOT_NULL(token);                                                                                            \
     ASSERT_EQUALS(token->getType(), COMPARISON_OPERATOR);                                                              \
@@ -444,10 +451,10 @@ TEST(tokenize, simpleAssignmentExpression) {
 
     ASSERT_EQUALS(tokens.size(), 8);
     ASSERT_ID_TOKEN(tokens[0], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[1], 2, 0, ASSIGNMENT);
+    ASSERT_ASSIGNMENT_OPERATOR_TOKEN(tokens[1]);
     ASSERT_ID_TOKEN(tokens[2], "y");
-    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 0, ASSIGNMENT);
-    ASSERT_OPERATOR_TOKEN(tokens[4], 2, 0, ASSIGNMENT);
+    ASSERT_ASSIGNMENT_OPERATOR_TOKEN(tokens[3]);
+    ASSERT_ASSIGNMENT_OPERATOR_TOKEN(tokens[4]);
     ASSERT_ID_TOKEN(tokens[5], "z");
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[6], EQUAL);
     ASSERT_ID_TOKEN(tokens[7], "a");

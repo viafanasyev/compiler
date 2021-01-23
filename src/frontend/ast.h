@@ -19,6 +19,7 @@ enum NodeType {
     CONSTANT_VALUE_NODE,
     VARIABLE_NODE,
     OPERATOR_NODE,
+    ASSIGNMENT_OPERATOR_NODE,
     COMPARISON_OPERATOR_NODE,
     STATEMENTS_NODE,
     BLOCK_NODE,
@@ -191,6 +192,28 @@ public:
     }
 
     const std::shared_ptr<OperatorToken>& getToken() const {
+        return token;
+    }
+
+    void accept(CodegenVisitor* visitor) const override;
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+class AssignmentOperatorNode : public ASTNode {
+
+private:
+    std::shared_ptr<AssignmentOperatorToken> token;
+
+public:
+    AssignmentOperatorNode(
+        const std::shared_ptr<AssignmentOperatorToken>& token_,
+        const std::shared_ptr<VariableNode>& variable,
+        const std::shared_ptr<ASTNode>& value
+    ) : ASTNode(ASSIGNMENT_OPERATOR_NODE, variable, value), token(token_) { }
+
+    const std::shared_ptr<AssignmentOperatorToken>& getToken() const {
         return token;
     }
 

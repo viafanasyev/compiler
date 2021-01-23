@@ -101,10 +101,6 @@ double PowerOperator::calculate(size_t argc, ...) const {
     return pow(leftOperand, rightOperand);
 }
 
-double AssignmentOperator::calculate(size_t argc __attribute__((unused)), ...) const {
-    throw std::logic_error("Assignment can't be calculated");
-}
-
 void ComparisonOperatorToken::print() const {
     Token::print();
     printf(" TYPE=%s", ComparisonOperatorTypeStrings[operatorType]);
@@ -268,7 +264,7 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
             tokens.emplace_back(new EqualComparisonOperator(currentTokenOrigin));
             ++expression;
         } else {
-            tokens.emplace_back(new AssignmentOperator(currentTokenOrigin));
+            tokens.emplace_back(new AssignmentOperatorToken(currentTokenOrigin));
         }
     } else if (strncmp(expression, "!=", 2) == 0) {
         tokens.emplace_back(new NotEqualComparisonOperator(currentTokenOrigin));
