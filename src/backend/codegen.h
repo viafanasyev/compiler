@@ -45,6 +45,7 @@ public:
     void visitArgumentsListNode(const ArgumentsListNode* node);
     void visitFunctionDefinitionNode(const FunctionDefinitionNode* node);
     void visitFunctionCallNode(const FunctionCallNode* node);
+    void visitVariableDeclarationNode(const VariableDeclarationNode* node);
     void visitReturnStatementNode(const ReturnStatementNode* node);
     void visitLabel(const Label* label);
 
@@ -66,13 +67,15 @@ public:
     void call(const std::shared_ptr<FunctionSymbol>& functionSymbol);
     void halt();
 
-    void getVarByAddress(size_t address);
-    void setVarByAddress(size_t address);
+    void getVarByAddress(unsigned int address);
+    void setVarByAddress(unsigned int address);
 
 private:
     static ComparisonOperatorType negateCompOp(ComparisonOperatorType compOp);
 
     std::shared_ptr<VariableSymbol> addVariable(char* name, const TokenOrigin& originPos);
+
+    void pushDefaultValueForType(Type type);
 };
 
 void codegen(const std::shared_ptr<ASTNode>& root, const char* assemblyFileName);

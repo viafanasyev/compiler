@@ -29,6 +29,7 @@ enum NodeType {
     ARGUMENTS_LIST_NODE,
     FUNCTION_DEFINITION_NODE,
     FUNCTION_CALL_NODE,
+    VARIABLE_DECLARATION_NODE,
     RETURN_STATEMENT_NODE,
 };
 
@@ -347,6 +348,20 @@ public:
     inline std::shared_ptr<IdToken> getFunctionName() const {
         return functionName;
     }
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+class VariableDeclarationNode : public ASTNode {
+
+public:
+    explicit VariableDeclarationNode(const std::shared_ptr<VariableNode>& variable) :
+            ASTNode(VARIABLE_DECLARATION_NODE, variable) { }
+    VariableDeclarationNode(const std::shared_ptr<VariableNode>& variable, const std::shared_ptr<ASTNode>& initialValue) :
+            ASTNode(VARIABLE_DECLARATION_NODE, variable, initialValue) { }
+
+    void accept(CodegenVisitor* visitor) const override;
 
 protected:
     void dotPrint(FILE* dotFile) const override;

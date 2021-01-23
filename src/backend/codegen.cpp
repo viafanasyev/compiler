@@ -61,9 +61,7 @@ void CodegenVisitor::visitOperatorNode(const OperatorNode* node) {
         if (node->getToken()->getOperatorType() == OperatorType::ASSIGNMENT) {
             auto variableNode = dynamic_cast<VariableNode*>(children[0].get());
             char* variableName = variableNode->getName();
-            if (!symbolTable.hasVariable(variableName)) {
-                addVariable(variableName, variableNode->getOriginPos());
-            }
+            if (!symbolTable.hasVariable(variableName))  throw SyntaxError(variableNode->getOriginPos(), "Undeclared variable");
 
             children[1]->accept(this);
 
@@ -239,6 +237,22 @@ void CodegenVisitor::visitFunctionCallNode(const FunctionCallNode* node) {
     call(symbol);
 }
 
+void CodegenVisitor::visitVariableDeclarationNode(const VariableDeclarationNode* node) {
+    size_t childrenNumber = node->getChildrenNumber();
+    assert(childrenNumber == 1 || childrenNumber == 2);
+    auto children = node->getChildren();
+    auto variable =     dynamic_cast<VariableNode*>(children[0].get());
+    auto initialValue = childrenNumber == 2 ? children[1] : nullptr;
+
+    if (initialValue) {
+        initialValue->accept(this);
+    } else {
+        pushDefaultValueForType(Type::DOUBLE);
+    }
+
+    setVarByAddress(addVariable(variable->getName(), variable->getOriginPos())->address);
+}
+
 void CodegenVisitor::visitReturnStatementNode(const ReturnStatementNode* node) {
     assert(node->getChildrenNumber() == 1);
 
@@ -362,7 +376,16 @@ ComparisonOperatorType CodegenVisitor::negateCompOp(ComparisonOperatorType compO
     }
 }
 
-void CodegenVisitor::getVarByAddress(size_t address) {
+void CodegenVisitor::pushDefaultValueForType(Type type) {
+    switch (type) {
+        case DOUBLE: push(0); return;
+        case VOID:            return;
+
+        default: throw std::logic_error("Unsupported value type. Only DOUBLE and VOID are supported yet");
+    }
+}
+
+void CodegenVisitor::getVarByAddress(unsigned int address) {
     address = symbolTable.getNextLocalVariableAddress() - address;
 
     // varRamAddress = AX - (nextVarLocalAddress - varLocalAddress)
@@ -378,7 +401,7 @@ void CodegenVisitor::getVarByAddress(size_t address) {
     }
 }
 
-void CodegenVisitor::setVarByAddress(size_t address) {
+void CodegenVisitor::setVarByAddress(unsigned int address) {
     address = symbolTable.getNextLocalVariableAddress() - address;
 
     // varRamAddress = AX - (nextVarLocalAddress - varLocalAddress)

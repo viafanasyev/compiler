@@ -203,6 +203,16 @@ void FunctionCallNode::dotPrint(FILE* dotFile) const {
     ASTNode::dotPrintChildren(this, dotFile);
 }
 
+void VariableDeclarationNode::accept(CodegenVisitor* visitor) const {
+    visitor->visitVariableDeclarationNode(this);
+}
+
+void VariableDeclarationNode::dotPrint(FILE* dotFile) const {
+    ASTNode::dotPrintCurrent(this, dotFile, "var decl", "#59BF5D");
+    assert(getChildrenNumber() == 1 || getChildrenNumber() == 2);
+    ASTNode::dotPrintChildren(this, dotFile);
+}
+
 void ReturnStatementNode::accept(CodegenVisitor* visitor) const {
     visitor->visitReturnStatementNode(this);
 }
