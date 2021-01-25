@@ -22,7 +22,7 @@
  *     Expression = Term ([+ -] Term)*
  *     Term = Factor ([* /] Factor)*
  *     Factor = Parenthesised (^ Parenthesised)*
- *     Parenthesised = '(' Expression ')' | Number | Variable | FunctionCall
+ *     Parenthesised = ('+' | '-') Parenthesised | '(' Expression ')' | Number | Variable | FunctionCall
  *     Assignment = Variable '=' Expression
  *     FunctionCall = ID '(' ArgumentsList ')'
  *     ArgumentsList = ( Expression (',' Expression)* )?
@@ -352,17 +352,24 @@ std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& to
 }
 
 std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
-    if (pos >= tokens.size()) throw SyntaxError("Expected number, identifier or '(', but got EOF");
+    if (pos >= tokens.size()) throw SyntaxError("Expected number, identifier, '(' or unary operator, but got EOF");
 
-    if (!isOpenRoundParenthesisToken(tokens[pos])) {
-        if (tokens[pos]->getType() == TokenType::CONSTANT_VALUE) return getNumber(tokens, pos);
-        if (tokens[pos]->getType() == TokenType::ID) {
-            if (pos + 1 < tokens.size() && isOpenRoundParenthesisToken(tokens[pos + 1])) return getFunctionCall(tokens, pos);
-            return getVariable(tokens, pos);
+    if (tokens[pos]->getType() == TokenType::OPERATOR) {
+        auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(tokens[pos]);
+        if (operatorToken->getOperatorType() == OperatorType::ARITHMETIC_NEGATION ||
+            operatorToken->getOperatorType() == OperatorType::UNARY_ADDITION
+        ) {
+            ++pos;
+            return std::make_shared<OperatorNode>(operatorToken, getParenthesised(tokens, pos));
         }
-        throw SyntaxError(tokens[pos]->getOriginPos(), "Expected number, identifier or '('");
     }
-    assert(isOpenRoundParenthesisToken(tokens[pos]));
+    if (tokens[pos]->getType() == TokenType::CONSTANT_VALUE) return getNumber(tokens, pos);
+    if (tokens[pos]->getType() == TokenType::ID) {
+        if (pos + 1 < tokens.size() && isOpenRoundParenthesisToken(tokens[pos + 1])) return getFunctionCall(tokens, pos);
+        return getVariable(tokens, pos);
+    }
+
+    if (!isOpenRoundParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected number, identifier,  '(' or unary operator");
     ++pos;
 
     std::shared_ptr<ASTNode> result = getExpression(tokens, pos);

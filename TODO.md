@@ -1,8 +1,8 @@
 # TODO
 
 ### Language improvements
-* Negation operator and unary plus
 * Global variables
+* Constants
 * Logical operators (`||`, `&&`, `!`)
 * Bitwise operators (`|`, `&`, `~`, `^`). `pow(x, y)` function instead of `^`?
 * Type system

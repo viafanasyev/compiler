@@ -55,6 +55,7 @@ void CodegenVisitor::visitOperatorNode(const OperatorNode* node) {
     size_t arity = node->getChildrenNumber();
     if (arity == 1) {
         node->getChildren()[0]->accept(this);
+        arithmeticOperation(node->getToken()->getOperatorType());
     } else if (arity == 2) {
         auto children = node->getChildren();
         children[0]->accept(this);

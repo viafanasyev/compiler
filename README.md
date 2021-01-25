@@ -115,7 +115,7 @@ File: `quadratic_equation.txt`
 func solveLinear(a, b) {
     if (a == 0) {
         if (b == 0) {
-            print(0 - 1);
+            print(-1);
         } else {
             print(0);
         }
@@ -123,7 +123,7 @@ func solveLinear(a, b) {
     }
 
     print(1);
-    print(((0 - 1) * b) / a);
+    print(-b / a);
     return 0;
 }
 
@@ -138,10 +138,10 @@ func solveQuadratic(a, b, c) {
         print(0);
     } else if (d == 0) {
         print(1);
-        print(((0 - 1) * b) / (2 * a));
+        print(-b / (2 * a));
     } else {
-        var x1 = ((0 - 1) * b - sqrt(d)) / (2 * a);
-        var x2 = ((0 - 1) * b + sqrt(d)) / (2 * a);
+        var x1 = (-b - sqrt(d)) / (2 * a);
+        var x2 = (-b + sqrt(d)) / (2 * a);
         print(2);
         print(x1);
         print(x2);
@@ -178,7 +178,7 @@ VariableDeclaration = 'var' Variable ('=' Expression)? ';'
 Expression = Term ([+ -] Term)*
 Term = Factor ([* /] Factor)*
 Factor = Parenthesised (^ Parenthesised)*
-Parenthesised = '(' Expression ')' | Number | Variable | FunctionCall
+Parenthesised = ('+' | '-') Parenthesised | '(' Expression ')' | Number | Variable | FunctionCall
 Assignment = Variable '=' Expression
 FunctionCall = ID '(' ArgumentsList ')'
 ArgumentsList = ( Expression (',' Expression)* )?

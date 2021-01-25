@@ -176,7 +176,7 @@ VariableDeclaration = 'var' Variable ('=' Expression)? ';'
 Expression = Term ([+ -] Term)*
 Term = Factor ([* /] Factor)*
 Factor = Parenthesised (^ Parenthesised)*
-Parenthesised = '(' Expression ')' | Number | Variable | FunctionCall
+Parenthesised = ('+' | '-') Parenthesised | '(' Expression ')' | Number | Variable | FunctionCall
 Assignment = Variable '=' Expression
 FunctionCall = ID '(' ArgumentsList ')'
 ArgumentsList = ( Expression (',' Expression)* )?

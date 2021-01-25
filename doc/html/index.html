@@ -178,7 +178,7 @@ Quadratic equation solver</h2>
 <p>File: <code>quadratic_equation.txt</code> </p><div class="fragment"><div class="line">func solveLinear(a, b) {</div>
 <div class="line">    if (a == 0) {</div>
 <div class="line">        if (b == 0) {</div>
-<div class="line">            print(0 - 1);</div>
+<div class="line">            print(-1);</div>
 <div class="line">        } else {</div>
 <div class="line">            print(0);</div>
 <div class="line">        }</div>
@@ -186,7 +186,7 @@ Quadratic equation solver</h2>
 <div class="line">    }</div>
 <div class="line"> </div>
 <div class="line">    print(1);</div>
-<div class="line">    print(((0 - 1) * b) / a);</div>
+<div class="line">    print(-b / a);</div>
 <div class="line">    return 0;</div>
 <div class="line">}</div>
 <div class="line"> </div>
@@ -201,10 +201,10 @@ Quadratic equation solver</h2>
 <div class="line">        print(0);</div>
 <div class="line">    } else if (d == 0) {</div>
 <div class="line">        print(1);</div>
-<div class="line">        print(((0 - 1) * b) / (2 * a));</div>
+<div class="line">        print(-b / (2 * a));</div>
 <div class="line">    } else {</div>
-<div class="line">        var x1 = ((0 - 1) * b - sqrt(d)) / (2 * a);</div>
-<div class="line">        var x2 = ((0 - 1) * b + sqrt(d)) / (2 * a);</div>
+<div class="line">        var x1 = (-b - sqrt(d)) / (2 * a);</div>
+<div class="line">        var x2 = (-b + sqrt(d)) / (2 * a);</div>
 <div class="line">        print(2);</div>
 <div class="line">        print(x1);</div>
 <div class="line">        print(x2);</div>
@@ -239,7 +239,7 @@ Grammar</h2>
 <div class="line">Expression = Term ([+ -] Term)*</div>
 <div class="line">Term = Factor ([* /] Factor)*</div>
 <div class="line">Factor = Parenthesised (^ Parenthesised)*</div>
-<div class="line">Parenthesised = &#39;(&#39; Expression &#39;)&#39; | Number | Variable | FunctionCall</div>
+<div class="line">Parenthesised = (&#39;+&#39; | &#39;-&#39;) Parenthesised | &#39;(&#39; Expression &#39;)&#39; | Number | Variable | FunctionCall</div>
 <div class="line">Assignment = Variable &#39;=&#39; Expression</div>
 <div class="line">FunctionCall = ID &#39;(&#39; ArgumentsList &#39;)&#39;</div>
 <div class="line">ArgumentsList = ( Expression (&#39;,&#39; Expression)* )?</div>
