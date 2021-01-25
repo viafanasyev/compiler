@@ -63,6 +63,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-attribs">Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
 <a href="#pro-static-methods">Static Protected Member Functions</a> &#124;
 <a href="class_a_s_t_node-members.html">List of all members</a>  </div>
@@ -71,7 +72,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Inherited by <a class="el" href="class_block_node.html">BlockNode</a>, <a class="el" href="class_constant_value_node.html">ConstantValueNode</a>, <a class="el" href="class_function_call_node.html">FunctionCallNode</a>, <a class="el" href="class_operator_node.html">OperatorNode</a>, <a class="el" href="class_statements_node.html">StatementsNode</a>, and <a class="el" href="class_variable_node.html">VariableNode</a>.</p>
+<p>Inherited by <a class="el" href="class_arguments_list_node.html">ArgumentsListNode</a>, <a class="el" href="class_assignment_operator_node.html">AssignmentOperatorNode</a>, <a class="el" href="class_block_node.html">BlockNode</a>, <a class="el" href="class_comparison_operator_node.html">ComparisonOperatorNode</a>, <a class="el" href="class_constant_value_node.html">ConstantValueNode</a>, <a class="el" href="class_function_call_node.html">FunctionCallNode</a>, <a class="el" href="class_function_definition_node.html">FunctionDefinitionNode</a>, <a class="el" href="class_if_else_node.html">IfElseNode</a>, <a class="el" href="class_if_node.html">IfNode</a>, <a class="el" href="class_operator_node.html">OperatorNode</a>, <a class="el" href="class_parameters_list_node.html">ParametersListNode</a>, <a class="el" href="class_return_statement_node.html">ReturnStatementNode</a>, <a class="el" href="class_statements_node.html">StatementsNode</a>, <a class="el" href="class_variable_declaration_node.html">VariableDeclarationNode</a>, <a class="el" href="class_variable_node.html">VariableNode</a>, and <a class="el" href="class_while_node.html">WhileNode</a>.</p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
@@ -87,9 +88,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a46ebec2dd4c6707c40cfbfd055edc098"><td class="memItemLeft" align="right" valign="top"><a id="a46ebec2dd4c6707c40cfbfd055edc098"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;leftChild, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;rightChild)</td></tr>
 <tr class="separator:a46ebec2dd4c6707c40cfbfd055edc098"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1068dff73f198284cf3ed307d3e1a562"><td class="memItemLeft" align="right" valign="top"><a id="a1068dff73f198284cf3ed307d3e1a562"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (<a class="el" href="class_a_s_t_node.html">ASTNode</a> &amp;&amp;astNode) noexcept</td></tr>
-<tr class="separator:a1068dff73f198284cf3ed307d3e1a562"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95396de0437b8ae84c8b82decc3f92a4"><td class="memItemLeft" align="right" valign="top"><a id="a95396de0437b8ae84c8b82decc3f92a4"></a>
 std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>getChildren</b> () const</td></tr>
 <tr class="separator:a95396de0437b8ae84c8b82decc3f92a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -102,21 +100,33 @@ NodeType&#160;</td><td class="memItemRight" valign="bottom"><b>getType</b> () co
 <tr class="memitem:a6184b7df58059a96ba4571492772ffea"><td class="memItemLeft" align="right" valign="top"><a id="a6184b7df58059a96ba4571492772ffea"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visualize</b> (const char *fileName) const</td></tr>
 <tr class="separator:a6184b7df58059a96ba4571492772ffea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6fe5f47a97de6afa499332b0d3609c28"><td class="memItemLeft" align="right" valign="top"><a id="a6fe5f47a97de6afa499332b0d3609c28"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>accept</b> (<a class="el" href="class_codegen_visitor.html">CodegenVisitor</a> *visitor) const =0</td></tr>
+<tr class="separator:a6fe5f47a97de6afa499332b0d3609c28"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-attribs"></a>
+Public Attributes</h2></td></tr>
+<tr class="memitem:a0a11f6fd4aadee7319d11fd59ecc6835"><td class="memItemLeft" align="right" valign="top"><a id="a0a11f6fd4aadee7319d11fd59ecc6835"></a>
+const size_t&#160;</td><td class="memItemRight" valign="bottom"><b>nodeId</b></td></tr>
+<tr class="separator:a0a11f6fd4aadee7319d11fd59ecc6835"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-methods"></a>
 Protected Member Functions</h2></td></tr>
-<tr class="memitem:a020da9858580d7b4724d3202ee9fde9f"><td class="memItemLeft" align="right" valign="top"><a id="a020da9858580d7b4724d3202ee9fde9f"></a>
-virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>dotPrint</b> (FILE *dotFile, int &amp;nodeId) const =0</td></tr>
-<tr class="separator:a020da9858580d7b4724d3202ee9fde9f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1151f78f21a4e23a3b8f209199c76165"><td class="memItemLeft" align="right" valign="top"><a id="a1151f78f21a4e23a3b8f209199c76165"></a>
+virtual void&#160;</td><td class="memItemRight" valign="bottom"><b>dotPrint</b> (FILE *dotFile) const =0</td></tr>
+<tr class="separator:a1151f78f21a4e23a3b8f209199c76165"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pro-static-methods"></a>
 Static Protected Member Functions</h2></td></tr>
-<tr class="memitem:aae760e6b1a6643a2c7de55e74613b855"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_s_t_node.html#aae760e6b1a6643a2c7de55e74613b855">dotPrint</a> (const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;node, FILE *dotFile, int &amp;nodeId)</td></tr>
-<tr class="separator:aae760e6b1a6643a2c7de55e74613b855"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8131e25db86db32fde6f108f2831adc4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_a_s_t_node.html#a8131e25db86db32fde6f108f2831adc4">dotPrintChildren</a> (const <a class="el" href="class_a_s_t_node.html">ASTNode</a> *node, FILE *dotFile)</td></tr>
+<tr class="separator:a8131e25db86db32fde6f108f2831adc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc4b9d15b730aba63bb25a0a69f32ae2"><td class="memItemLeft" align="right" valign="top"><a id="abc4b9d15b730aba63bb25a0a69f32ae2"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>dotPrintCurrent</b> (const <a class="el" href="class_a_s_t_node.html">ASTNode</a> *node, FILE *dotFile, const char *label, const char *fillColor)</td></tr>
+<tr class="separator:abc4b9d15b730aba63bb25a0a69f32ae2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aae760e6b1a6643a2c7de55e74613b855"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aae760e6b1a6643a2c7de55e74613b855">&#9670;&nbsp;</a></span>dotPrint()</h2>
+<a id="a8131e25db86db32fde6f108f2831adc4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8131e25db86db32fde6f108f2831adc4">&#9670;&nbsp;</a></span>dotPrintChildren()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,22 +135,16 @@ Static Protected Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void ASTNode::dotPrint </td>
+          <td class="memname">void ASTNode::dotPrintChildren </td>
           <td>(</td>
-          <td class="paramtype">const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="class_a_s_t_node.html">ASTNode</a> *&#160;</td>
           <td class="paramname"><em>node</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">FILE *&#160;</td>
-          <td class="paramname"><em>dotFile</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int &amp;&#160;</td>
-          <td class="paramname"><em>nodeId</em>&#160;</td>
+          <td class="paramname"><em>dotFile</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -150,7 +154,7 @@ Static Protected Member Functions</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">protected</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -167,7 +171,7 @@ protected:
         p-&gt;foo();
     }
 };
-</pre><p>Use <code>dotPrint(child, dotFile, nodeId)</code> instead of <code>child-&gt;dotPrint(dotFile, nodeId)</code>. </p>
+</pre><p>Use <code>dotPrint(child, dotFile)</code> instead of <code>child-&gt;dotPrint(dotFile)</code>. </p>
 
 </div>
 </div>

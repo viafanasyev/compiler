@@ -66,25 +66,49 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
-<a href="#func-members">Functions</a>  </div>
+<a href="#enum-members">Enumerations</a> &#124;
+<a href="#func-members">Functions</a> &#124;
+<a href="#var-members">Variables</a>  </div>
   <div class="headertitle">
 <div class="title">main.cpp File Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;memory&gt;</code><br />
+<code>#include &quot;<a class="el" href="codegen_8h_source.html">backend/codegen.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ast_8h_source.html">frontend/ast.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="recursive__parser_8h_source.html">frontend/recursive_parser.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_syntax_error_8h_source.html">frontend/SyntaxError.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_syntax_error_8h_source.html">util/SyntaxError.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_redefinition_error_8h_source.html">util/RedefinitionError.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_mapped_file_8h_source.html">MappedFile.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="ast-optimizers_8h_source.html">middleend/ast-optimizers.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="arg-parser_8h_source.html">stack-machine/src/arg-parser.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="stack-machine_8h_source.html">stack-machine/src/stack-machine.h</a>&quot;</code><br />
 </div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
+Enumerations</h2></td></tr>
+<tr class="memitem:a832d8f45aebf863b94fac3ebba0d294b"><td class="memItemLeft" align="right" valign="top"><a id="a832d8f45aebf863b94fac3ebba0d294b"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>CompilerRunningMode</b> { <b>PRINT_AST</b>, 
+<b>COMPILE</b>, 
+<b>COMPILE_AND_RUN</b>
+ }</td></tr>
+<tr class="separator:a832d8f45aebf863b94fac3ebba0d294b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ad8c18e59d1bc5efc48f49d823eb4d74a"><td class="memItemLeft" align="right" valign="top"><a id="ad8c18e59d1bc5efc48f49d823eb4d74a"></a>
+CompilerRunningMode&#160;</td><td class="memItemRight" valign="bottom"><b>parseCompilerRunningMode</b> (const char *mode)</td></tr>
+<tr class="separator:ad8c18e59d1bc5efc48f49d823eb4d74a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a34325338cd8e3227bb02a19017d25381"><td class="memItemLeft" align="right" valign="top"><a id="a34325338cd8e3227bb02a19017d25381"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>outputAST</b> (const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;root, const char *fileName)</td></tr>
 <tr class="separator:a34325338cd8e3227bb02a19017d25381"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0ddf1224851353fc92bfbff6f499fa97"><td class="memItemLeft" align="right" valign="top"><a id="a0ddf1224851353fc92bfbff6f499fa97"></a>
 int&#160;</td><td class="memItemRight" valign="bottom"><b>main</b> (int argc, char *argv[])</td></tr>
 <tr class="separator:a0ddf1224851353fc92bfbff6f499fa97"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="var-members"></a>
+Variables</h2></td></tr>
+<tr class="memitem:a22ca5436240d9a3b5853326f00e70fc4"><td class="memItemLeft" align="right" valign="top"><a id="a22ca5436240d9a3b5853326f00e70fc4"></a>
+const char *const&#160;</td><td class="memItemRight" valign="bottom"><b>irFileExtension</b> = &quot;.ir&quot;</td></tr>
+<tr class="separator:a22ca5436240d9a3b5853326f00e70fc4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

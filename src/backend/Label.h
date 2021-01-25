@@ -1,5 +1,6 @@
 /**
  * @file
+ * @brief Definition and implementation of IR code label. Label can be used for jumps or calls.
  */
 #ifndef COMPILER_LABEL_H
 #define COMPILER_LABEL_H

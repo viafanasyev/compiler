@@ -1,0 +1,44 @@
+func solveLinear(a, b) {
+    if (a == 0) {
+        if (b == 0) {
+            print(0 - 1);
+        } else {
+            print(0);
+        }
+        return 0;
+    }
+
+    print(1);
+    print(((0 - 1) * b) / a);
+    return 0;
+}
+
+func solveQuadratic(a, b, c) {
+    if (a == 0) {
+        solveLinear(b, c);
+        return 0;
+    }
+
+    var d = b*b - 4*a*c;
+    if (d < 0) {
+        print(0);
+    } else if (d == 0) {
+        print(1);
+        print(((0 - 1) * b) / (2 * a));
+    } else {
+        var x1 = ((0 - 1) * b - sqrt(d)) / (2 * a);
+        var x2 = ((0 - 1) * b + sqrt(d)) / (2 * a);
+        print(2);
+        print(x1);
+        print(x2);
+    }
+    return 0;
+}
+
+func main() {
+    var a = read();
+    var b = read();
+    var c = read();
+
+    solveQuadratic(a, b, c);
+}

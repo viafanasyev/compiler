@@ -1,9 +1,7 @@
 var searchData=
 [
-  ['test_138',['TEST',['../testlib_8h.html#a63862f8a42d6bee21007a3764e6c003c',1,'testlib.h']]],
-  ['test_5finfo_139',['TEST_INFO',['../testlib_8h.html#a6f9bfa46a963a63e89c25b399dc6a3b7',1,'testlib.h']]],
-  ['test_5fname_140',['TEST_NAME',['../testlib_8h.html#a3e8ea953365265f6627605afbde9ba70',1,'testlib.h']]],
-  ['testlib_5fassert_5fequals_5ffailure_5fmessage_141',['TESTLIB_ASSERT_EQUALS_FAILURE_MESSAGE',['../testlib_8h.html#abf1c68451f41d73653199ef83b4b1074',1,'testlib.h']]],
-  ['testlib_5fassert_5ffailed_142',['TESTLIB_ASSERT_FAILED',['../testlib_8h.html#a17f8ea0df49d4709f5de8bb764d2d2bf',1,'testlib.h']]],
-  ['testlib_5feps_143',['TESTLIB_EPS',['../testlib_8h.html#a06c1d086c6645f3a4c71bdff6db3ff66',1,'testlib.h']]]
+  ['log_5farray_357',['LOG_ARRAY',['../logger_8h.html#ae82157f5d1c3c7afe735ceb0bf56d3ed',1,'logger.h']]],
+  ['log_5farray_5findented_358',['LOG_ARRAY_INDENTED',['../logger_8h.html#ab6b7adbf96580b006a2b7080767aefd5',1,'logger.h']]],
+  ['log_5fvalue_359',['LOG_VALUE',['../logger_8h.html#afea4ac185d147eee245bd24143aa3720',1,'logger.h']]],
+  ['log_5fvalue_5findented_360',['LOG_VALUE_INDENTED',['../logger_8h.html#a36369fc206e5f9b2d72867176d5cbe49',1,'logger.h']]]
 ];

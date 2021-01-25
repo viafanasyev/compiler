@@ -82,9 +82,33 @@ $(function() {
 <code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;cmath&gt;</code><br />
 <code>#include &quot;<a class="el" href="tokenizer_8h_source.html">tokenizer.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="constants_8h_source.html">../util/constants.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_syntax_error_8h_source.html">../util/SyntaxError.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_token_origin_8h_source.html">../util/TokenOrigin.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ad7a588ffbccb6551bd43dbfa47972be9"><td class="memItemLeft" align="right" valign="top"><a id="ad7a588ffbccb6551bd43dbfa47972be9"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOpenCurlyParenthesisToken</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:ad7a588ffbccb6551bd43dbfa47972be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a765a7317acc94da553c6b7e299897b6b"><td class="memItemLeft" align="right" valign="top"><a id="a765a7317acc94da553c6b7e299897b6b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isCloseCurlyParenthesisToken</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a765a7317acc94da553c6b7e299897b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a200a81b6a7862a18018834422e98db6c"><td class="memItemLeft" align="right" valign="top"><a id="a200a81b6a7862a18018834422e98db6c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOpenRoundParenthesisToken</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a200a81b6a7862a18018834422e98db6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a54613c1c00486007cd3f81fab5d98d"><td class="memItemLeft" align="right" valign="top"><a id="a9a54613c1c00486007cd3f81fab5d98d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isCloseRoundParenthesisToken</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a9a54613c1c00486007cd3f81fab5d98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a813625286e4be00497bf3b39342a4693"><td class="memItemLeft" align="right" valign="top"><a id="a813625286e4be00497bf3b39342a4693"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isExpressionOperator</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a813625286e4be00497bf3b39342a4693"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f567e53d48d455728c35129ad3f977"><td class="memItemLeft" align="right" valign="top"><a id="a20f567e53d48d455728c35129ad3f977"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTermOperator</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a20f567e53d48d455728c35129ad3f977"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a136483193e7fbe927e766e50e98e13da"><td class="memItemLeft" align="right" valign="top"><a id="a136483193e7fbe927e766e50e98e13da"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFactorOperator</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a136483193e7fbe927e766e50e98e13da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa44bc325151c00cf105f6c5e09feb7b3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tokenizer_8cpp.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a> (char *expression)</td></tr>
 <tr class="separator:aa44bc325151c00cf105f6c5e09feb7b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
@@ -115,7 +139,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>vector of parsed tokens. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::invalid_argument</td><td>if invalid symbol met. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_syntax_error.html">SyntaxError</a></td><td>if invalid symbol met. </td></tr>
   </table>
   </dd>
 </dl>

@@ -1,0 +1,423 @@
+digraph AST {
+169 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+169->43
+43 [label="func def
+name: solveLinear", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+43->2
+2 [label="params", shape=box, style=filled, color="grey", fillcolor="grey"];
+2->0
+0 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+2->1
+1 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+43->42
+42 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+42->41
+41 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+41->26
+26 [label="if", shape=box, style=filled, color="grey", fillcolor="grey"];
+26->5
+5 [label="comp op
+op: ==", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+5->3
+3 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+5->4
+4 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+26->25
+25 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+25->24
+24 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+24->21
+21 [label="if-else", shape=box, style=filled, color="grey", fillcolor="grey"];
+21->8
+8 [label="comp op
+op: ==", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+8->6
+6 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+8->7
+7 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+21->15
+15 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+15->14
+14 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+14->13
+13 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+13->12
+12 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+12->170
+170 [label="const
+value: -1", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+21->20
+20 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+20->19
+19 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+19->18
+18 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+18->17
+17 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+17->16
+16 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+24->23
+23 [label="return", shape=box, style=filled, color="grey", fillcolor="grey"];
+23->22
+22 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+41->29
+29 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+29->28
+28 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+28->27
+27 [label="const
+value: 1", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+41->38
+38 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+38->37
+37 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+37->36
+36 [label="binary op
+op: /", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+36->34
+34 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+34->171
+171 [label="const
+value: -1", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+34->33
+33 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+36->35
+35 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+41->40
+40 [label="return", shape=box, style=filled, color="grey", fillcolor="grey"];
+40->39
+39 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+169->147
+147 [label="func def
+name: solveQuadratic", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+147->47
+47 [label="params", shape=box, style=filled, color="grey", fillcolor="grey"];
+47->44
+44 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+47->45
+45 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+47->46
+46 [label="var
+name: c", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+147->146
+146 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+146->145
+145 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+145->59
+59 [label="if", shape=box, style=filled, color="grey", fillcolor="grey"];
+59->50
+50 [label="comp op
+op: ==", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+50->48
+48 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+50->49
+49 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+59->58
+58 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+58->57
+57 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+57->54
+54 [label="func call
+name: solveLinear", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+54->53
+53 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+53->51
+51 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+53->52
+52 [label="var
+name: c", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+57->56
+56 [label="return", shape=box, style=filled, color="grey", fillcolor="grey"];
+56->55
+55 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+145->70
+70 [label="var decl", shape=box, style=filled, color="grey", fillcolor="#59BF5D"];
+70->60
+60 [label="var
+name: d", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+70->69
+69 [label="binary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+69->63
+63 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+63->61
+61 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+63->62
+62 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+69->68
+68 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+68->66
+66 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+66->64
+64 [label="const
+value: 4", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+66->65
+65 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+68->67
+67 [label="var
+name: c", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+145->142
+142 [label="if-else", shape=box, style=filled, color="grey", fillcolor="grey"];
+142->73
+73 [label="comp op
+op: <", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+73->71
+71 [label="var
+name: d", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+73->72
+72 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+142->78
+78 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+78->77
+77 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+77->76
+76 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+76->75
+75 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+75->74
+74 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+142->141
+141 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+141->140
+140 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+140->139
+139 [label="if-else", shape=box, style=filled, color="grey", fillcolor="grey"];
+139->81
+81 [label="comp op
+op: ==", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+81->79
+79 [label="var
+name: d", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+81->80
+80 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+139->97
+97 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+97->96
+96 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+96->84
+84 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+84->83
+83 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+83->82
+82 [label="const
+value: 1", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+96->95
+95 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+95->94
+94 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+94->93
+93 [label="binary op
+op: /", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+93->89
+89 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+89->172
+172 [label="const
+value: -1", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+89->88
+88 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+93->92
+92 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+92->90
+90 [label="const
+value: 2", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+92->91
+91 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+139->138
+138 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+138->137
+137 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+137->112
+112 [label="var decl", shape=box, style=filled, color="grey", fillcolor="#59BF5D"];
+112->98
+98 [label="var
+name: x1", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+112->111
+111 [label="binary op
+op: /", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+111->107
+107 [label="binary op
+op: -", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+107->103
+103 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+103->173
+173 [label="const
+value: -1", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+103->102
+102 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+107->106
+106 [label="func call
+name: sqrt", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+106->105
+105 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+105->104
+104 [label="var
+name: d", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+111->110
+110 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+110->108
+108 [label="const
+value: 2", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+110->109
+109 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+137->127
+127 [label="var decl", shape=box, style=filled, color="grey", fillcolor="#59BF5D"];
+127->113
+113 [label="var
+name: x2", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+127->126
+126 [label="binary op
+op: /", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+126->122
+122 [label="binary op
+op: +", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+122->118
+118 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+118->174
+174 [label="const
+value: -1", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+118->117
+117 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+122->121
+121 [label="func call
+name: sqrt", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+121->120
+120 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+120->119
+119 [label="var
+name: d", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+126->125
+125 [label="binary op
+op: *", shape=box, style=filled, color="grey", fillcolor="#C9E7FF"];
+125->123
+123 [label="const
+value: 2", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+125->124
+124 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+137->130
+130 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+130->129
+129 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+129->128
+128 [label="const
+value: 2", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+137->133
+133 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+133->132
+132 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+132->131
+131 [label="var
+name: x1", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+137->136
+136 [label="func call
+name: print", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+136->135
+135 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+135->134
+134 [label="var
+name: x2", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+145->144
+144 [label="return", shape=box, style=filled, color="grey", fillcolor="grey"];
+144->143
+143 [label="const
+value: 0", shape=box, style=filled, color="grey", fillcolor="#FFFEC9"];
+169->168
+168 [label="func def
+name: main", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+168->148
+148 [label="no params", shape=box, style=filled, color="grey", fillcolor="grey"];
+168->167
+167 [label="block", shape=box, style=filled, color="grey", fillcolor="grey"];
+167->166
+166 [label="statements", shape=box, style=filled, color="grey", fillcolor="grey"];
+166->152
+152 [label="var decl", shape=box, style=filled, color="grey", fillcolor="#59BF5D"];
+152->149
+149 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+152->151
+151 [label="func call
+name: read", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+151->150
+150 [label="no args", shape=box, style=filled, color="grey", fillcolor="grey"];
+166->156
+156 [label="var decl", shape=box, style=filled, color="grey", fillcolor="#59BF5D"];
+156->153
+153 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+156->155
+155 [label="func call
+name: read", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+155->154
+154 [label="no args", shape=box, style=filled, color="grey", fillcolor="grey"];
+166->160
+160 [label="var decl", shape=box, style=filled, color="grey", fillcolor="#59BF5D"];
+160->157
+157 [label="var
+name: c", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+160->159
+159 [label="func call
+name: read", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+159->158
+158 [label="no args", shape=box, style=filled, color="grey", fillcolor="grey"];
+166->165
+165 [label="func call
+name: solveQuadratic", shape=box, style=filled, color="grey", fillcolor="#F9C7FF"];
+165->164
+164 [label="args", shape=box, style=filled, color="grey", fillcolor="grey"];
+164->161
+161 [label="var
+name: a", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+164->162
+162 [label="var
+name: b", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+164->163
+163 [label="var
+name: c", shape=box, style=filled, color="grey", fillcolor="#99FF9D"];
+}

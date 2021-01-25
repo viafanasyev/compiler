@@ -1,0 +1,24 @@
+func fib(n) {
+    var cur = 0;
+    var next = 1;
+    while (n > 0) {
+        next = cur + next;
+        cur = next - cur;
+        n = n - 1;
+    }
+    return cur;
+}
+
+func recFib(n) {
+    if (n <= 2) return 1;
+    return recFib(n - 1) + recFib(n - 2);
+}
+
+func main() {
+    var n = read();
+    while (n > 0) {
+        print(fib(n));
+        print(recFib(n));
+        n = read();
+    }
+}

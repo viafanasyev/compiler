@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['variablenode_102',['VariableNode',['../class_variable_node.html',1,'']]],
-  ['variabletoken_103',['VariableToken',['../class_variable_token.html',1,'']]]
+  ['operatornode_224',['OperatorNode',['../class_operator_node.html',1,'']]],
+  ['operatortoken_225',['OperatorToken',['../class_operator_token.html',1,'']]],
+  ['optimizer_226',['Optimizer',['../class_optimizer.html',1,'']]]
 ];

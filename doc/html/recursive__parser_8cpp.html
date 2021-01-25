@@ -76,19 +76,52 @@ $(function() {
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;vector&gt;</code><br />
 <code>#include &quot;<a class="el" href="recursive__parser_8h_source.html">recursive_parser.h</a>&quot;</code><br />
-<code>#include &quot;<a class="el" href="_syntax_error_8h_source.html">SyntaxError.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_syntax_error_8h_source.html">../util/SyntaxError.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
-<tr class="memitem:a6c3cc585058795c81fdeeb2c96050cfd"><td class="memItemLeft" align="right" valign="top"><a id="a6c3cc585058795c81fdeeb2c96050cfd"></a>
-std::shared_ptr&lt; <a class="el" href="class_statements_node.html">StatementsNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getStatements</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
-<tr class="separator:a6c3cc585058795c81fdeeb2c96050cfd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b0602d5429835983da912e6ab7da469"><td class="memItemLeft" align="right" valign="top"><a id="a6b0602d5429835983da912e6ab7da469"></a>
-std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getStatement</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
-<tr class="separator:a6b0602d5429835983da912e6ab7da469"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aca7dd5ca787991b633afb76c72c1e8a7"><td class="memItemLeft" align="right" valign="top"><a id="aca7dd5ca787991b633afb76c72c1e8a7"></a>
+std::shared_ptr&lt; <a class="el" href="class_statements_node.html">StatementsNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getOuterScopeStatements</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:aca7dd5ca787991b633afb76c72c1e8a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a503f98c8c804c7542f3b7119063eb4c2"><td class="memItemLeft" align="right" valign="top"><a id="a503f98c8c804c7542f3b7119063eb4c2"></a>
+std::shared_ptr&lt; <a class="el" href="class_statements_node.html">StatementsNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getFunctionScopeStatements</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a503f98c8c804c7542f3b7119063eb4c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab2da0c258a42e09dee116f2a5272b4c6"><td class="memItemLeft" align="right" valign="top"><a id="ab2da0c258a42e09dee116f2a5272b4c6"></a>
+std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getOuterScopeStatement</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:ab2da0c258a42e09dee116f2a5272b4c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aada250f1d6e5c1cc6b66820118f044b1"><td class="memItemLeft" align="right" valign="top"><a id="aada250f1d6e5c1cc6b66820118f044b1"></a>
+std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getFunctionScopeStatement</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:aada250f1d6e5c1cc6b66820118f044b1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a018ea55a6945816739a96086cded3b2b"><td class="memItemLeft" align="right" valign="top"><a id="a018ea55a6945816739a96086cded3b2b"></a>
 std::shared_ptr&lt; <a class="el" href="class_block_node.html">BlockNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getBlock</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:a018ea55a6945816739a96086cded3b2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7ec9a40bb114f972146fac580ae3c4ff"><td class="memItemLeft" align="right" valign="top"><a id="a7ec9a40bb114f972146fac580ae3c4ff"></a>
+std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getIfStatement</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a7ec9a40bb114f972146fac580ae3c4ff"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47c71508292e83d4d71aabe2f56bce1b"><td class="memItemLeft" align="right" valign="top"><a id="a47c71508292e83d4d71aabe2f56bce1b"></a>
+std::shared_ptr&lt; <a class="el" href="class_comparison_operator_node.html">ComparisonOperatorNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getIfStatementHeader</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a47c71508292e83d4d71aabe2f56bce1b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8e2d1d9a5e8c9b05ed76522fad32ef29"><td class="memItemLeft" align="right" valign="top"><a id="a8e2d1d9a5e8c9b05ed76522fad32ef29"></a>
+std::shared_ptr&lt; <a class="el" href="class_while_node.html">WhileNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getWhileStatement</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a8e2d1d9a5e8c9b05ed76522fad32ef29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a845eb0e0e19eef7b4d7e633d69c8a6c6"><td class="memItemLeft" align="right" valign="top"><a id="a845eb0e0e19eef7b4d7e633d69c8a6c6"></a>
+std::shared_ptr&lt; <a class="el" href="class_comparison_operator_node.html">ComparisonOperatorNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getWhileStatementHeader</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a845eb0e0e19eef7b4d7e633d69c8a6c6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1ff2c42179272af801c5db9dce5ed3f0"><td class="memItemLeft" align="right" valign="top"><a id="a1ff2c42179272af801c5db9dce5ed3f0"></a>
+std::shared_ptr&lt; <a class="el" href="class_comparison_operator_node.html">ComparisonOperatorNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getComparisonExpression</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a1ff2c42179272af801c5db9dce5ed3f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a65eb79862f5fc24074b1b8bff896d5b9"><td class="memItemLeft" align="right" valign="top"><a id="a65eb79862f5fc24074b1b8bff896d5b9"></a>
+std::shared_ptr&lt; <a class="el" href="class_function_definition_node.html">FunctionDefinitionNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getFunctionDefinition</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a65eb79862f5fc24074b1b8bff896d5b9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2fccc163a0598f9e0599d6e3fd0028fc"><td class="memItemLeft" align="right" valign="top"><a id="a2fccc163a0598f9e0599d6e3fd0028fc"></a>
+std::shared_ptr&lt; <a class="el" href="class_parameters_list_node.html">ParametersListNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getParametersList</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a2fccc163a0598f9e0599d6e3fd0028fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3335ec9118536c458e9211ecc33b3235"><td class="memItemLeft" align="right" valign="top"><a id="a3335ec9118536c458e9211ecc33b3235"></a>
+std::shared_ptr&lt; <a class="el" href="class_return_statement_node.html">ReturnStatementNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getReturnStatement</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a3335ec9118536c458e9211ecc33b3235"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a02733496ac1d4815d9b58aeefef3fbb9"><td class="memItemLeft" align="right" valign="top"><a id="a02733496ac1d4815d9b58aeefef3fbb9"></a>
+std::shared_ptr&lt; <a class="el" href="class_variable_declaration_node.html">VariableDeclarationNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariableDeclaration</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a02733496ac1d4815d9b58aeefef3fbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87e124fd6ab8f25eecb85fc7ffd10ed8"><td class="memItemLeft" align="right" valign="top"><a id="a87e124fd6ab8f25eecb85fc7ffd10ed8"></a>
 std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getExpression</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:a87e124fd6ab8f25eecb85fc7ffd10ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -101,28 +134,55 @@ std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&
 <tr class="memitem:ac0faaaf9ca04d9c288fe9552459f0a94"><td class="memItemLeft" align="right" valign="top"><a id="ac0faaaf9ca04d9c288fe9552459f0a94"></a>
 std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getParenthesised</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:ac0faaaf9ca04d9c288fe9552459f0a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa40bfb09b5c36dd88d22c3a3a8f00e7"><td class="memItemLeft" align="right" valign="top"><a id="aaa40bfb09b5c36dd88d22c3a3a8f00e7"></a>
+std::shared_ptr&lt; <a class="el" href="class_assignment_operator_node.html">AssignmentOperatorNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAssignment</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:aaa40bfb09b5c36dd88d22c3a3a8f00e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac36619a2e23f3e0d84d9bf072eb6a2a0"><td class="memItemLeft" align="right" valign="top"><a id="ac36619a2e23f3e0d84d9bf072eb6a2a0"></a>
+std::shared_ptr&lt; <a class="el" href="class_function_call_node.html">FunctionCallNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getFunctionCall</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:ac36619a2e23f3e0d84d9bf072eb6a2a0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e7dff82f526eaa2937f53a81a37bfb4"><td class="memItemLeft" align="right" valign="top"><a id="a4e7dff82f526eaa2937f53a81a37bfb4"></a>
+std::shared_ptr&lt; <a class="el" href="class_arguments_list_node.html">ArgumentsListNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getArgumentsList</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a4e7dff82f526eaa2937f53a81a37bfb4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8611f1f67dbdc5863c2fe0a07e114e0d"><td class="memItemLeft" align="right" valign="top"><a id="a8611f1f67dbdc5863c2fe0a07e114e0d"></a>
+std::shared_ptr&lt; <a class="el" href="class_variable_node.html">VariableNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a8611f1f67dbdc5863c2fe0a07e114e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f8b182e210641794ad6dec0c7e15a69"><td class="memItemLeft" align="right" valign="top"><a id="a4f8b182e210641794ad6dec0c7e15a69"></a>
 std::shared_ptr&lt; <a class="el" href="class_constant_value_node.html">ConstantValueNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getNumber</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:a4f8b182e210641794ad6dec0c7e15a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af65d6052f15cbfdc3489f06bacc3ebca"><td class="memItemLeft" align="right" valign="top"><a id="af65d6052f15cbfdc3489f06bacc3ebca"></a>
-std::shared_ptr&lt; <a class="el" href="class_variable_node.html">VariableNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getId</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
-<tr class="separator:af65d6052f15cbfdc3489f06bacc3ebca"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0d937cf63b4a92104c9b379bb255e104"><td class="memItemLeft" align="right" valign="top"><a id="a0d937cf63b4a92104c9b379bb255e104"></a>
+std::shared_ptr&lt; <a class="el" href="class_id_token.html">IdToken</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getId</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a0d937cf63b4a92104c9b379bb255e104"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a61dac3481cdac71332a2c246b8daab5f"><td class="memItemLeft" align="right" valign="top"><a id="a61dac3481cdac71332a2c246b8daab5f"></a>
 std::shared_ptr&lt; <a class="el" href="class_statements_node.html">StatementsNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>buildASTRecursively</b> (char *expression)</td></tr>
 <tr class="separator:a61dac3481cdac71332a2c246b8daab5f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of recursive parser. </p>
-<p>It parses programs using next grammar: </p><pre class="fragment">G = Statements '\0'
-Statements = (Statement)*
-Statement = Expression ';' | Block
-Block = '{' Statements '}'
-Expression = Term ([+|-] Term)*
-Term = Factor ([*|/] Factor)*
+<p>It parses programs using next grammar: </p><pre class="fragment">G = OuterScopeStatements '\0'
+OuterScopeStatements = (OuterScopeStatement)*
+FunctionScopeStatements = (FunctionScopeStatement)*
+OuterScopeStatement = FunctionDefinition
+FunctionScopeStatement = Expression ';' | Assignment ';' | VariableDeclaration | Block | IfStatement | WhileStatement | ReturnStatement
+Block = '{' FunctionScopeStatements '}'
+IfStatement = IfStatementHeader FunctionScopeStatement ('else' FunctionScopeStatement)?
+IfStatementHeader = 'if' '(' ComparisonExpression ')'
+WhileStatement = WhileStatementHeader FunctionScopeStatement
+WhileStatementHeader = 'while' '(' ComparisonExpression ')'
+ComparisonExpression = Expression [&lt; &gt; == &lt;= &gt;=] Expression
+FunctionDefinition = 'func' ID '(' ParametersList ')' Block
+ParametersList = ( Variable (',' Variable)* )?
+ReturnStatement = 'return' Expression ';'
+VariableDeclaration = 'var' Variable ('=' Expression)? ';'
+Expression = Term ([+ -] Term)*
+Term = Factor ([* /] Factor)*
 Factor = Parenthesised (^ Parenthesised)*
-Parenthesised = '(' Expression ')' | Number | ID
+Parenthesised = '(' Expression ')' | Number | Variable | FunctionCall
+Assignment = Variable '=' Expression
+FunctionCall = ID '(' ArgumentsList ')'
+ArgumentsList = ( Expression (',' Expression)* )?
+Variable = ID
 Number = [0-9]+
-ID = [a-zA-Z]+
+ID = [a-z A-Z] [a-z A-Z 0-9]*
 </pre> </div></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

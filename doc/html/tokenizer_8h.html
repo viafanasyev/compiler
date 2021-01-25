@@ -74,14 +74,17 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>Definition of tokens that can be parsed and a tokenizer functions.  
+<p>Definition of tokens that can be parsed and tokenizer functions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;cctype&gt;</code><br />
 <code>#include &lt;climits&gt;</code><br />
+<code>#include &lt;cstddef&gt;</code><br />
 <code>#include &lt;cstring&gt;</code><br />
 <code>#include &lt;map&gt;</code><br />
 <code>#include &lt;memory&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
+<code>#include &quot;<a class="el" href="constants_8h_source.html">../util/constants.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_token_origin_8h_source.html">../util/TokenOrigin.h</a>&quot;</code><br />
 </div>
 <p><a href="tokenizer_8h_source.html">Go to the source code of this file.</a></p>
 <table class="memberdecls">
@@ -109,11 +112,39 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_power_operator.html">PowerOperator</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_variable_token.html">VariableToken</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_assignment_operator_token.html">AssignmentOperatorToken</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_function_token.html">FunctionToken</a></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_comparison_operator_token.html">ComparisonOperatorToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_less_comparison_operator.html">LessComparisonOperator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_less_or_equal_comparison_operator.html">LessOrEqualComparisonOperator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_greater_comparison_operator.html">GreaterComparisonOperator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_greater_or_equal_comparison_operator.html">GreaterOrEqualComparisonOperator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_equal_comparison_operator.html">EqualComparisonOperator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_not_equal_comparison_operator.html">NotEqualComparisonOperator</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_id_token.html">IdToken</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_semicolon_token.html">SemicolonToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_if_token.html">IfToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_else_token.html">ElseToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_while_token.html">WhileToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_func_token.html">FuncToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_var_token.html">VarToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_comma_token.html">CommaToken</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class_return_token.html">ReturnToken</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
@@ -122,10 +153,20 @@ Enumerations</h2></td></tr>
 &#160;&#160;<b>CONSTANT_VALUE</b>, 
 <b>PARENTHESIS</b>, 
 <b>OPERATOR</b>, 
-<b>VARIABLE</b>, 
+<b>ASSIGNMENT_OPERATOR</b>, 
 <br />
-&#160;&#160;<b>FUNCTION</b>, 
-<b>SEMICOLON</b>
+&#160;&#160;<b>COMPARISON_OPERATOR</b>, 
+<b>ID</b>, 
+<b>SEMICOLON</b>, 
+<b>IF</b>, 
+<br />
+&#160;&#160;<b>ELSE</b>, 
+<b>WHILE</b>, 
+<b>FUNC</b>, 
+<b>VAR</b>, 
+<br />
+&#160;&#160;<b>COMMA</b>, 
+<b>RETURN</b>
 <br />
  }</td></tr>
 <tr class="separator:aa520fbf142ba1e7e659590c07da31921"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -145,14 +186,46 @@ Enumerations</h2></td></tr>
 <br />
  }</td></tr>
 <tr class="separator:a6a02b2d1d62293b20242e3dcfbdd0117"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4e285e3f7b58bac01a400f592a708d81"><td class="memItemLeft" align="right" valign="top"><a id="a4e285e3f7b58bac01a400f592a708d81"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>ComparisonOperatorType</b> { <br />
+&#160;&#160;<b>LESS</b>, 
+<b>LESS_OR_EQUAL</b>, 
+<b>GREATER</b>, 
+<b>GREATER_OR_EQUAL</b>, 
+<br />
+&#160;&#160;<b>EQUAL</b>, 
+<b>NOT_EQUAL</b>
+<br />
+ }</td></tr>
+<tr class="separator:a4e285e3f7b58bac01a400f592a708d81"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:ad7a588ffbccb6551bd43dbfa47972be9"><td class="memItemLeft" align="right" valign="top"><a id="ad7a588ffbccb6551bd43dbfa47972be9"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOpenCurlyParenthesisToken</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:ad7a588ffbccb6551bd43dbfa47972be9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a765a7317acc94da553c6b7e299897b6b"><td class="memItemLeft" align="right" valign="top"><a id="a765a7317acc94da553c6b7e299897b6b"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isCloseCurlyParenthesisToken</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a765a7317acc94da553c6b7e299897b6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a200a81b6a7862a18018834422e98db6c"><td class="memItemLeft" align="right" valign="top"><a id="a200a81b6a7862a18018834422e98db6c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isOpenRoundParenthesisToken</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a200a81b6a7862a18018834422e98db6c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a54613c1c00486007cd3f81fab5d98d"><td class="memItemLeft" align="right" valign="top"><a id="a9a54613c1c00486007cd3f81fab5d98d"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isCloseRoundParenthesisToken</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a9a54613c1c00486007cd3f81fab5d98d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a813625286e4be00497bf3b39342a4693"><td class="memItemLeft" align="right" valign="top"><a id="a813625286e4be00497bf3b39342a4693"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isExpressionOperator</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a813625286e4be00497bf3b39342a4693"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a20f567e53d48d455728c35129ad3f977"><td class="memItemLeft" align="right" valign="top"><a id="a20f567e53d48d455728c35129ad3f977"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isTermOperator</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a20f567e53d48d455728c35129ad3f977"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a136483193e7fbe927e766e50e98e13da"><td class="memItemLeft" align="right" valign="top"><a id="a136483193e7fbe927e766e50e98e13da"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>isFactorOperator</b> (const std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &amp;token)</td></tr>
+<tr class="separator:a136483193e7fbe927e766e50e98e13da"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa44bc325151c00cf105f6c5e09feb7b3"><td class="memItemLeft" align="right" valign="top">std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt; &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a> (char *expression)</td></tr>
 <tr class="separator:aa44bc325151c00cf105f6c5e09feb7b3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>Definition of tokens that can be parsed and a tokenizer functions. </p>
+<div class="textblock"><p>Definition of tokens that can be parsed and tokenizer functions. </p>
 </div><h2 class="groupheader">Function Documentation</h2>
 <a id="aa44bc325151c00cf105f6c5e09feb7b3"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aa44bc325151c00cf105f6c5e09feb7b3">&#9670;&nbsp;</a></span>tokenize()</h2>
@@ -178,7 +251,7 @@ Functions</h2></td></tr>
 <dl class="section return"><dt>Returns</dt><dd>vector of parsed tokens. </dd></dl>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
-    <tr><td class="paramname">std::invalid_argument</td><td>if invalid symbol met. </td></tr>
+    <tr><td class="paramname"><a class="el" href="class_syntax_error.html">SyntaxError</a></td><td>if invalid symbol met. </td></tr>
   </table>
   </dd>
 </dl>

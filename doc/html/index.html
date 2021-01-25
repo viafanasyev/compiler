@@ -69,24 +69,38 @@ $(function() {
 Project description</h1>
 <p>This program is developed as a part of ISP RAS course. <br  />
 </p>
-<p>NOTE: This program runs only on UNIX-like OS. Also <code>dot</code> and <code>pdflatex</code> should be installed.</p>
-<h2><a class="anchor" id="autotoc_md2"></a>
-Structure</h2>
+<p>This program is a compiler for a <span style="font-size:0.75em;">currently unnamed</span> language. It can program build and show AST for code, compile and run programs on <a href="https://github.com/viafanasyev/stack-machine">pseudo-virtual-stack-machine</a>.</p>
+<p>NOTE: This program runs only on UNIX-like OS. Also <code>dot</code> should be installed.</p>
+<h1><a class="anchor" id="autotoc_md2"></a>
+Structure</h1>
 <ul>
 <li>src/ : Main project<ul>
+<li>backend/ : IR generation<ul>
+<li><a class="el" href="codegen_8h.html" title="Definition of IR code generation functions.">codegen.h</a>, <a class="el" href="codegen_8cpp.html" title="Implementation of IR code generation functions.">codegen.cpp</a> : Definition and implementation of IR code generation functions - particularly, a <a class="el" href="class_codegen_visitor.html">CodegenVisitor</a> for ASTNodes;</li>
+<li><a class="el" href="_label_8h.html" title="Definition and implementation of IR code label. Label can be used for jumps or calls.">Label.h</a>, <a class="el" href="_label_8cpp.html">Label.cpp</a> : Definition and implementation of IR code label (used for jump and call instructions);</li>
+<li><a class="el" href="_symbol_table_8h.html" title="Definition of symbol table and symbols for variables and functions. Used to save symbols,...">SymbolTable.h</a>, <a class="el" href="_symbol_table_8cpp.html" title="Implementation of symbol table and symbols for variables and functions.">SymbolTable.cpp</a> : Definition and implementation of symbol table and symbols for variables and functions. Used to save symbols, their positions in memory and specific information (like labels for functions);</li>
+</ul>
+</li>
 <li>frontend/ : Parsing, AST building and etc.<ul>
-<li><a class="el" href="ast_8h.html" title="Definition of AST node and AST building functions.">ast.h</a>, <a class="el" href="ast_8cpp.html" title="Implementation of AST building functions.">ast.cpp</a> : Definition and implementation of AST node, AST building, visualization and TeX conversion functions;</li>
-<li><a class="el" href="tokenizer_8h.html" title="Definition of tokens that can be parsed and a tokenizer functions.">tokenizer.h</a>, <a class="el" href="tokenizer_8cpp.html" title="Implementation of tokenizer functions.">tokenizer.cpp</a> : Definition and implementation of tokens and tokenizer functions;</li>
-<li><a class="el" href="recursive__parser_8h.html" title="Definition of calculator that uses recursive parser.">recursive_parser.h</a>, <a class="el" href="recursive__parser_8cpp.html" title="Implementation of recursive parser.">recursive_parser.cpp</a> : Definition and implementation of recursive parser;</li>
-<li><a class="el" href="_syntax_error_8h.html">SyntaxError.h</a>, <a class="el" href="_syntax_error_8cpp.html">SyntaxError.cpp</a> : Definition and implementation of exception that is thrown on syntax error;</li>
+<li><a class="el" href="ast_8h.html" title="Definition of AST nodes and AST building functions.">ast.h</a>, <a class="el" href="ast_8cpp.html" title="Implementation of AST building functions.">ast.cpp</a> : Definition and implementation of AST node, AST building and visualization functions;</li>
+<li><a class="el" href="recursive__parser_8h.html" title="Definition of recursive parser.">recursive_parser.h</a>, <a class="el" href="recursive__parser_8cpp.html" title="Implementation of recursive parser.">recursive_parser.cpp</a> : Definition and implementation of recursive parser;</li>
+<li><a class="el" href="tokenizer_8h.html" title="Definition of tokens that can be parsed and tokenizer functions.">tokenizer.h</a>, <a class="el" href="tokenizer_8cpp.html" title="Implementation of tokenizer functions.">tokenizer.cpp</a> : Definition and implementation of tokens and tokenizer functions;</li>
 </ul>
 </li>
 <li>middleend/ : AST optimizations<ul>
 <li><a class="el" href="ast-optimizers_8h.html" title="Definition of AST optimizers.">ast-optimizers.h</a>, <a class="el" href="ast-optimizers_8cpp.html" title="Implementation of AST optimizers.">ast-optimizers.cpp</a> : Definition and implementation of AST optimizers;</li>
 </ul>
 </li>
-<li>backend/ : IR generation</li>
-<li>main.cpp : Entry point for the program.</li>
+<li>stack-machine/ : stack machine that runs compiled program (see <a href="https://github.com/viafanasyev/stack-machine">GitHub repo</a>)</li>
+<li>util/ : Utility classes, functions, etc.<ul>
+<li><a class="el" href="constants_8h.html" title="Configuration constants needed for compilation.">constants.h</a> : Useful constants like maximal variable name length;</li>
+<li><a class="el" href="_redefinition_error_8h.html">RedefinitionError.h</a>, <a class="el" href="_redefinition_error_8cpp.html">RedefinitionError.cpp</a> : Definition and implementation of exception that is thrown on variable or function being redefined;</li>
+<li><a class="el" href="_syntax_error_8h.html">SyntaxError.h</a>, <a class="el" href="_syntax_error_8cpp.html">SyntaxError.cpp</a> : Definition and implementation of exception that is thrown on syntax error;</li>
+<li><a class="el" href="_token_origin_8h.html">TokenOrigin.h</a> : Structure containing origin position of token;</li>
+</ul>
+</li>
+<li>main.cpp : Entry point for the program;</li>
+<li><a class="el" href="_mapped_file_8h.html" title="Header file for MappedFile class.">MappedFile.h</a>, <a class="el" href="_mapped_file_8cpp.html" title="Source file for MappedFile class.">MappedFile.cpp</a> : Represents a text file mapped by mmap function.</li>
 </ul>
 </li>
 <li>test/ : Tests and testing library<ul>
@@ -94,29 +108,167 @@ Structure</h2>
 <li><a class="el" href="tokenizer__tests_8cpp.html" title="Tests for tokenizer functions.">tokenizer_tests.cpp</a> : Tests for tokenizer functions;</li>
 </ul>
 </li>
-<li><a class="el" href="testlib_8h.html" title="Header file with testlib description.">testlib.h</a>, <a class="el" href="testlib_8cpp.html" title="Source file with testlib implementation.">testlib.cpp</a> : Library for testing with assertions and helper macros;</li>
+<li>testlib.h, testlib.cpp : Library for testing with assertions and helper macros;</li>
 <li>main.cpp : Entry point for tests. Just runs all tests.</li>
 </ul>
 </li>
 <li>doc/ : doxygen documentation</li>
 <li>Doxyfile : doxygen config file</li>
 </ul>
-<h2><a class="anchor" id="autotoc_md3"></a>
-Run</h2>
+<h1><a class="anchor" id="autotoc_md3"></a>
+Language description</h1>
+<p>This language has (almost) a C-style syntax. <br  />
+ Each program should have no-arg main function. <br  />
+ Each statement should be terminated with <code>;</code>. Each variable should be declared using <code>var</code> keyword: <code>var x = 42;</code>. <br  />
+ There's no global variables. <br  />
+ Each function should be defined using <code>func</code> keyword: <code>func foo(a, b, c) { ... }</code>. <br  />
+ Each function (except main) should return value. Implicit <code>return 0</code> added to the end of each function, if there's no return. <br  />
+</p>
+<p>Like in C, only function defined above are visible in the current function. <br  />
+ Variables can be shadowed in the nested scopes. For example: </p><div class="fragment"><div class="line">{</div>
+<div class="line">    var x = 0;</div>
+<div class="line">    {</div>
+<div class="line">        var x = 1; &lt;-- Shadows previous declared variable</div>
+<div class="line">    }</div>
+<div class="line">    &lt;-- But x is equal to 0 here</div>
+<div class="line">}</div>
+</div><!-- fragment --><p>There's no type system in the current version of this language, so every variable and function has type <code>double</code> (only exception is main function - it has type <code>void</code>). <br  />
+ This means, that there's no operations like <code>%</code> (remainder operator). <br  />
+ Note: <code>==</code> operator compares value with 1e-9 precision (<code>x == y</code> -&gt; <code>|x - y| &lt; 1e-9</code>), not by actual value. <br  />
+</p>
+<p>Language has three internal functions:</p><ul>
+<li><code>read()</code> - reads number from console and returns it's value;</li>
+<li><code>print(x)</code> - prints value of <code>x</code> into console;</li>
+<li><code>sqrt(x)</code> - returns square root of the <code>x</code>.</li>
+</ul>
+<p><br  />
+</p>
+<p>For list of all features to be done, see <code>TODO.md</code>.</p>
 <h2><a class="anchor" id="autotoc_md4"></a>
+Examples</h2>
+<p>All examples can be found in <code>examples/</code> directory.</p>
+<h3><a class="anchor" id="autotoc_md5"></a>
+Recursive and non-recursive fibonacci</h3>
+<p>File: <code>fibonacci.txt</code> </p><div class="fragment"><div class="line">func fib(n) {</div>
+<div class="line">    var cur = 0;</div>
+<div class="line">    var next = 1;</div>
+<div class="line">    while (n &gt; 0) {</div>
+<div class="line">        next = cur + next;</div>
+<div class="line">        cur = next - cur;</div>
+<div class="line">        n = n - 1;</div>
+<div class="line">    }</div>
+<div class="line">    return cur;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">func recFib(n) {</div>
+<div class="line">    if (n &lt;= 2) return 1;</div>
+<div class="line">    return recFib(n - 1) + recFib(n - 2);</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">func main() {</div>
+<div class="line">    var n = read();</div>
+<div class="line">    while (n &gt; 0) {</div>
+<div class="line">        print(fib(n));</div>
+<div class="line">        print(recFib(n));</div>
+<div class="line">        n = read();</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
+Quadratic equation solver</h2>
+<p>File: <code>quadratic_equation.txt</code> </p><div class="fragment"><div class="line">func solveLinear(a, b) {</div>
+<div class="line">    if (a == 0) {</div>
+<div class="line">        if (b == 0) {</div>
+<div class="line">            print(0 - 1);</div>
+<div class="line">        } else {</div>
+<div class="line">            print(0);</div>
+<div class="line">        }</div>
+<div class="line">        return 0;</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    print(1);</div>
+<div class="line">    print(((0 - 1) * b) / a);</div>
+<div class="line">    return 0;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">func solveQuadratic(a, b, c) {</div>
+<div class="line">    if (a == 0) {</div>
+<div class="line">        solveLinear(b, c);</div>
+<div class="line">        return 0;</div>
+<div class="line">    }</div>
+<div class="line"> </div>
+<div class="line">    var d = b*b - 4*a*c;</div>
+<div class="line">    if (d &lt; 0) {</div>
+<div class="line">        print(0);</div>
+<div class="line">    } else if (d == 0) {</div>
+<div class="line">        print(1);</div>
+<div class="line">        print(((0 - 1) * b) / (2 * a));</div>
+<div class="line">    } else {</div>
+<div class="line">        var x1 = ((0 - 1) * b - sqrt(d)) / (2 * a);</div>
+<div class="line">        var x2 = ((0 - 1) * b + sqrt(d)) / (2 * a);</div>
+<div class="line">        print(2);</div>
+<div class="line">        print(x1);</div>
+<div class="line">        print(x2);</div>
+<div class="line">    }</div>
+<div class="line">    return 0;</div>
+<div class="line">}</div>
+<div class="line"> </div>
+<div class="line">func main() {</div>
+<div class="line">    var a = read();</div>
+<div class="line">    var b = read();</div>
+<div class="line">    var c = read();</div>
+<div class="line"> </div>
+<div class="line">    solveQuadratic(a, b, c);</div>
+<div class="line">}</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md7"></a>
+Grammar</h2>
+<div class="fragment"><div class="line">G = OuterScopeStatements &#39;\0&#39;</div>
+<div class="line">OuterScopeStatements = (OuterScopeStatement)*</div>
+<div class="line">FunctionScopeStatements = (FunctionScopeStatement)*</div>
+<div class="line">OuterScopeStatement = FunctionDefinition</div>
+<div class="line">FunctionScopeStatement = Expression &#39;;&#39; | Assignment &#39;;&#39; | VariableDeclaration | Block | IfStatement | WhileStatement | ReturnStatement</div>
+<div class="line">Block = &#39;{&#39; FunctionScopeStatements &#39;}&#39;</div>
+<div class="line">IfStatement = IfStatementHeader FunctionScopeStatement (&#39;else&#39; FunctionScopeStatement)?</div>
+<div class="line">IfStatementHeader = &#39;if&#39; &#39;(&#39; ComparisonExpression &#39;)&#39;</div>
+<div class="line">WhileStatement = WhileStatementHeader FunctionScopeStatement</div>
+<div class="line">WhileStatementHeader = &#39;while&#39; &#39;(&#39; ComparisonExpression &#39;)&#39;</div>
+<div class="line">ComparisonExpression = Expression [&lt; &gt; == &lt;= &gt;=] Expression</div>
+<div class="line">FunctionDefinition = &#39;func&#39; ID &#39;(&#39; ParametersList &#39;)&#39; Block</div>
+<div class="line">ParametersList = ( Variable (&#39;,&#39; Variable)* )?</div>
+<div class="line">ReturnStatement = &#39;return&#39; Expression &#39;;&#39;</div>
+<div class="line">VariableDeclaration = &#39;var&#39; Variable (&#39;=&#39; Expression)? &#39;;&#39;</div>
+<div class="line">Expression = Term ([+ -] Term)*</div>
+<div class="line">Term = Factor ([* /] Factor)*</div>
+<div class="line">Factor = Parenthesised (^ Parenthesised)*</div>
+<div class="line">Parenthesised = &#39;(&#39; Expression &#39;)&#39; | Number | Variable | FunctionCall</div>
+<div class="line">Assignment = Variable &#39;=&#39; Expression</div>
+<div class="line">FunctionCall = ID &#39;(&#39; ArgumentsList &#39;)&#39;</div>
+<div class="line">ArgumentsList = ( Expression (&#39;,&#39; Expression)* )?</div>
+<div class="line">Variable = ID</div>
+<div class="line">Number = [0-9]+</div>
+<div class="line">ID = [a-z A-Z] [a-z A-Z 0-9]*</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>
+Run</h1>
+<h2><a class="anchor" id="autotoc_md9"></a>
 Compiler</h2>
+<p>There are 3 modes compiler can be run in:</p><ul>
+<li>Compile</li>
+<li>Print AST</li>
+<li>Compile and run</li>
+</ul>
 <p>To run compiler execute next commands in terminal: </p><div class="fragment"><div class="line">cmake . &amp;&amp; make</div>
-<div class="line">./compiler &quot;(N * (N + 1)) / 2&quot;</div>
-</div><!-- fragment --><h3><a class="anchor" id="autotoc_md5"></a>
-Tests</h3>
+<div class="line">./compiler code.txt     # Just compile program code from code.txt</div>
+<div class="line">./compiler code.txt ast # Print AST of the parsed program</div>
+<div class="line">./compiler code.txt run # Compile and run program on stack machine</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md10"></a>
+Tests</h2>
 <p>To run tests execute next commands in terminal: </p><div class="fragment"><div class="line">cmake . &amp;&amp; make</div>
 <div class="line">./tests</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
-Documentation</h2>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md11"></a>
+Documentation</h1>
 <p>Doxygen is used to create documentation. You can watch it by opening <code>doc/html/index.html</code> in browser. <br  />
 </p>
-<h2><a class="anchor" id="autotoc_md7"></a>
-OS</h2>
+<h1><a class="anchor" id="autotoc_md12"></a>
+OS</h1>
 <p>Program is developed under Ubuntu 20.04.1 LTS. </p>
 </div></div><!-- PageDoc -->
 </div><!-- contents -->

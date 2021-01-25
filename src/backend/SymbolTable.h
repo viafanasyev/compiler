@@ -1,6 +1,7 @@
 /**
  * @file
- * @brief Definition of symbol table and symbols for variables and functions
+ * @brief Definition of symbol table and symbols for variables and functions.
+ *        Used to save symbols, their positions in memory and specific information (like labels for functions)
  */
 #ifndef COMPILER_SYMBOLTABLE_H
 #define COMPILER_SYMBOLTABLE_H

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['unaryadditionoperator_100',['UnaryAdditionOperator',['../class_unary_addition_operator.html',1,'']]],
-  ['unaryadditionoptimizer_101',['UnaryAdditionOptimizer',['../class_unary_addition_optimizer.html',1,'']]]
+  ['notequalcomparisonoperator_223',['NotEqualComparisonOperator',['../class_not_equal_comparison_operator.html',1,'']]]
 ];

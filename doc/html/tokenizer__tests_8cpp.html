@@ -76,21 +76,31 @@ $(function() {
 <p>Tests for tokenizer functions.  
 <a href="#details">More...</a></p>
 <div class="textblock"><code>#include &lt;cstring&gt;</code><br />
-<code>#include &lt;stdexcept&gt;</code><br />
 <code>#include &lt;vector&gt;</code><br />
-<code>#include &quot;<a class="el" href="testlib_8h_source.html">../testlib.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="test_2testlib_8h_source.html">../testlib.h</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="_syntax_error_8h_source.html">../../src/util/SyntaxError.h</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="tokenizer_8h_source.html">../../src/frontend/tokenizer.h</a>&quot;</code><br />
 </div><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
 <tr class="memitem:a8f4db45eee85affe34417acf47684db5"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_CONSTANT_VALUE_TOKEN</b>(token,  value)</td></tr>
 <tr class="separator:a8f4db45eee85affe34417acf47684db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac94273fce2fc3812c35aa04c0e5e4c92"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_PARENTHESIS_TOKEN</b>(token,  open)</td></tr>
-<tr class="separator:ac94273fce2fc3812c35aa04c0e5e4c92"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac00ea5bc57a4a2f70f8ac65e2fd41192"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_PARENTHESIS_TOKEN</b>(token,  open,  type)</td></tr>
+<tr class="separator:ac00ea5bc57a4a2f70f8ac65e2fd41192"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8ae97166b3a4846e44ca07a4d0ae465e"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_OPERATOR_TOKEN</b>(token,  arity,  precedence,  operatorType)</td></tr>
 <tr class="separator:a8ae97166b3a4846e44ca07a4d0ae465e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8315390b386033b4368fad99864055cd"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_VARIABLE_TOKEN</b>(token,  name)</td></tr>
-<tr class="separator:a8315390b386033b4368fad99864055cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1fc134f8134c1c2c56a149bedfcc68f"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_ASSIGNMENT_OPERATOR_TOKEN</b>(token)</td></tr>
+<tr class="separator:ae1fc134f8134c1c2c56a149bedfcc68f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49dab07181388724ece5f4d43afe51cc"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_COMPARISON_OPERATOR_TOKEN</b>(token,  operatorType)</td></tr>
+<tr class="separator:a49dab07181388724ece5f4d43afe51cc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a107ebf142be2977c2feadae898ae31af"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_ID_TOKEN</b>(token,  name)</td></tr>
+<tr class="separator:a107ebf142be2977c2feadae898ae31af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72759a981e13bcc853c531a3f8f2171d"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_IF_TOKEN</b>(token)</td></tr>
+<tr class="separator:a72759a981e13bcc853c531a3f8f2171d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af929b0991ec1fa3d431d82d8b7363e44"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_ELSE_TOKEN</b>(token)</td></tr>
+<tr class="separator:af929b0991ec1fa3d431d82d8b7363e44"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3ca7c85a21d40269197e6bfb85065754"><td class="memItemLeft" align="right" valign="top">#define&#160;</td><td class="memItemRight" valign="bottom"><b>ASSERT_WHILE_TOKEN</b>(token)</td></tr>
+<tr class="separator:a3ca7c85a21d40269197e6bfb85065754"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="func-members"></a>
 Functions</h2></td></tr>
@@ -124,10 +134,117 @@ Functions</h2></td></tr>
 <tr class="memitem:aa73de06f16b9bf8437df3cb689af227a"><td class="memItemLeft" align="right" valign="top"><a id="aa73de06f16b9bf8437df3cb689af227a"></a>
 &#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleExpressionWithMultiplePowerOperations)</td></tr>
 <tr class="separator:aa73de06f16b9bf8437df3cb689af227a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24f5abdbba60e18d1808498d73f59ff0"><td class="memItemLeft" align="right" valign="top"><a id="a24f5abdbba60e18d1808498d73f59ff0"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleExpressionWithLessComparisonOperator)</td></tr>
+<tr class="separator:a24f5abdbba60e18d1808498d73f59ff0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7115056a7ae790ca7603b9e2ba930bb8"><td class="memItemLeft" align="right" valign="top"><a id="a7115056a7ae790ca7603b9e2ba930bb8"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleExpressionWithLessOrEqualComparisonOperator)</td></tr>
+<tr class="separator:a7115056a7ae790ca7603b9e2ba930bb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a40934fce54f46d9a8fd309f7fb710d41"><td class="memItemLeft" align="right" valign="top"><a id="a40934fce54f46d9a8fd309f7fb710d41"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleExpressionWithGreaterComparisonOperator)</td></tr>
+<tr class="separator:a40934fce54f46d9a8fd309f7fb710d41"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a37f60c77917836200334fd175962cf9c"><td class="memItemLeft" align="right" valign="top"><a id="a37f60c77917836200334fd175962cf9c"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleExpressionWithGreaterOrEqualComparisonOperator)</td></tr>
+<tr class="separator:a37f60c77917836200334fd175962cf9c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a32b547e69ac80d8ce2c50c7af4798bf3"><td class="memItemLeft" align="right" valign="top"><a id="a32b547e69ac80d8ce2c50c7af4798bf3"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleExpressionWithEqualComparisonOperator)</td></tr>
+<tr class="separator:a32b547e69ac80d8ce2c50c7af4798bf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad19e7caeca369a93f7f40986779a5209"><td class="memItemLeft" align="right" valign="top"><a id="ad19e7caeca369a93f7f40986779a5209"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleIfStatement)</td></tr>
+<tr class="separator:ad19e7caeca369a93f7f40986779a5209"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a219c2ca9578df2081452168032b00e47"><td class="memItemLeft" align="right" valign="top"><a id="a219c2ca9578df2081452168032b00e47"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleIfElseStatement)</td></tr>
+<tr class="separator:a219c2ca9578df2081452168032b00e47"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a61e65e7b931d43b32996baf4009dc8e3"><td class="memItemLeft" align="right" valign="top"><a id="a61e65e7b931d43b32996baf4009dc8e3"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, variableNameStartsWithIf)</td></tr>
+<tr class="separator:a61e65e7b931d43b32996baf4009dc8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:addb490ee53470deffed56e8e15cbf233"><td class="memItemLeft" align="right" valign="top"><a id="addb490ee53470deffed56e8e15cbf233"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, variableNameStartsWithElse)</td></tr>
+<tr class="separator:addb490ee53470deffed56e8e15cbf233"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6af5ca31cb030253bf4c456adf768b5e"><td class="memItemLeft" align="right" valign="top"><a id="a6af5ca31cb030253bf4c456adf768b5e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleWhileStatement)</td></tr>
+<tr class="separator:a6af5ca31cb030253bf4c456adf768b5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c0bc4bdc0d1edeeef9a311f4bbf687b"><td class="memItemLeft" align="right" valign="top"><a id="a0c0bc4bdc0d1edeeef9a311f4bbf687b"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, variableNameStartsWithWhile)</td></tr>
+<tr class="separator:a0c0bc4bdc0d1edeeef9a311f4bbf687b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a52c98fc83af75d4628646cc039b4d657"><td class="memItemLeft" align="right" valign="top"><a id="a52c98fc83af75d4628646cc039b4d657"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, simpleAssignmentExpression)</td></tr>
+<tr class="separator:a52c98fc83af75d4628646cc039b4d657"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a21f84dd198fac944fa67ecd1920e0649"><td class="memItemLeft" align="right" valign="top"><a id="a21f84dd198fac944fa67ecd1920e0649"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, plusSignAfterRoundParenthesisIsAddition)</td></tr>
+<tr class="separator:a21f84dd198fac944fa67ecd1920e0649"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a72eb2d746cd8afff422526be74688695"><td class="memItemLeft" align="right" valign="top"><a id="a72eb2d746cd8afff422526be74688695"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, minusSignAfterRoundParenthesisIsSubtraction)</td></tr>
+<tr class="separator:a72eb2d746cd8afff422526be74688695"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af2907b68749801692544af3c40c323bf"><td class="memItemLeft" align="right" valign="top"><a id="af2907b68749801692544af3c40c323bf"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, plusSignAfterCurlyParenthesisIsUnaryAddition)</td></tr>
+<tr class="separator:af2907b68749801692544af3c40c323bf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0c16ec4e2d6a1d0b33c012c145584944"><td class="memItemLeft" align="right" valign="top"><a id="a0c16ec4e2d6a1d0b33c012c145584944"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>TEST</b> (<a class="el" href="tokenizer_8h.html#aa44bc325151c00cf105f6c5e09feb7b3">tokenize</a>, minusSignAfterCurlyParenthesisIsArithmeticNegation)</td></tr>
+<tr class="separator:a0c16ec4e2d6a1d0b33c012c145584944"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tests for tokenizer functions. </p>
 </div><h2 class="groupheader">Macro Definition Documentation</h2>
+<a id="ae1fc134f8134c1c2c56a149bedfcc68f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae1fc134f8134c1c2c56a149bedfcc68f">&#9670;&nbsp;</a></span>ASSERT_ASSIGNMENT_OPERATOR_TOKEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ASSERT_ASSIGNMENT_OPERATOR_TOKEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">token</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                   \</div>
+<div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
+<div class="line">    ASSERT_EQUALS(token-&gt;getType(), ASSIGNMENT_OPERATOR);                                                              \</div>
+<div class="line">    auto operatorToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_assignment_operator_token.html">AssignmentOperatorToken</a>*<span class="keyword">&gt;</span>(token.get());                                          \</div>
+<div class="line">    ASSERT_NOT_NULL(operatorToken);                                                                                    \</div>
+<div class="line">} <span class="keywordflow">while</span> (0)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a49dab07181388724ece5f4d43afe51cc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49dab07181388724ece5f4d43afe51cc">&#9670;&nbsp;</a></span>ASSERT_COMPARISON_OPERATOR_TOKEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ASSERT_COMPARISON_OPERATOR_TOKEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">token, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">operatorType&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                     \</div>
+<div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
+<div class="line">    ASSERT_EQUALS(token-&gt;getType(), COMPARISON_OPERATOR);                                                              \</div>
+<div class="line">    auto operatorToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_comparison_operator_token.html">ComparisonOperatorToken</a>*<span class="keyword">&gt;</span>(token.get());                                          \</div>
+<div class="line">    ASSERT_NOT_NULL(operatorToken);                                                                                    \</div>
+<div class="line">    ASSERT_EQUALS(operatorToken-&gt;getOperatorType(), operatorType);                                                     \</div>
+<div class="line">} <span class="keywordflow">while</span> (0)</div>
+</div><!-- fragment -->
+</div>
+</div>
 <a id="a8f4db45eee85affe34417acf47684db5"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a8f4db45eee85affe34417acf47684db5">&#9670;&nbsp;</a></span>ASSERT_CONSTANT_VALUE_TOKEN</h2>
 
@@ -160,6 +277,89 @@ Functions</h2></td></tr>
 <div class="line">    ASSERT_NOT_NULL(constantValueToken);                                                                               \</div>
 <div class="line">    ASSERT_DOUBLE_EQUALS(constantValueToken-&gt;getValue(), value);                                                       \</div>
 <div class="line">} <span class="keywordflow">while</span>(0)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="af929b0991ec1fa3d431d82d8b7363e44"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af929b0991ec1fa3d431d82d8b7363e44">&#9670;&nbsp;</a></span>ASSERT_ELSE_TOKEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ASSERT_ELSE_TOKEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">token</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                  \</div>
+<div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
+<div class="line">    ASSERT_EQUALS(token-&gt;getType(), ELSE);                                                                             \</div>
+<div class="line">    auto operatorToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_else_token.html">ElseToken</a>*<span class="keyword">&gt;</span>(token.get());                                                        \</div>
+<div class="line">    ASSERT_NOT_NULL(operatorToken);                                                                                    \</div>
+<div class="line">} <span class="keywordflow">while</span> (0)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a107ebf142be2977c2feadae898ae31af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a107ebf142be2977c2feadae898ae31af">&#9670;&nbsp;</a></span>ASSERT_ID_TOKEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ASSERT_ID_TOKEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">token, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">name&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                              \</div>
+<div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
+<div class="line">    ASSERT_EQUALS(token-&gt;getType(), ID);                                                                               \</div>
+<div class="line">    auto idToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_id_token.html">IdToken</a>*<span class="keyword">&gt;</span>(token.get());                                                                \</div>
+<div class="line">    ASSERT_NOT_NULL(idToken);                                                                                          \</div>
+<div class="line">    ASSERT_TRUE(strcmp(idToken-&gt;getName(), name) == 0);                                                                \</div>
+<div class="line">} <span class="keywordflow">while</span>(0)</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a72759a981e13bcc853c531a3f8f2171d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a72759a981e13bcc853c531a3f8f2171d">&#9670;&nbsp;</a></span>ASSERT_IF_TOKEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ASSERT_IF_TOKEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">token</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                    \</div>
+<div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
+<div class="line">    ASSERT_EQUALS(token-&gt;getType(), IF);                                                                               \</div>
+<div class="line">    auto operatorToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_if_token.html">IfToken</a>*<span class="keyword">&gt;</span>(token.get());                                                          \</div>
+<div class="line">    ASSERT_NOT_NULL(operatorToken);                                                                                    \</div>
+<div class="line">} <span class="keywordflow">while</span> (0)</div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -212,8 +412,8 @@ Functions</h2></td></tr>
 </div><!-- fragment -->
 </div>
 </div>
-<a id="ac94273fce2fc3812c35aa04c0e5e4c92"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac94273fce2fc3812c35aa04c0e5e4c92">&#9670;&nbsp;</a></span>ASSERT_PARENTHESIS_TOKEN</h2>
+<a id="ac00ea5bc57a4a2f70f8ac65e2fd41192"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac00ea5bc57a4a2f70f8ac65e2fd41192">&#9670;&nbsp;</a></span>ASSERT_PARENTHESIS_TOKEN</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -228,42 +428,13 @@ Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">open&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                     \</div>
-<div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
-<div class="line">    ASSERT_EQUALS(token-&gt;getType(), PARENTHESIS);                                                                      \</div>
-<div class="line">    auto parenthesisToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_parenthesis_token.html">ParenthesisToken</a>*<span class="keyword">&gt;</span>(token.get());                                              \</div>
-<div class="line">    ASSERT_NOT_NULL(parenthesisToken);                                                                                 \</div>
-<div class="line">    ASSERT_EQUALS(parenthesisToken-&gt;isOpen(), open);                                                                   \</div>
-<div class="line">} <span class="keywordflow">while</span>(0)</div>
-</div><!-- fragment -->
-</div>
-</div>
-<a id="a8315390b386033b4368fad99864055cd"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8315390b386033b4368fad99864055cd">&#9670;&nbsp;</a></span>ASSERT_VARIABLE_TOKEN</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">#define ASSERT_VARIABLE_TOKEN</td>
-          <td>(</td>
-          <td class="paramtype">&#160;</td>
-          <td class="paramname">token, </td>
+          <td class="paramname">open, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">&#160;</td>
-          <td class="paramname">name&#160;</td>
+          <td class="paramname">type&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -272,21 +443,51 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                        \</div>
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                               \</div>
 <div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
-<div class="line">    ASSERT_EQUALS(token-&gt;getType(), VARIABLE);                                                                         \</div>
-<div class="line">    auto variableToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_variable_token.html">VariableToken</a>*<span class="keyword">&gt;</span>(token.get());                                                    \</div>
-<div class="line">    ASSERT_NOT_NULL(variableToken);                                                                                    \</div>
-<div class="line">    ASSERT_TRUE(strcmp(variableToken-&gt;getName(), name) == 0);                                                          \</div>
+<div class="line">    ASSERT_EQUALS(token-&gt;getType(), PARENTHESIS);                                                                      \</div>
+<div class="line">    auto parenthesisToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_parenthesis_token.html">ParenthesisToken</a>*<span class="keyword">&gt;</span>(token.get());                                              \</div>
+<div class="line">    ASSERT_NOT_NULL(parenthesisToken);                                                                                 \</div>
+<div class="line">    ASSERT_EQUALS(parenthesisToken-&gt;isOpen(), open);                                                                   \</div>
+<div class="line">    ASSERT_EQUALS(parenthesisToken-&gt;getParenthesisType(), type);                                                       \</div>
 <div class="line">} <span class="keywordflow">while</span>(0)</div>
 </div><!-- fragment -->
 </div>
 </div>
+<a id="a3ca7c85a21d40269197e6bfb85065754"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3ca7c85a21d40269197e6bfb85065754">&#9670;&nbsp;</a></span>ASSERT_WHILE_TOKEN</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">#define ASSERT_WHILE_TOKEN</td>
+          <td>(</td>
+          <td class="paramtype">&#160;</td>
+          <td class="paramname">token</td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<b>Value:</b><div class="fragment"><div class="line">    <span class="keywordflow">do</span> {                                                                                 \</div>
+<div class="line">    ASSERT_NOT_NULL(token);                                                                                            \</div>
+<div class="line">    ASSERT_EQUALS(token-&gt;getType(), WHILE);                                                                            \</div>
+<div class="line">    auto operatorToken = <span class="keyword">dynamic_cast&lt;</span><a class="code" href="class_while_token.html">WhileToken</a>*<span class="keyword">&gt;</span>(token.get());                                                       \</div>
+<div class="line">    ASSERT_NOT_NULL(operatorToken);                                                                                    \</div>
+<div class="line">} <span class="keywordflow">while</span> (0)</div>
+</div><!-- fragment -->
+</div>
+</div>
 </div><!-- contents -->
-<div class="ttc" id="aclass_parenthesis_token_html"><div class="ttname"><a href="class_parenthesis_token.html">ParenthesisToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:78</div></div>
-<div class="ttc" id="aclass_variable_token_html"><div class="ttname"><a href="class_variable_token.html">VariableToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:246</div></div>
-<div class="ttc" id="aclass_constant_value_token_html"><div class="ttname"><a href="class_constant_value_token.html">ConstantValueToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:56</div></div>
-<div class="ttc" id="aclass_operator_token_html"><div class="ttname"><a href="class_operator_token.html">OperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:125</div></div>
+<div class="ttc" id="aclass_assignment_operator_token_html"><div class="ttname"><a href="class_assignment_operator_token.html">AssignmentOperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:262</div></div>
+<div class="ttc" id="aclass_while_token_html"><div class="ttname"><a href="class_while_token.html">WhileToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:405</div></div>
+<div class="ttc" id="aclass_else_token_html"><div class="ttname"><a href="class_else_token.html">ElseToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:400</div></div>
+<div class="ttc" id="aclass_parenthesis_token_html"><div class="ttname"><a href="class_parenthesis_token.html">ParenthesisToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:94</div></div>
+<div class="ttc" id="aclass_comparison_operator_token_html"><div class="ttname"><a href="class_comparison_operator_token.html">ComparisonOperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:285</div></div>
+<div class="ttc" id="aclass_constant_value_token_html"><div class="ttname"><a href="class_constant_value_token.html">ConstantValueToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:74</div></div>
+<div class="ttc" id="aclass_id_token_html"><div class="ttname"><a href="class_id_token.html">IdToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:363</div></div>
+<div class="ttc" id="aclass_if_token_html"><div class="ttname"><a href="class_if_token.html">IfToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:395</div></div>
+<div class="ttc" id="aclass_operator_token_html"><div class="ttname"><a href="class_operator_token.html">OperatorToken</a></div><div class="ttdef"><b>Definition:</b> tokenizer.h:139</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

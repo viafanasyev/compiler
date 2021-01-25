@@ -69,22 +69,67 @@ $(function() {
 <div class="title">SymbolTable Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
+
+<p><code>#include &lt;<a class="el" href="_symbol_table_8h_source.html">SymbolTable.h</a>&gt;</code></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a46862a5d8f7f2f91d898681d2abce25d"><td class="memItemLeft" align="right" valign="top"><a id="a46862a5d8f7f2f91d898681d2abce25d"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addFunction</b> (const char *name, const std::shared_ptr&lt; <a class="el" href="class_function_token.html">FunctionToken</a> &gt; &amp;functionToken) noexcept</td></tr>
-<tr class="separator:a46862a5d8f7f2f91d898681d2abce25d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a89040f4846a02771a7b493bd24dafdc1"><td class="memItemLeft" align="right" valign="top"><a id="a89040f4846a02771a7b493bd24dafdc1"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>addVariable</b> (char *name) noexcept</td></tr>
-<tr class="separator:a89040f4846a02771a7b493bd24dafdc1"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad1ccd133037a742503943b4eb68c73d2"><td class="memItemLeft" align="right" valign="top"><a id="ad1ccd133037a742503943b4eb68c73d2"></a>
-std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getSymbolByName</b> (char *name) noexcept</td></tr>
-<tr class="separator:ad1ccd133037a742503943b4eb68c73d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a57ffb672c04f165fc2578026b147141c"><td class="memItemLeft" align="right" valign="top"><a id="a57ffb672c04f165fc2578026b147141c"></a>
+std::shared_ptr&lt; <a class="el" href="struct_variable_symbol.html">VariableSymbol</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>addVariable</b> (char *name, const <a class="el" href="struct_token_origin.html">TokenOrigin</a> &amp;originPos)</td></tr>
+<tr class="separator:a57ffb672c04f165fc2578026b147141c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a884c5862dd9ead68c63cb03f80020b3c"><td class="memItemLeft" align="right" valign="top"><a id="a884c5862dd9ead68c63cb03f80020b3c"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasVariable</b> (char *name) const</td></tr>
+<tr class="separator:a884c5862dd9ead68c63cb03f80020b3c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1eab6d4f7652edcf44d1efb617d7f6ba"><td class="memItemLeft" align="right" valign="top"><a id="a1eab6d4f7652edcf44d1efb617d7f6ba"></a>
+std::shared_ptr&lt; <a class="el" href="struct_variable_symbol.html">VariableSymbol</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariableByName</b> (char *name) const</td></tr>
+<tr class="separator:a1eab6d4f7652edcf44d1efb617d7f6ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae1fa3848b799a94d2d6727a228ddbc6e"><td class="memItemLeft" align="right" valign="top"><a id="ae1fa3848b799a94d2d6727a228ddbc6e"></a>
+unsigned int&#160;</td><td class="memItemRight" valign="bottom"><b>getNextLocalVariableAddress</b> () const</td></tr>
+<tr class="separator:ae1fa3848b799a94d2d6727a228ddbc6e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a762546a4f974c0f0912308de1fb07e98"><td class="memItemLeft" align="right" valign="top"><a id="a762546a4f974c0f0912308de1fb07e98"></a>
+std::shared_ptr&lt; <a class="el" href="struct_function_symbol.html">FunctionSymbol</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>addFunction</b> (char *name, Type returnType, unsigned char argumentsNumber, const <a class="el" href="struct_token_origin.html">TokenOrigin</a> &amp;originPos)</td></tr>
+<tr class="separator:a762546a4f974c0f0912308de1fb07e98"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aebef5e3790f4dc1ff3640136161a9cea"><td class="memItemLeft" align="right" valign="top"><a id="aebef5e3790f4dc1ff3640136161a9cea"></a>
+bool&#160;</td><td class="memItemRight" valign="bottom"><b>hasFunction</b> (char *name) const</td></tr>
+<tr class="separator:aebef5e3790f4dc1ff3640136161a9cea"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc5f8e773dc5880c0fc70ab94cc70b56"><td class="memItemLeft" align="right" valign="top"><a id="abc5f8e773dc5880c0fc70ab94cc70b56"></a>
+std::shared_ptr&lt; <a class="el" href="struct_function_symbol.html">FunctionSymbol</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getFunctionByName</b> (char *name) const</td></tr>
+<tr class="separator:abc5f8e773dc5880c0fc70ab94cc70b56"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8bb899b5047e9197daabdb440fa7a696"><td class="memItemLeft" align="right" valign="top"><a id="a8bb899b5047e9197daabdb440fa7a696"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>enterFunction</b> ()</td></tr>
+<tr class="separator:a8bb899b5047e9197daabdb440fa7a696"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7b5b6ee727b81020736bdaee0c8ca8c3"><td class="memItemLeft" align="right" valign="top"><a id="a7b5b6ee727b81020736bdaee0c8ca8c3"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>leaveFunction</b> ()</td></tr>
+<tr class="separator:a7b5b6ee727b81020736bdaee0c8ca8c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47e3ca026d304e0abfc2373a9d110048"><td class="memItemLeft" align="right" valign="top"><a id="a47e3ca026d304e0abfc2373a9d110048"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>enterBlock</b> ()</td></tr>
+<tr class="separator:a47e3ca026d304e0abfc2373a9d110048"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5d48b4c656f4c51408480b6077f8e653"><td class="memItemLeft" align="right" valign="top"><a id="a5d48b4c656f4c51408480b6077f8e653"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>leaveBlock</b> ()</td></tr>
+<tr class="separator:a5d48b4c656f4c51408480b6077f8e653"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
-<hr/>The documentation for this class was generated from the following files:<ul>
-<li>src/frontend/<a class="el" href="recursive__parser_8h_source.html">recursive_parser.h</a></li>
-<li>src/frontend/<a class="el" href="recursive__parser_8cpp.html">recursive_parser.cpp</a></li>
+<a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
+<div class="textblock"><p>Symbol table contains variables and functions.</p>
+<p>Functions can be defined only in outer scope, so they just stored in std::map by their names.</p>
+<p>Variables can be defined everywhere except outer scope. Also, any variable can be redefined in any block, that is a child of the block this variable defined in. For example, code below works (nested variable shadows previous defined variable): </p><pre class="fragment">{
+    ...define x...
+    {
+        ...define x...
+    }
+}
+</pre><p>But the next code - doesn't: { ...define x... ...define x... }</p>
+<p>Next algorithm is used for variable storing:</p><ul>
+<li>Each scope is an std::map inside of the std::forward_list. Front of the list is the current scope.</li>
+<li>On block enter: new empty std::map pushed into the list.</li>
+<li>On block leave: node on the front of the list is removed and all the variables in this scope are removed too.</li>
+<li>On variable create: variable added into the current scope (node on the front of the list).</li>
+<li>Variables are searched from front to back. So the variable in the nested scope shadows the variable in the parent scope, if they both have similar names.</li>
+<li>Each variable has a size of 8 bytes, because only type 'double' is supported yet.</li>
+<li>All variables are saved linearly in the <a class="el" href="class_r_a_m.html">RAM</a> - if variable 'y' is declared just after variable 'x', then 'y'.address = 'x'.address + 8. </li>
+</ul>
+</div><hr/>The documentation for this class was generated from the following files:<ul>
+<li>src/backend/<a class="el" href="_symbol_table_8h_source.html">SymbolTable.h</a></li>
+<li>src/backend/<a class="el" href="_symbol_table_8cpp.html">SymbolTable.cpp</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
