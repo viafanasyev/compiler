@@ -147,8 +147,10 @@ void SymbolTable::leaveBlock() {
 
     // Restore next variable address
     unsigned int maxLocalVariableAddress = 0u;
-    for (const auto& symbol : variables.front()) {
-        maxLocalVariableAddress = std::max(maxLocalVariableAddress, symbol.second->address);
+    for (const auto& block : variables) {
+        for (const auto& symbol : block) {
+            maxLocalVariableAddress = std::max(maxLocalVariableAddress, symbol.second->address); // TODO: Improve by saving last addresses in separate list?
+        }
     }
     nextLocalVariableAddress = maxLocalVariableAddress + VARIABLE_SIZE_IN_BYTES;
 }
