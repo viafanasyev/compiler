@@ -228,10 +228,8 @@ Grammar</h2>
 <div class="line">OuterScopeStatement = FunctionDefinition</div>
 <div class="line">FunctionScopeStatement = Expression &#39;;&#39; | Assignment &#39;;&#39; | VariableDeclaration | Block | IfStatement | WhileStatement | ReturnStatement</div>
 <div class="line">Block = &#39;{&#39; FunctionScopeStatements &#39;}&#39;</div>
-<div class="line">IfStatement = IfStatementHeader FunctionScopeStatement (&#39;else&#39; FunctionScopeStatement)?</div>
-<div class="line">IfStatementHeader = &#39;if&#39; &#39;(&#39; ComparisonExpression &#39;)&#39;</div>
-<div class="line">WhileStatement = WhileStatementHeader FunctionScopeStatement</div>
-<div class="line">WhileStatementHeader = &#39;while&#39; &#39;(&#39; ComparisonExpression &#39;)&#39;</div>
+<div class="line">IfStatement = &#39;if&#39; &#39;(&#39; ComparisonExpression &#39;)&#39; FunctionScopeStatement (&#39;else&#39; FunctionScopeStatement)?</div>
+<div class="line">WhileStatement = &#39;while&#39; &#39;(&#39; ComparisonExpression &#39;)&#39; FunctionScopeStatement</div>
 <div class="line">ComparisonExpression = Expression [&lt; &gt; == &lt;= &gt;=] Expression</div>
 <div class="line">FunctionDefinition = &#39;func&#39; ID &#39;(&#39; ParametersList &#39;)&#39; Block</div>
 <div class="line">ParametersList = ( Variable (&#39;,&#39; Variable)* )?</div>

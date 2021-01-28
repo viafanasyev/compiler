@@ -7,6 +7,7 @@
 #include "frontend/recursive_parser.h"
 #include "util/SyntaxError.h"
 #include "util/RedefinitionError.h"
+#include "util/CoercionError.h"
 #include "MappedFile.h"
 #include "middleend/ast-optimizers.h"
 #include "stack-machine/src/arg-parser.h"
@@ -81,6 +82,9 @@ int main(int argc, char* argv[]) {
         exitCode = -1;
     } catch (const RedefinitionError& ex) {
         fprintf(stderr, "Redefinition error: %s", ex.what());
+        exitCode = -1;
+    } catch (const CoercionError& ex) {
+        fprintf(stderr, "Coercion error: %s", ex.what());
         exitCode = -1;
     }
     return exitCode;

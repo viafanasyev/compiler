@@ -135,34 +135,36 @@ $(function() {
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    std::shared_ptr&lt;VariableSymbol&gt; addVariable(<span class="keywordtype">char</span>* name, <span class="keyword">const</span> <a class="code" href="struct_token_origin.html">TokenOrigin</a>&amp; originPos);</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160; </div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    <span class="keywordtype">void</span> pushDefaultValueForType(Type type);</div>
-<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;};</div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160; </div>
-<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;<span class="keywordtype">void</span> codegen(<span class="keyword">const</span> std::shared_ptr&lt;ASTNode&gt;&amp; root, <span class="keyword">const</span> <span class="keywordtype">char</span>* assemblyFileName);</div>
+<div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160; </div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">void</span> coerceTo(std::shared_ptr&lt;ASTNode&gt;&amp; node, Type to);</div>
+<div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;};</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160; </div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="preprocessor">#endif // COMPILER_CODEGEN_H</span></div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;<span class="keywordtype">void</span> codegen(<span class="keyword">const</span> std::shared_ptr&lt;ASTNode&gt;&amp; root, <span class="keyword">const</span> <span class="keywordtype">char</span>* assemblyFileName);</div>
+<div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160; </div>
+<div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160;<span class="preprocessor">#endif // COMPILER_CODEGEN_H</span></div>
 </div><!-- fragment --></div><!-- contents -->
-<div class="ttc" id="aclass_function_definition_node_html"><div class="ttname"><a href="class_function_definition_node.html">FunctionDefinitionNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:336</div></div>
+<div class="ttc" id="aclass_function_definition_node_html"><div class="ttname"><a href="class_function_definition_node.html">FunctionDefinitionNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:332</div></div>
 <div class="ttc" id="aclass_operator_node_html"><div class="ttname"><a href="class_operator_node.html">OperatorNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:173</div></div>
-<div class="ttc" id="aclass_function_call_node_html"><div class="ttname"><a href="class_function_call_node.html">FunctionCallNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:358</div></div>
-<div class="ttc" id="aclass_parameters_list_node_html"><div class="ttname"><a href="class_parameters_list_node.html">ParametersListNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:306</div></div>
+<div class="ttc" id="aclass_function_call_node_html"><div class="ttname"><a href="class_function_call_node.html">FunctionCallNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:354</div></div>
+<div class="ttc" id="aclass_parameters_list_node_html"><div class="ttname"><a href="class_parameters_list_node.html">ParametersListNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:302</div></div>
 <div class="ttc" id="astruct_label_html"><div class="ttname"><a href="struct_label.html">Label</a></div><div class="ttdef"><b>Definition:</b> Label.h:13</div></div>
-<div class="ttc" id="aclass_block_node_html"><div class="ttname"><a href="class_block_node.html">BlockNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:259</div></div>
-<div class="ttc" id="aclass_statements_node_html"><div class="ttname"><a href="class_statements_node.html">StatementsNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:247</div></div>
+<div class="ttc" id="aclass_block_node_html"><div class="ttname"><a href="class_block_node.html">BlockNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:255</div></div>
+<div class="ttc" id="aclass_statements_node_html"><div class="ttname"><a href="class_statements_node.html">StatementsNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:243</div></div>
 <div class="ttc" id="a_label_8h_html"><div class="ttname"><a href="_label_8h.html">Label.h</a></div><div class="ttdoc">Definition and implementation of IR code label. Label can be used for jumps or calls.</div></div>
-<div class="ttc" id="aclass_return_statement_node_html"><div class="ttname"><a href="class_return_statement_node.html">ReturnStatementNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:393</div></div>
-<div class="ttc" id="aclass_if_else_node_html"><div class="ttname"><a href="class_if_else_node.html">IfElseNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:282</div></div>
+<div class="ttc" id="aclass_return_statement_node_html"><div class="ttname"><a href="class_return_statement_node.html">ReturnStatementNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:389</div></div>
+<div class="ttc" id="aclass_if_else_node_html"><div class="ttname"><a href="class_if_else_node.html">IfElseNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:278</div></div>
 <div class="ttc" id="a_symbol_table_8h_html"><div class="ttname"><a href="_symbol_table_8h.html">SymbolTable.h</a></div><div class="ttdoc">Definition of symbol table and symbols for variables and functions. Used to save symbols,...</div></div>
 <div class="ttc" id="aclass_codegen_visitor_html"><div class="ttname"><a href="class_codegen_visitor.html">CodegenVisitor</a></div><div class="ttdef"><b>Definition:</b> codegen.h:22</div></div>
-<div class="ttc" id="aclass_comparison_operator_node_html"><div class="ttname"><a href="class_comparison_operator_node.html">ComparisonOperatorNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:226</div></div>
+<div class="ttc" id="aclass_comparison_operator_node_html"><div class="ttname"><a href="class_comparison_operator_node.html">ComparisonOperatorNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:219</div></div>
 <div class="ttc" id="astruct_token_origin_html"><div class="ttname"><a href="struct_token_origin.html">TokenOrigin</a></div><div class="ttdef"><b>Definition:</b> TokenOrigin.h:7</div></div>
-<div class="ttc" id="aclass_while_node_html"><div class="ttname"><a href="class_while_node.html">WhileNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:294</div></div>
-<div class="ttc" id="aclass_variable_declaration_node_html"><div class="ttname"><a href="class_variable_declaration_node.html">VariableDeclarationNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:379</div></div>
-<div class="ttc" id="aclass_symbol_table_html"><div class="ttname"><a href="class_symbol_table.html">SymbolTable</a></div><div class="ttdef"><b>Definition:</b> SymbolTable.h:79</div></div>
-<div class="ttc" id="aclass_constant_value_node_html"><div class="ttname"><a href="class_constant_value_node.html">ConstantValueNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:122</div></div>
-<div class="ttc" id="aclass_arguments_list_node_html"><div class="ttname"><a href="class_arguments_list_node.html">ArgumentsListNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:322</div></div>
-<div class="ttc" id="aclass_if_node_html"><div class="ttname"><a href="class_if_node.html">IfNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:270</div></div>
+<div class="ttc" id="aclass_while_node_html"><div class="ttname"><a href="class_while_node.html">WhileNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:290</div></div>
+<div class="ttc" id="aclass_variable_declaration_node_html"><div class="ttname"><a href="class_variable_declaration_node.html">VariableDeclarationNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:375</div></div>
+<div class="ttc" id="aclass_symbol_table_html"><div class="ttname"><a href="class_symbol_table.html">SymbolTable</a></div><div class="ttdef"><b>Definition:</b> SymbolTable.h:84</div></div>
+<div class="ttc" id="aclass_constant_value_node_html"><div class="ttname"><a href="class_constant_value_node.html">ConstantValueNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:127</div></div>
+<div class="ttc" id="aclass_arguments_list_node_html"><div class="ttname"><a href="class_arguments_list_node.html">ArgumentsListNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:318</div></div>
+<div class="ttc" id="aclass_if_node_html"><div class="ttname"><a href="class_if_node.html">IfNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:266</div></div>
 <div class="ttc" id="aclass_assignment_operator_node_html"><div class="ttname"><a href="class_assignment_operator_node.html">AssignmentOperatorNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:204</div></div>
-<div class="ttc" id="aclass_variable_node_html"><div class="ttname"><a href="class_variable_node.html">VariableNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:140</div></div>
+<div class="ttc" id="aclass_variable_node_html"><div class="ttname"><a href="class_variable_node.html">VariableNode</a></div><div class="ttdef"><b>Definition:</b> ast.h:145</div></div>
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
 Generated by &#160;<a href="http://www.doxygen.org/index.html">

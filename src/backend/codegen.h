@@ -77,6 +77,8 @@ private:
     std::shared_ptr<VariableSymbol> addVariable(char* name, const TokenOrigin& originPos);
 
     void pushDefaultValueForType(Type type);
+
+    void coerceTo(std::shared_ptr<ASTNode>& node, Type to);
 };
 
 void codegen(const std::shared_ptr<ASTNode>& root, const char* assemblyFileName);

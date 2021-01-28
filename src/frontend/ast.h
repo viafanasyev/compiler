@@ -40,18 +40,19 @@ private:
     std::shared_ptr<ASTNode>* children = nullptr;
     size_t childrenNumber = 0;
     NodeType type;
+    TokenOrigin originPos;
 
     static size_t nextNodeId;
 
 public:
     const size_t nodeId;
 
-    explicit ASTNode(NodeType type_) : type(type_), nodeId(nextNodeId++) {
+    ASTNode(NodeType type_, TokenOrigin originPos_) : type(type_), originPos(originPos_), nodeId(nextNodeId++) {
         childrenNumber = 0;
         children = nullptr;
     }
 
-    ASTNode(NodeType type_, const std::vector<std::shared_ptr<ASTNode>>& children_) : type(type_), nodeId(nextNodeId++) {
+    ASTNode(NodeType type_, TokenOrigin originPos_, const std::vector<std::shared_ptr<ASTNode>>& children_) : ASTNode(type_, originPos_) {
         childrenNumber = children_.size();
         children = new std::shared_ptr<ASTNode>[childrenNumber];
         for (size_t i = 0; i < childrenNumber; ++i) {
@@ -59,13 +60,13 @@ public:
         }
     }
 
-    ASTNode(NodeType type_, const std::shared_ptr<ASTNode>& child) : type(type_), nodeId(nextNodeId++) {
+    ASTNode(NodeType type_, TokenOrigin originPos_, const std::shared_ptr<ASTNode>& child) : ASTNode(type_, originPos_) {
         childrenNumber = 1;
         children = new std::shared_ptr<ASTNode>[1];
         children[0] = child;
     }
 
-    ASTNode(NodeType type_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) : type(type_), nodeId(nextNodeId++) {
+    ASTNode(NodeType type_, TokenOrigin originPos_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) : ASTNode(type_, originPos_) {
         childrenNumber = 2;
         children = new std::shared_ptr<ASTNode>[2];
         children[0] = leftChild;
@@ -86,6 +87,10 @@ public:
 
     NodeType getType() const {
         return type;
+    }
+
+    TokenOrigin getOriginPos() const {
+        return originPos;
     }
 
     void visualize(const char* fileName) const;
@@ -125,7 +130,7 @@ private:
     double value;
 
 public:
-    explicit ConstantValueNode(double value_) : ASTNode(CONSTANT_VALUE_NODE), value(value_) { }
+    explicit ConstantValueNode(TokenOrigin originPos_, double value_) : ASTNode(CONSTANT_VALUE_NODE, originPos_), value(value_) { }
 
     double getValue() const {
         return value;
@@ -141,10 +146,9 @@ class VariableNode : public ASTNode {
 
 private:
     char* name;
-    TokenOrigin originPos;
 
 public:
-    explicit VariableNode(const char* name_, TokenOrigin originPos_) : ASTNode(VARIABLE_NODE), originPos(originPos_) {
+    explicit VariableNode(TokenOrigin originPos_, const char* name_) : ASTNode(VARIABLE_NODE, originPos_) {
         name = (char*)calloc(MAX_ID_LENGTH + 1, sizeof(char)); // +1 is for '\0'
         for (unsigned short i = 0; i < MAX_ID_LENGTH; ++i) {
             name[i] = name_[i];
@@ -160,10 +164,6 @@ public:
         return name;
     }
 
-    TokenOrigin getOriginPos() const {
-        return originPos;
-    }
-
     void accept(CodegenVisitor* visitor) const override;
 
 protected:
@@ -177,17 +177,17 @@ private:
 
 public:
     OperatorNode(const std::shared_ptr<OperatorToken>& token_, const std::vector<std::shared_ptr<ASTNode>>& children_) :
-        ASTNode(OPERATOR_NODE, children_), token(token_) {
+        ASTNode(OPERATOR_NODE, token_->getOriginPos(), children_), token(token_) {
         assert(token_->getType() == OPERATOR && dynamic_cast<OperatorToken*>(token_.get())->getArity() == children_.size());
     }
 
     OperatorNode(const std::shared_ptr<OperatorToken>& token_, const std::shared_ptr<ASTNode>& child) :
-        ASTNode(OPERATOR_NODE, child), token(token_) {
+        ASTNode(OPERATOR_NODE, token_->getOriginPos(), child), token(token_) {
         assert(token_->getType() == OPERATOR && dynamic_cast<OperatorToken*>(token_.get())->getArity() == 1);
     }
 
     OperatorNode(const std::shared_ptr<OperatorToken>& token_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) :
-        ASTNode(OPERATOR_NODE, leftChild, rightChild), token(token_) {
+        ASTNode(OPERATOR_NODE, token_->getOriginPos(), leftChild, rightChild), token(token_) {
         assert(token_->getType() == OPERATOR && dynamic_cast<OperatorToken*>(token_.get())->getArity() == 2);
     }
 
@@ -203,19 +203,12 @@ protected:
 
 class AssignmentOperatorNode : public ASTNode {
 
-private:
-    std::shared_ptr<AssignmentOperatorToken> token;
-
 public:
     AssignmentOperatorNode(
         const std::shared_ptr<AssignmentOperatorToken>& token_,
         const std::shared_ptr<VariableNode>& variable,
         const std::shared_ptr<ASTNode>& value
-    ) : ASTNode(ASSIGNMENT_OPERATOR_NODE, variable, value), token(token_) { }
-
-    const std::shared_ptr<AssignmentOperatorToken>& getToken() const {
-        return token;
-    }
+    ) : ASTNode(ASSIGNMENT_OPERATOR_NODE, token_->getOriginPos(), variable, value) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -229,8 +222,11 @@ private:
     std::shared_ptr<ComparisonOperatorToken> token;
 
 public:
-    ComparisonOperatorNode(const std::shared_ptr<ComparisonOperatorToken>& token_, const std::shared_ptr<ASTNode>& leftChild, const std::shared_ptr<ASTNode>& rightChild) :
-        ASTNode(COMPARISON_OPERATOR_NODE, leftChild, rightChild), token(token_) {
+    ComparisonOperatorNode(
+        const std::shared_ptr<ComparisonOperatorToken>& token_,
+        const std::shared_ptr<ASTNode>& leftChild,
+        const std::shared_ptr<ASTNode>& rightChild
+    ) : ASTNode(COMPARISON_OPERATOR_NODE, token_->getOriginPos(), leftChild, rightChild), token(token_) {
         assert(token_->getType() == COMPARISON_OPERATOR);
     }
 
@@ -247,8 +243,8 @@ protected:
 class StatementsNode : public ASTNode {
 
 public:
-    explicit StatementsNode(const std::shared_ptr<ASTNode>& singleStatement) : ASTNode(STATEMENTS_NODE, singleStatement) { }
-    explicit StatementsNode(const std::vector<std::shared_ptr<ASTNode>>& children_) : ASTNode(STATEMENTS_NODE, children_) { }
+    StatementsNode(TokenOrigin originPos_, const std::shared_ptr<ASTNode>& singleStatement) : ASTNode(STATEMENTS_NODE, originPos_, singleStatement) { }
+    StatementsNode(TokenOrigin originPos_, const std::vector<std::shared_ptr<ASTNode>>& children_) : ASTNode(STATEMENTS_NODE, originPos_, children_) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -259,7 +255,7 @@ protected:
 class BlockNode : public ASTNode {
 
 public:
-    explicit BlockNode(const std::shared_ptr<StatementsNode>& nestedStatements) : ASTNode(BLOCK_NODE, nestedStatements) { }
+    BlockNode(TokenOrigin originPos_, const std::shared_ptr<StatementsNode>& nestedStatements) : ASTNode(BLOCK_NODE, originPos_, nestedStatements) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -270,8 +266,8 @@ protected:
 class IfNode : public ASTNode {
 
 public:
-    IfNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& body) :
-        ASTNode(IF_NODE, condition, body) { }
+    IfNode(TokenOrigin originPos_, const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& body) :
+        ASTNode(IF_NODE, originPos_, condition, body) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -282,8 +278,8 @@ protected:
 class IfElseNode : public ASTNode {
 
 public:
-    IfElseNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& ifBody, const std::shared_ptr<ASTNode>& elseBody) :
-        ASTNode(IF_ELSE_NODE, {condition, ifBody, elseBody}) { }
+    IfElseNode(TokenOrigin originPos_, const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& ifBody, const std::shared_ptr<ASTNode>& elseBody) :
+        ASTNode(IF_ELSE_NODE, originPos_, {condition, ifBody, elseBody}) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -294,8 +290,8 @@ protected:
 class WhileNode : public ASTNode {
 
 public:
-    WhileNode(const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& body) :
-        ASTNode(WHILE_NODE, condition, body) { }
+    WhileNode(TokenOrigin originPos_, const std::shared_ptr<ComparisonOperatorNode>& condition, const std::shared_ptr<ASTNode>& body) :
+        ASTNode(WHILE_NODE, originPos_, condition, body) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -306,12 +302,12 @@ protected:
 class ParametersListNode : public ASTNode {
 
 public:
-    explicit ParametersListNode(const std::vector<std::shared_ptr<ASTNode>>& parameters) :
-        ASTNode(PARAMETERS_LIST_NODE, parameters) {
+    ParametersListNode(TokenOrigin originPos_, const std::vector<std::shared_ptr<ASTNode>>& parameters) :
+        ASTNode(PARAMETERS_LIST_NODE, originPos_, parameters) {
         for (const auto& parameter : parameters) assert(parameter->getType() == VARIABLE_NODE);
     }
 
-    ParametersListNode() : ASTNode(PARAMETERS_LIST_NODE) { }
+    explicit ParametersListNode(TokenOrigin originPos_) : ASTNode(PARAMETERS_LIST_NODE, originPos_) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -322,10 +318,10 @@ protected:
 class ArgumentsListNode : public ASTNode {
 
 public:
-    explicit ArgumentsListNode(const std::vector<std::shared_ptr<ASTNode>>& arguments) :
-        ASTNode(ARGUMENTS_LIST_NODE, arguments) { }
+    ArgumentsListNode(TokenOrigin originPos_, const std::vector<std::shared_ptr<ASTNode>>& arguments) :
+        ASTNode(ARGUMENTS_LIST_NODE, originPos_, arguments) { }
 
-    ArgumentsListNode() : ASTNode(ARGUMENTS_LIST_NODE) { }
+    explicit ArgumentsListNode(TokenOrigin originPos_) : ASTNode(ARGUMENTS_LIST_NODE, originPos_) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -343,7 +339,7 @@ public:
         const std::shared_ptr<IdToken>& functionName_,
         const std::shared_ptr<ParametersListNode>& parameters,
         const std::shared_ptr<BlockNode>& definition
-    ) : ASTNode(FUNCTION_DEFINITION_NODE, {parameters, definition}), functionName(functionName_) { }
+    ) : ASTNode(FUNCTION_DEFINITION_NODE, functionName_->getOriginPos(), {parameters, definition}), functionName(functionName_) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -364,7 +360,7 @@ public:
     FunctionCallNode(
         const std::shared_ptr<IdToken>& functionName_,
         const std::shared_ptr<ArgumentsListNode>& arguments
-    ) : ASTNode(FUNCTION_CALL_NODE, arguments), functionName(functionName_) { }
+    ) : ASTNode(FUNCTION_CALL_NODE, functionName_->getOriginPos(), arguments), functionName(functionName_) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -379,10 +375,10 @@ protected:
 class VariableDeclarationNode : public ASTNode {
 
 public:
-    explicit VariableDeclarationNode(const std::shared_ptr<VariableNode>& variable) :
-            ASTNode(VARIABLE_DECLARATION_NODE, variable) { }
-    VariableDeclarationNode(const std::shared_ptr<VariableNode>& variable, const std::shared_ptr<ASTNode>& initialValue) :
-            ASTNode(VARIABLE_DECLARATION_NODE, variable, initialValue) { }
+    VariableDeclarationNode(TokenOrigin originPos_, const std::shared_ptr<VariableNode>& variable) :
+            ASTNode(VARIABLE_DECLARATION_NODE, originPos_, variable) { }
+    VariableDeclarationNode(TokenOrigin originPos_, const std::shared_ptr<VariableNode>& variable, const std::shared_ptr<ASTNode>& initialValue) :
+            ASTNode(VARIABLE_DECLARATION_NODE, originPos_, variable, initialValue) { }
 
     void accept(CodegenVisitor* visitor) const override;
 
@@ -393,8 +389,8 @@ protected:
 class ReturnStatementNode : public ASTNode {
 
 public:
-    explicit ReturnStatementNode(const std::shared_ptr<ASTNode>& returnedExpression) :
-        ASTNode(RETURN_STATEMENT_NODE, returnedExpression) { }
+    ReturnStatementNode(TokenOrigin originPos_, const std::shared_ptr<ASTNode>& returnedExpression) :
+        ASTNode(RETURN_STATEMENT_NODE, originPos_, returnedExpression) { }
 
     void accept(CodegenVisitor* visitor) const override;
 

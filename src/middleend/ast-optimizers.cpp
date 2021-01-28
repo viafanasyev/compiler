@@ -137,7 +137,7 @@ std::shared_ptr<ASTNode>& ConstantCompressor::optimizeCurrent(std::shared_ptr<AS
         const auto child = children[0];
         if (child->getType() == NodeType::CONSTANT_VALUE_NODE) {
             const double result = operatorNode->getToken()->calculate(1, dynamic_cast<ConstantValueNode*>(child.get())->getValue());
-            node = std::make_shared<ConstantValueNode>(result);
+            node = std::make_shared<ConstantValueNode>(child->getOriginPos(), result);
         }
         return node;
     } else if (childrenNumber == 2) {
@@ -149,7 +149,7 @@ std::shared_ptr<ASTNode>& ConstantCompressor::optimizeCurrent(std::shared_ptr<AS
                 dynamic_cast<ConstantValueNode*>(leftChild.get())->getValue(),
                 dynamic_cast<ConstantValueNode*>(rightChild.get())->getValue()
             );
-            node = std::make_shared<ConstantValueNode>(result);
+            node = std::make_shared<ConstantValueNode>(leftChild->getOriginPos(), result);
         }
         return node;
     } else {

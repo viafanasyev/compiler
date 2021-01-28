@@ -76,18 +76,18 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a359af3f3d34430d946bbf5a966ae416a"><td class="memItemLeft" align="right" valign="top"><a id="a359af3f3d34430d946bbf5a966ae416a"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_)</td></tr>
-<tr class="separator:a359af3f3d34430d946bbf5a966ae416a"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad4afef84ead34de5e86d6c9987f5e682"><td class="memItemLeft" align="right" valign="top"><a id="ad4afef84ead34de5e86d6c9987f5e682"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&gt; &amp;children_)</td></tr>
-<tr class="separator:ad4afef84ead34de5e86d6c9987f5e682"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3e6a0d274e074e9b191be0bddcc212a7"><td class="memItemLeft" align="right" valign="top"><a id="a3e6a0d274e074e9b191be0bddcc212a7"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;child)</td></tr>
-<tr class="separator:a3e6a0d274e074e9b191be0bddcc212a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46ebec2dd4c6707c40cfbfd055edc098"><td class="memItemLeft" align="right" valign="top"><a id="a46ebec2dd4c6707c40cfbfd055edc098"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;leftChild, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;rightChild)</td></tr>
-<tr class="separator:a46ebec2dd4c6707c40cfbfd055edc098"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8d11e66bb6cfb9b5554860a67297bfc7"><td class="memItemLeft" align="right" valign="top"><a id="a8d11e66bb6cfb9b5554860a67297bfc7"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, <a class="el" href="struct_token_origin.html">TokenOrigin</a> originPos_)</td></tr>
+<tr class="separator:a8d11e66bb6cfb9b5554860a67297bfc7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a614df557c2ede872740dee39f4398496"><td class="memItemLeft" align="right" valign="top"><a id="a614df557c2ede872740dee39f4398496"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, <a class="el" href="struct_token_origin.html">TokenOrigin</a> originPos_, const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&gt; &amp;children_)</td></tr>
+<tr class="separator:a614df557c2ede872740dee39f4398496"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a552bdf504e773f1ff9f587f9db205860"><td class="memItemLeft" align="right" valign="top"><a id="a552bdf504e773f1ff9f587f9db205860"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, <a class="el" href="struct_token_origin.html">TokenOrigin</a> originPos_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;child)</td></tr>
+<tr class="separator:a552bdf504e773f1ff9f587f9db205860"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab907b03ac0b075dceb286f98ef512d9e"><td class="memItemLeft" align="right" valign="top"><a id="ab907b03ac0b075dceb286f98ef512d9e"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>ASTNode</b> (NodeType type_, <a class="el" href="struct_token_origin.html">TokenOrigin</a> originPos_, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;leftChild, const std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; &amp;rightChild)</td></tr>
+<tr class="separator:ab907b03ac0b075dceb286f98ef512d9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a95396de0437b8ae84c8b82decc3f92a4"><td class="memItemLeft" align="right" valign="top"><a id="a95396de0437b8ae84c8b82decc3f92a4"></a>
 std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt; *&#160;</td><td class="memItemRight" valign="bottom"><b>getChildren</b> () const</td></tr>
 <tr class="separator:a95396de0437b8ae84c8b82decc3f92a4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,6 +97,9 @@ size_t&#160;</td><td class="memItemRight" valign="bottom"><b>getChildrenNumber</
 <tr class="memitem:adea1417dfe42623f46a21bad795b52a1"><td class="memItemLeft" align="right" valign="top"><a id="adea1417dfe42623f46a21bad795b52a1"></a>
 NodeType&#160;</td><td class="memItemRight" valign="bottom"><b>getType</b> () const</td></tr>
 <tr class="separator:adea1417dfe42623f46a21bad795b52a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8abe2d73553a58829326940981b74075"><td class="memItemLeft" align="right" valign="top"><a id="a8abe2d73553a58829326940981b74075"></a>
+<a class="el" href="struct_token_origin.html">TokenOrigin</a>&#160;</td><td class="memItemRight" valign="bottom"><b>getOriginPos</b> () const</td></tr>
+<tr class="separator:a8abe2d73553a58829326940981b74075"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6184b7df58059a96ba4571492772ffea"><td class="memItemLeft" align="right" valign="top"><a id="a6184b7df58059a96ba4571492772ffea"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><b>visualize</b> (const char *fileName) const</td></tr>
 <tr class="separator:a6184b7df58059a96ba4571492772ffea"><td class="memSeparator" colspan="2">&#160;</td></tr>

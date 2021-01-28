@@ -20,6 +20,11 @@ enum Type {
     DOUBLE,
 };
 
+static const char* const TypeStrings[] = {
+    "void",
+    "double",
+};
+
 struct VariableSymbol {
     const unsigned int address;
     const TokenOrigin originPos;

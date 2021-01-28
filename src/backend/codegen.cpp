@@ -7,6 +7,7 @@
 #include "Label.h"
 #include "SymbolTable.h"
 #include "../util/constants.h"
+#include "../util/CoercionError.h"
 #include "../util/SyntaxError.h"
 
 static inline bool returnsNonVoid(const std::shared_ptr<ASTNode>& node, const SymbolTable& symbolTable) {
@@ -53,17 +54,14 @@ void CodegenVisitor::visitVariableNode(const VariableNode* node) {
 
 void CodegenVisitor::visitOperatorNode(const OperatorNode* node) {
     size_t arity = node->getChildrenNumber();
-    if (arity == 1) {
-        node->getChildren()[0]->accept(this);
-        arithmeticOperation(node->getToken()->getOperatorType());
-    } else if (arity == 2) {
-        auto children = node->getChildren();
-        children[0]->accept(this);
-        children[1]->accept(this);
-        arithmeticOperation(node->getToken()->getOperatorType());
-    } else {
-        throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
+    if (arity != 1 && arity != 2) throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
+
+    auto children = node->getChildren();
+    for (size_t i = 0; i < arity; ++i) {
+        children[i]->accept(this);
+        coerceTo(children[i], Type::DOUBLE);
     }
+    arithmeticOperation(node->getToken()->getOperatorType());
 }
 
 void CodegenVisitor::visitAssignmentOperatorNode(const AssignmentOperatorNode* node) {
@@ -73,6 +71,7 @@ void CodegenVisitor::visitAssignmentOperatorNode(const AssignmentOperatorNode* n
     auto value    = children[1];
 
     value->accept(this);
+    coerceTo(value, Type::DOUBLE);
 
     char* variableName = variable->getName();
     if (!symbolTable.hasVariable(variableName)) throw SyntaxError(variable->getOriginPos(), "Undeclared variable");
@@ -97,9 +96,7 @@ void CodegenVisitor::visitStatementsNode(const StatementsNode* node) {
     auto children = node->getChildren();
     for (size_t i = 0; i < childrenNumber; ++i) {
         children[i]->accept(this);
-        if (returnsNonVoid(children[i], symbolTable)) {
-            pop(); // If variable is left on stack, it should be removed
-        }
+        coerceTo(children[i], Type::VOID); // If variable is left on stack, it should be removed
     }
 }
 
@@ -188,6 +185,7 @@ void CodegenVisitor::visitArgumentsListNode(const ArgumentsListNode* node) {
     auto children = node->getChildren();
     for (size_t i = node->getChildrenNumber(); i --> 0 ;) { // from (childrenNumber - 1) to 0
         children[i]->accept(this);
+        coerceTo(children[i], Type::DOUBLE);
     }
 }
 
@@ -249,6 +247,7 @@ void CodegenVisitor::visitVariableDeclarationNode(const VariableDeclarationNode*
 
     if (initialValue) {
         initialValue->accept(this);
+        coerceTo(initialValue, Type::DOUBLE);
     } else {
         pushDefaultValueForType(Type::DOUBLE);
     }
@@ -426,6 +425,18 @@ std::shared_ptr<VariableSymbol> CodegenVisitor::addVariable(char* name, const To
     popReg("AX");
 
     return symbolTable.addVariable(name, originPos);
+}
+
+void CodegenVisitor::coerceTo(std::shared_ptr<ASTNode>& node, Type to) {
+    Type from = returnsNonVoid(node, symbolTable) ? Type::DOUBLE : Type::VOID;
+
+    if (from == to) return;
+    if (from == Type::VOID) throw CoercionError(node->getOriginPos(), from, to);
+    if (to   == Type::VOID) {
+        pop();
+        return;
+    }
+    throw CoercionError(node->getOriginPos(), from, to);
 }
 
 void codegen(const std::shared_ptr<ASTNode>& root, const char* assemblyFileName) {

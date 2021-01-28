@@ -167,10 +167,8 @@ FunctionScopeStatements = (FunctionScopeStatement)*
 OuterScopeStatement = FunctionDefinition
 FunctionScopeStatement = Expression ';' | Assignment ';' | VariableDeclaration | Block | IfStatement | WhileStatement | ReturnStatement
 Block = '{' FunctionScopeStatements '}'
-IfStatement = IfStatementHeader FunctionScopeStatement ('else' FunctionScopeStatement)?
-IfStatementHeader = 'if' '(' ComparisonExpression ')'
-WhileStatement = WhileStatementHeader FunctionScopeStatement
-WhileStatementHeader = 'while' '(' ComparisonExpression ')'
+IfStatement = 'if' '(' ComparisonExpression ')' FunctionScopeStatement ('else' FunctionScopeStatement)?
+WhileStatement = 'while' '(' ComparisonExpression ')' FunctionScopeStatement
 ComparisonExpression = Expression [< > == <= >=] Expression
 FunctionDefinition = 'func' ID '(' ParametersList ')' Block
 ParametersList = ( Variable (',' Variable)* )?
