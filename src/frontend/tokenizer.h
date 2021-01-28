@@ -123,7 +123,6 @@ enum OperatorType {
     DIVISION,
     ARITHMETIC_NEGATION,
     UNARY_ADDITION,
-    POWER,
 };
 
 static const char* const OperatorTypeStrings[] = {
@@ -133,7 +132,6 @@ static const char* const OperatorTypeStrings[] = {
     "DIVISION",
     "ARITHMETIC_NEGATION",
     "UNARY_ADDITION",
-    "POWER",
 };
 
 class OperatorToken : public Token {
@@ -242,18 +240,6 @@ public:
 
     const char* getSymbol() const override {
         return "+";
-    }
-
-    double calculate(size_t argc, ...) const override;
-};
-
-class PowerOperator : public OperatorToken {
-
-public:
-    explicit PowerOperator(TokenOrigin originPos_) : OperatorToken(originPos_, 2, 3, false, POWER) { } // Power is right-associative like in math
-
-    const char* getSymbol() const override {
-        return "^";
     }
 
     double calculate(size_t argc, ...) const override;

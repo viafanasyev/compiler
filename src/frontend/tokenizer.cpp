@@ -91,16 +91,6 @@ double UnaryAdditionOperator::calculate(size_t argc, ...) const {
     return operand;
 }
 
-double PowerOperator::calculate(size_t argc, ...) const {
-    assert(argc == 2);
-    va_list operands;
-    va_start(operands, argc);
-    double leftOperand = va_arg(operands, double);
-    double rightOperand = va_arg(operands, double);
-    va_end(operands);
-    return pow(leftOperand, rightOperand);
-}
-
 void ComparisonOperatorToken::print() const {
     Token::print();
     printf(" TYPE=%s", ComparisonOperatorTypeStrings[operatorType]);
@@ -150,12 +140,6 @@ bool isTermOperator(const std::shared_ptr<Token>& token) {
     if (token->getType() != TokenType::OPERATOR) return false;
     auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
     return operatorToken->getOperatorType() == OperatorType::MULTIPLICATION || operatorToken->getOperatorType() == OperatorType::DIVISION;
-}
-
-bool isFactorOperator(const std::shared_ptr<Token>& token) {
-    if (token->getType() != TokenType::OPERATOR) return false;
-    auto operatorToken = std::dynamic_pointer_cast<OperatorToken>(token);
-    return operatorToken->getOperatorType() == OperatorType::POWER;
 }
 
 static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std::vector<std::shared_ptr<Token>>& tokens);
@@ -238,9 +222,6 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
             }
         }
 
-        ++expression;
-    } else if (*expression == '^') {
-        tokens.emplace_back(new PowerOperator(currentTokenOrigin));
         ++expression;
     } else if (*expression == '<') {
         ++expression;

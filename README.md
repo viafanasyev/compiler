@@ -67,10 +67,11 @@ There's no type system in the current version of this language, so every variabl
 This means, that there's no operations like `%` (remainder operator).  
 Note: `==` operator compares value with 1e-9 precision (`x == y` -> `|x - y| < 1e-9`), not by actual value.  
 
-Language has three internal functions:
+Language has next internal functions:
   * `read()` - reads number from console and returns it's value;
   * `print(x)` - prints value of `x` into console;
-  * `sqrt(x)` - returns square root of the `x`.
+  * `sqrt(x)` - returns square root of the `x`;
+  * `pow(x, y)` - returns `x` raised to the `y` power.
 
 <br>
 
@@ -177,8 +178,7 @@ ReturnStatement = 'return' Expression ';'
 VariableDeclaration = 'var' Variable ('=' Expression)? ';'
 Expression = Term ([+ -] Term)*
 Term = Factor ([* /] Factor)*
-Factor = Parenthesised (^ Parenthesised)*
-Parenthesised = ('+' | '-') Parenthesised | '(' Expression ')' | Number | Variable | FunctionCall
+Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Variable | FunctionCall
 Assignment = Variable '=' Expression
 FunctionCall = ID '(' ArgumentsList ')'
 ArgumentsList = ( Expression (',' Expression)* )?

@@ -345,7 +345,6 @@ void CodegenVisitor::arithmeticOperation(OperatorType op) {
         case MULTIPLICATION:      fprintf(assemblyFile, "MUL\n"); return;
         case DIVISION:            fprintf(assemblyFile, "DIV\n"); return;
         case UNARY_ADDITION:      /* Do nothing */ return;
-        case POWER:               fprintf(assemblyFile, "POW\n"); return;
         default:                  throw std::logic_error("Unsupported arithmetic operation");
     }
 }

@@ -131,9 +131,6 @@ std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&
 <tr class="memitem:a635e2e45d2a0339044c4e7646ebc6eab"><td class="memItemLeft" align="right" valign="top"><a id="a635e2e45d2a0339044c4e7646ebc6eab"></a>
 std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getFactor</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:a635e2e45d2a0339044c4e7646ebc6eab"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0faaaf9ca04d9c288fe9552459f0a94"><td class="memItemLeft" align="right" valign="top"><a id="ac0faaaf9ca04d9c288fe9552459f0a94"></a>
-std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getParenthesised</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
-<tr class="separator:ac0faaaf9ca04d9c288fe9552459f0a94"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aaa40bfb09b5c36dd88d22c3a3a8f00e7"><td class="memItemLeft" align="right" valign="top"><a id="aaa40bfb09b5c36dd88d22c3a3a8f00e7"></a>
 std::shared_ptr&lt; <a class="el" href="class_assignment_operator_node.html">AssignmentOperatorNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getAssignment</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:aaa40bfb09b5c36dd88d22c3a3a8f00e7"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -175,8 +172,7 @@ ReturnStatement = 'return' Expression ';'
 VariableDeclaration = 'var' Variable ('=' Expression)? ';'
 Expression = Term ([+ -] Term)*
 Term = Factor ([* /] Factor)*
-Factor = Parenthesised (^ Parenthesised)*
-Parenthesised = ('+' | '-') Parenthesised | '(' Expression ')' | Number | Variable | FunctionCall
+Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Variable | FunctionCall
 Assignment = Variable '=' Expression
 FunctionCall = ID '(' ArgumentsList ')'
 ArgumentsList = ( Expression (',' Expression)* )?

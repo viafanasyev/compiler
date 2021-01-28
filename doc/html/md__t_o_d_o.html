@@ -71,7 +71,7 @@ Language improvements</h2>
 <li>Global variables</li>
 <li>Constants</li>
 <li>Logical operators (<code>||</code>, <code>&amp;&amp;</code>, <code>!</code>)</li>
-<li>Bitwise operators (<code>|</code>, <code>&amp;</code>, <code>~</code>, <code>^</code>). <code>pow(x, y)</code> function instead of <code>^</code>?</li>
+<li>Bitwise operators (<code>|</code>, <code>&amp;</code>, <code>~</code>, <code>^</code>)</li>
 <li>Type system</li>
 </ul>
 <h2><a class="anchor" id="autotoc_md27"></a>
@@ -79,12 +79,7 @@ Compiler improvements</h2>
 <ul>
 <li>Put instructions into list instead of simply printing to file to perform optimizations</li>
 <li>Resolve labels and calls in two walks. Remove <code>mainFunction</code> creation from <a class="el" href="codegen_8cpp.html" title="Implementation of IR code generation functions.">codegen.cpp</a>:27</li>
-<li>Control flow analysis on instructions list. Don't generate implicit <code>return 0</code>, just check if function is terminated with <code>return</code> in each case.</li>
-</ul>
-<h2><a class="anchor" id="autotoc_md28"></a>
-CPU improvements</h2>
-<ul>
-<li>Implement <code>POW</code> operation </li>
+<li>Control flow analysis on instructions list. Don't generate implicit <code>return 0</code>, just check if function is terminated with <code>return</code> in each case. </li>
 </ul>
 </div></div><!-- contents -->
 </div><!-- PageDoc -->

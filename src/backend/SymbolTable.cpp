@@ -52,6 +52,7 @@ SymbolTable::SymbolTable() {
     functions[copyName("read")]  = std::make_shared<FunctionSymbol>("IN",   Type::DOUBLE, 0);
     functions[copyName("print")] = std::make_shared<FunctionSymbol>("OUT",  Type::VOID,   1);
     functions[copyName("sqrt")]  = std::make_shared<FunctionSymbol>("SQRT", Type::DOUBLE, 1);
+    functions[copyName("pow")]   = std::make_shared<FunctionSymbol>("POW",  Type::DOUBLE, 2);
 }
 
 SymbolTable::~SymbolTable() {

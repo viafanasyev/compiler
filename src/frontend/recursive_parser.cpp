@@ -21,8 +21,7 @@
  *     VariableDeclaration = 'var' Variable ('=' Expression)? ';'
  *     Expression = Term ([+ -] Term)*
  *     Term = Factor ([* /] Factor)*
- *     Factor = Parenthesised (^ Parenthesised)*
- *     Parenthesised = ('+' | '-') Parenthesised | '(' Expression ')' | Number | Variable | FunctionCall
+ *     Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Variable | FunctionCall
  *     Assignment = Variable '=' Expression
  *     FunctionCall = ID '(' ArgumentsList ')'
  *     ArgumentsList = ( Expression (',' Expression)* )?
@@ -51,7 +50,6 @@ std::shared_ptr<VariableDeclarationNode> getVariableDeclaration(const std::vecto
 std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getTerm(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
-std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<AssignmentOperatorNode> getAssignment(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<FunctionCallNode> getFunctionCall(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ArgumentsListNode> getArgumentsList(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
@@ -327,31 +325,6 @@ std::shared_ptr<ASTNode> getTerm(const std::vector<std::shared_ptr<Token>>& toke
 }
 
 std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
-    std::shared_ptr<ASTNode> result = getParenthesised(tokens, pos);
-    std::shared_ptr<ASTNode> operand = nullptr;
-    std::vector<std::shared_ptr<ASTNode>> operands;
-    std::vector<std::shared_ptr<OperatorToken>> operators;
-    while (pos < tokens.size() && isFactorOperator(tokens[pos])) {
-        assert(tokens[pos]->getType() == TokenType::OPERATOR);
-        operators.push_back(std::dynamic_pointer_cast<OperatorToken>(tokens[pos]));
-        ++pos;
-
-        operand = getParenthesised(tokens, pos);
-
-        operands.push_back(operand);
-    }
-    if (!operands.empty()) { // Calculating right-to-left because '^' is right-associative
-        size_t i = operands.size() - 1;
-        while (i > 0) {
-            operands[i - 1] = std::make_shared<OperatorNode>(operators[i], operands[i - 1], operands[i]);
-            --i;
-        }
-        result = std::make_shared<OperatorNode>(operators[0], result, operands[0]);
-    }
-    return result;
-}
-
-std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
     if (pos >= tokens.size()) throw SyntaxError("Expected number, identifier, '(' or unary operator, but got EOF");
 
     if (tokens[pos]->getType() == TokenType::OPERATOR) {
@@ -360,7 +333,7 @@ std::shared_ptr<ASTNode> getParenthesised(const std::vector<std::shared_ptr<Toke
             operatorToken->getOperatorType() == OperatorType::UNARY_ADDITION
         ) {
             ++pos;
-            return std::make_shared<OperatorNode>(operatorToken, getParenthesised(tokens, pos));
+            return std::make_shared<OperatorNode>(operatorToken, getFactor(tokens, pos));
         }
     }
     if (tokens[pos]->getType() == TokenType::CONSTANT_VALUE) return getNumber(tokens, pos);

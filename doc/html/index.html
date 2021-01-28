@@ -136,10 +136,11 @@ Language description</h1>
  This means, that there's no operations like <code>%</code> (remainder operator). <br  />
  Note: <code>==</code> operator compares value with 1e-9 precision (<code>x == y</code> -&gt; <code>|x - y| &lt; 1e-9</code>), not by actual value. <br  />
 </p>
-<p>Language has three internal functions:</p><ul>
+<p>Language has next internal functions:</p><ul>
 <li><code>read()</code> - reads number from console and returns it's value;</li>
 <li><code>print(x)</code> - prints value of <code>x</code> into console;</li>
-<li><code>sqrt(x)</code> - returns square root of the <code>x</code>.</li>
+<li><code>sqrt(x)</code> - returns square root of the <code>x</code>;</li>
+<li><code>pow(x, y)</code> - returns <code>x</code> raised to the <code>y</code> power.</li>
 </ul>
 <p><br  />
 </p>
@@ -238,8 +239,7 @@ Grammar</h2>
 <div class="line">VariableDeclaration = &#39;var&#39; Variable (&#39;=&#39; Expression)? &#39;;&#39;</div>
 <div class="line">Expression = Term ([+ -] Term)*</div>
 <div class="line">Term = Factor ([* /] Factor)*</div>
-<div class="line">Factor = Parenthesised (^ Parenthesised)*</div>
-<div class="line">Parenthesised = (&#39;+&#39; | &#39;-&#39;) Parenthesised | &#39;(&#39; Expression &#39;)&#39; | Number | Variable | FunctionCall</div>
+<div class="line">Factor = (&#39;+&#39; | &#39;-&#39;) Factor | &#39;(&#39; Expression &#39;)&#39; | Number | Variable | FunctionCall</div>
 <div class="line">Assignment = Variable &#39;=&#39; Expression</div>
 <div class="line">FunctionCall = ID &#39;(&#39; ArgumentsList &#39;)&#39;</div>
 <div class="line">ArgumentsList = ( Expression (&#39;,&#39; Expression)* )?</div>
