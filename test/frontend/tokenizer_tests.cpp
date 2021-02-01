@@ -204,27 +204,8 @@ TEST(tokenize, simpleExpressionWithVariables) {
     ASSERT_ID_TOKEN(tokens[6], "tmp");
 }
 
-TEST(tokenize, simpleExpressionWithMultiplePowerOperations) {
-    char* expression = (char*)"x + x^2 + x^y^z";
-
-    std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
-
-    ASSERT_EQUALS(tokens.size(), 11);
-    ASSERT_ID_TOKEN(tokens[0], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
-    ASSERT_ID_TOKEN(tokens[2], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
-    ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
-    ASSERT_OPERATOR_TOKEN(tokens[5], 2, 1, ADDITION);
-    ASSERT_ID_TOKEN(tokens[6], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[7], 2, 3, POWER);
-    ASSERT_ID_TOKEN(tokens[8], "y");
-    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
-    ASSERT_ID_TOKEN(tokens[10], "z");
-}
-
 TEST(tokenize, simpleExpressionWithLessComparisonOperator) {
-    char* expression = (char*)"x + x^2 < y + y^2";
+    char* expression = (char*)"x + x*2 < y + y*2";
 
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
@@ -232,18 +213,18 @@ TEST(tokenize, simpleExpressionWithLessComparisonOperator) {
     ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[2], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], LESS);
     ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[8], "y");
-    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
 
 TEST(tokenize, simpleExpressionWithLessOrEqualComparisonOperator) {
-    char* expression = (char*)"x + x^2 <= y + y^2";
+    char* expression = (char*)"x + x*2 <= y + y*2";
 
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
@@ -251,18 +232,18 @@ TEST(tokenize, simpleExpressionWithLessOrEqualComparisonOperator) {
     ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[2], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], LESS_OR_EQUAL);
     ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[8], "y");
-    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
 
 TEST(tokenize, simpleExpressionWithGreaterComparisonOperator) {
-    char* expression = (char*)"x + x^2 > y + y^2";
+    char* expression = (char*)"x + x*2 > y + y*2";
 
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
@@ -270,18 +251,18 @@ TEST(tokenize, simpleExpressionWithGreaterComparisonOperator) {
     ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[2], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], GREATER);
     ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[8], "y");
-    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
 
 TEST(tokenize, simpleExpressionWithGreaterOrEqualComparisonOperator) {
-    char* expression = (char*)"x + x^2 >= y + y^2";
+    char* expression = (char*)"x + x*2 >= y + y*2";
 
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
@@ -289,18 +270,18 @@ TEST(tokenize, simpleExpressionWithGreaterOrEqualComparisonOperator) {
     ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[2], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], GREATER_OR_EQUAL);
     ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[8], "y");
-    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
 
 TEST(tokenize, simpleExpressionWithEqualComparisonOperator) {
-    char* expression = (char*)"x + x^2 == y + y^2";
+    char* expression = (char*)"x + x*2 == y + y*2";
 
     std::vector<std::shared_ptr<Token>> tokens = tokenize(expression);
 
@@ -308,13 +289,13 @@ TEST(tokenize, simpleExpressionWithEqualComparisonOperator) {
     ASSERT_ID_TOKEN(tokens[0], "x");
     ASSERT_OPERATOR_TOKEN(tokens[1], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[2], "x");
-    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[3], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[4], 2);
     ASSERT_COMPARISON_OPERATOR_TOKEN(tokens[5], EQUAL);
     ASSERT_ID_TOKEN(tokens[6], "y");
     ASSERT_OPERATOR_TOKEN(tokens[7], 2, 1, ADDITION);
     ASSERT_ID_TOKEN(tokens[8], "y");
-    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 3, POWER);
+    ASSERT_OPERATOR_TOKEN(tokens[9], 2, 2, MULTIPLICATION);
     ASSERT_CONSTANT_VALUE_TOKEN(tokens[10], 2);
 }
 

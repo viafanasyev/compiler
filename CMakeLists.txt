@@ -60,4 +60,9 @@ add_executable(
         src/util/RedefinitionError.h
         src/util/RedefinitionError.cpp
         src/backend/Label.h
-        src/backend/Label.cpp)
+        src/backend/Label.cpp
+        src/util/constants.h
+        src/util/CoercionError.h
+        src/util/CoercionError.cpp
+        src/util/ValueReassignmentError.h
+        src/util/ValueReassignmentError.cpp)
