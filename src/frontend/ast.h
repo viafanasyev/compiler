@@ -18,6 +18,7 @@ class CodegenVisitor;
 enum NodeType {
     CONSTANT_VALUE_NODE,
     VARIABLE_NODE,
+    VALUE_NODE,
     OPERATOR_NODE,
     ASSIGNMENT_OPERATOR_NODE,
     COMPARISON_OPERATOR_NODE,
@@ -31,6 +32,7 @@ enum NodeType {
     FUNCTION_DEFINITION_NODE,
     FUNCTION_CALL_NODE,
     VARIABLE_DECLARATION_NODE,
+    VALUE_DECLARATION_NODE,
     RETURN_STATEMENT_NODE,
 };
 
@@ -157,6 +159,34 @@ public:
     }
 
     ~VariableNode() {
+        free(name);
+    }
+
+    char* getName() const {
+        return name;
+    }
+
+    void accept(CodegenVisitor* visitor) const override;
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+class ValueNode : public ASTNode {
+
+private:
+    char* name;
+
+public:
+    explicit ValueNode(TokenOrigin originPos_, const char* name_) : ASTNode(VALUE_NODE, originPos_) {
+        name = (char*)calloc(MAX_ID_LENGTH + 1, sizeof(char)); // +1 is for '\0'
+        for (unsigned short i = 0; i < MAX_ID_LENGTH; ++i) {
+            name[i] = name_[i];
+            if (name[i] == '\0') break;
+        }
+    }
+
+    ~ValueNode() {
         free(name);
     }
 
@@ -379,6 +409,18 @@ public:
             ASTNode(VARIABLE_DECLARATION_NODE, originPos_, variable) { }
     VariableDeclarationNode(TokenOrigin originPos_, const std::shared_ptr<VariableNode>& variable, const std::shared_ptr<ASTNode>& initialValue) :
             ASTNode(VARIABLE_DECLARATION_NODE, originPos_, variable, initialValue) { }
+
+    void accept(CodegenVisitor* visitor) const override;
+
+protected:
+    void dotPrint(FILE* dotFile) const override;
+};
+
+class ValueDeclarationNode : public ASTNode {
+
+public:
+    ValueDeclarationNode(TokenOrigin originPos_, const std::shared_ptr<ValueNode>& value, const std::shared_ptr<ASTNode>& initialValue) :
+            ASTNode(VALUE_DECLARATION_NODE, originPos_, value, initialValue) { }
 
     void accept(CodegenVisitor* visitor) const override;
 

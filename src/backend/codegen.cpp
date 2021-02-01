@@ -9,6 +9,7 @@
 #include "../util/constants.h"
 #include "../util/CoercionError.h"
 #include "../util/SyntaxError.h"
+#include "../util/ValueReassignmentError.h"
 
 static inline bool returnsNonVoid(const std::shared_ptr<ASTNode>& node, const SymbolTable& symbolTable) {
     const NodeType nodeType = node->getType();
@@ -16,6 +17,8 @@ static inline bool returnsNonVoid(const std::shared_ptr<ASTNode>& node, const Sy
         nodeType == NodeType::CONSTANT_VALUE_NODE
     ) || (
         nodeType == NodeType::VARIABLE_NODE
+    ) || (
+        nodeType == NodeType::VALUE_NODE
     ) || (
         nodeType == NodeType::OPERATOR_NODE
     ) || (
@@ -52,6 +55,13 @@ void CodegenVisitor::visitVariableNode(const VariableNode* node) {
     getVarByAddress(symbolTable.getVariableByName(variableName)->address);
 }
 
+void CodegenVisitor::visitValueNode(const ValueNode* node) {
+    char* valueName = node->getName();
+    if (!symbolTable.hasVariable(valueName)) throw SyntaxError(node->getOriginPos(), "Undeclared value");
+
+    getVarByAddress(symbolTable.getVariableByName(valueName)->address);
+}
+
 void CodegenVisitor::visitOperatorNode(const OperatorNode* node) {
     size_t arity = node->getChildrenNumber();
     if (arity != 1 && arity != 2) throw std::logic_error("Unsupported arity of operator. Only unary and binary are supported yet");
@@ -75,7 +85,9 @@ void CodegenVisitor::visitAssignmentOperatorNode(const AssignmentOperatorNode* n
 
     char* variableName = variable->getName();
     if (!symbolTable.hasVariable(variableName)) throw SyntaxError(variable->getOriginPos(), "Undeclared variable");
-    setVarByAddress(symbolTable.getVariableByName(variableName)->address);
+    auto variableSymbol = symbolTable.getVariableByName(variableName);
+    if (variableSymbol->isFinal) throw ValueReassignmentError(variableSymbol->originPos, node->getOriginPos());
+    setVarByAddress(variableSymbol->address);
 }
 
 void CodegenVisitor::visitComparisonOperatorNode(const ComparisonOperatorNode* node) {
@@ -175,7 +187,7 @@ void CodegenVisitor::visitParametersListNode(const ParametersListNode* node) {
         setVarByAddress(symbolTable.getNextLocalVariableAddress());
 
         auto variableNode = dynamic_cast<VariableNode*>(children[i].get());
-        addVariable(variableNode->getName(), variableNode->getOriginPos());
+        addVariable(variableNode->getName(), variableNode->getOriginPos(), false);
     }
 
     pushReg("CX"); // Put saved AX value on stack
@@ -242,7 +254,7 @@ void CodegenVisitor::visitVariableDeclarationNode(const VariableDeclarationNode*
     size_t childrenNumber = node->getChildrenNumber();
     assert(childrenNumber == 1 || childrenNumber == 2);
     auto children = node->getChildren();
-    auto variable =     dynamic_cast<VariableNode*>(children[0].get());
+    auto variable     = dynamic_cast<VariableNode*>(children[0].get());
     auto initialValue = childrenNumber == 2 ? children[1] : nullptr;
 
     if (initialValue) {
@@ -252,7 +264,19 @@ void CodegenVisitor::visitVariableDeclarationNode(const VariableDeclarationNode*
         pushDefaultValueForType(Type::DOUBLE);
     }
 
-    setVarByAddress(addVariable(variable->getName(), variable->getOriginPos())->address);
+    setVarByAddress(addVariable(variable->getName(), variable->getOriginPos(), false)->address);
+}
+
+void CodegenVisitor::visitValueDeclarationNode(const ValueDeclarationNode* node) {
+    assert(node->getChildrenNumber() == 2);
+    auto children = node->getChildren();
+    auto variable     = dynamic_cast<ValueNode*>(children[0].get());
+    auto initialValue = children[1];
+
+    initialValue->accept(this);
+    coerceTo(initialValue, Type::DOUBLE);
+
+    setVarByAddress(addVariable(variable->getName(), variable->getOriginPos(), true)->address);
 }
 
 void CodegenVisitor::visitReturnStatementNode(const ReturnStatementNode* node) {
@@ -417,14 +441,14 @@ void CodegenVisitor::setVarByAddress(unsigned int address) {
     }
 }
 
-std::shared_ptr<VariableSymbol> CodegenVisitor::addVariable(char* name, const TokenOrigin& originPos) {
+std::shared_ptr<VariableSymbol> CodegenVisitor::addVariable(char* name, const TokenOrigin& originPos, bool isFinal) {
     // Increase AX by variable size
     pushReg("AX");
     push(VARIABLE_SIZE_IN_BYTES);
     fprintf(assemblyFile, "ADD\n");
     popReg("AX");
 
-    return symbolTable.addVariable(name, originPos);
+    return symbolTable.addVariable(name, originPos, isFinal);
 }
 
 void CodegenVisitor::coerceTo(std::shared_ptr<ASTNode>& node, Type to) {

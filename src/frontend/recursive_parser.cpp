@@ -8,7 +8,7 @@
  *     OuterScopeStatements = (OuterScopeStatement)*
  *     FunctionScopeStatements = (FunctionScopeStatement)*
  *     OuterScopeStatement = FunctionDefinition
- *     FunctionScopeStatement = Expression ';' | Assignment ';' | VariableDeclaration | Block | IfStatement | WhileStatement | ReturnStatement
+ *     FunctionScopeStatement = Expression ';' | Assignment ';' | VariableDeclaration | ValueDeclaration | Block | IfStatement | WhileStatement | ReturnStatement
  *     Block = '{' FunctionScopeStatements '}'
  *     IfStatement = 'if' '(' ComparisonExpression ')' FunctionScopeStatement ('else' FunctionScopeStatement)?
  *     WhileStatement = 'while' '(' ComparisonExpression ')' FunctionScopeStatement
@@ -17,13 +17,15 @@
  *     ParametersList = ( Variable (',' Variable)* )?
  *     ReturnStatement = 'return' Expression ';'
  *     VariableDeclaration = 'var' Variable ('=' Expression)? ';'
+ *     ValueDeclaration = 'val' Value '=' Expression ';'
  *     Expression = Term ([+ -] Term)*
  *     Term = Factor ([* /] Factor)*
- *     Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Variable | FunctionCall
+ *     Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Value | FunctionCall
  *     Assignment = Variable '=' Expression
  *     FunctionCall = ID '(' ArgumentsList ')'
  *     ArgumentsList = ( Expression (',' Expression)* )?
  *     Variable = ID
+ *     Value = ID
  *     Number = [0-9]+
  *     ID = [a-z A-Z] [a-z A-Z 0-9]*
  */
@@ -43,6 +45,7 @@ std::shared_ptr<FunctionDefinitionNode> getFunctionDefinition(const std::vector<
 std::shared_ptr<ParametersListNode> getParametersList(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ReturnStatementNode> getReturnStatement(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<VariableDeclarationNode> getVariableDeclaration(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ValueDeclarationNode> getValueDeclaration(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getTerm(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
@@ -50,6 +53,7 @@ std::shared_ptr<AssignmentOperatorNode> getAssignment(const std::vector<std::sha
 std::shared_ptr<FunctionCallNode> getFunctionCall(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ArgumentsListNode> getArgumentsList(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<VariableNode> getVariable(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
+std::shared_ptr<ValueNode> getValue(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<ConstantValueNode> getNumber(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 std::shared_ptr<IdToken> getId(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos);
 
@@ -117,6 +121,8 @@ std::shared_ptr<ASTNode> getFunctionScopeStatement(const std::vector<std::shared
         statement = getWhileStatement(tokens, pos);
     } else if (tokens[pos]->getType() == TokenType::VAR) {
         statement = getVariableDeclaration(tokens, pos);
+    } else if (tokens[pos]->getType() == TokenType::VAL) {
+        statement = getValueDeclaration(tokens, pos);
     } else if (tokens[pos]->getType() == TokenType::RETURN) {
         statement = getReturnStatement(tokens, pos);
     } else {
@@ -282,6 +288,27 @@ std::shared_ptr<VariableDeclarationNode> getVariableDeclaration(const std::vecto
         : std::make_shared<VariableDeclarationNode>(originPos, variable, initialValue);
 }
 
+std::shared_ptr<ValueDeclarationNode> getValueDeclaration(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    if (pos >= tokens.size()) throw SyntaxError("Expected value declaration, but got EOF");
+    if (tokens[pos]->getType() != TokenType::VAL) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected value declaration");
+    TokenOrigin originPos = tokens[pos]->getOriginPos();
+    ++pos;
+
+    auto value = getValue(tokens, pos);
+
+    if (pos >= tokens.size()) throw SyntaxError("Expected '=', but got EOF");
+    if (tokens[pos]->getType() != TokenType::ASSIGNMENT_OPERATOR) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected '='");
+    ++pos;
+
+    auto initialValue = getExpression(tokens, pos);
+
+    if (pos >= tokens.size()) throw SyntaxError("Expected ';', but got EOF");
+    if (tokens[pos]->getType() != TokenType::SEMICOLON) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected ';'");
+    ++pos;
+
+    return std::make_shared<ValueDeclarationNode>(originPos, value, initialValue);
+}
+
 std::shared_ptr<ASTNode> getExpression(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
     if (pos >= tokens.size()) throw SyntaxError("Expected expression, but got EOF");
 
@@ -331,7 +358,7 @@ std::shared_ptr<ASTNode> getFactor(const std::vector<std::shared_ptr<Token>>& to
     if (tokens[pos]->getType() == TokenType::CONSTANT_VALUE) return getNumber(tokens, pos);
     if (tokens[pos]->getType() == TokenType::ID) {
         if (pos + 1 < tokens.size() && isOpenRoundParenthesisToken(tokens[pos + 1])) return getFunctionCall(tokens, pos);
-        return getVariable(tokens, pos);
+        return getValue(tokens, pos);
     }
 
     if (!isOpenRoundParenthesisToken(tokens[pos])) throw SyntaxError(tokens[pos]->getOriginPos(), "Expected number, identifier,  '(' or unary operator");
@@ -397,6 +424,11 @@ std::shared_ptr<ArgumentsListNode> getArgumentsList(const std::vector<std::share
 std::shared_ptr<VariableNode> getVariable(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
     auto idToken = getId(tokens, pos);
     return std::make_shared<VariableNode>(idToken->getOriginPos(), idToken->getName());
+}
+
+std::shared_ptr<ValueNode> getValue(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {
+    auto idToken = getId(tokens, pos);
+    return std::make_shared<ValueNode>(idToken->getOriginPos(), idToken->getName());
 }
 
 std::shared_ptr<ConstantValueNode> getNumber(const std::vector<std::shared_ptr<Token>>& tokens, size_t& pos) {

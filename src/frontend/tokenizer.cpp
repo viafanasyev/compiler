@@ -269,6 +269,8 @@ static bool addNextToken(char*& expression, TokenOrigin& currentTokenOrigin, std
             tokens.emplace_back(new FuncToken(currentTokenOrigin));
         } else if (strcmp(name, "var") == 0) {
             tokens.emplace_back(new VarToken(currentTokenOrigin));
+        } else if (strcmp(name, "val") == 0) {
+            tokens.emplace_back(new ValToken(currentTokenOrigin));
         } else if (strcmp(name, "return") == 0) {
             tokens.emplace_back(new ReturnToken(currentTokenOrigin));
         } else {

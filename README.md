@@ -47,11 +47,12 @@ This language has (almost) a C-style syntax.
 Each program should have no-arg main function.  
 Each statement should be terminated with `;`.
 Each variable should be declared using `var` keyword: `var x = 42;`.  
+There are constant/final variables (a.k.a. values), that can be declared using `val` keyword: `val eps = 0.001;`. Values can't be reassigned.  
 There's no global variables.  
 Each function should be defined using `func` keyword: `func foo(a, b, c) { ... }`.  
 Each function (except main) should return value. Implicit `return 0` added to the end of each function, if there's no return.  
 
-Like in C, only function defined above are visible in the current function.  
+Like in C, only functions defined above are visible in the current function.  
 Variables can be shadowed in the nested scopes. For example:
 ```
 {
@@ -134,15 +135,15 @@ func solveQuadratic(a, b, c) {
         return 0;
     }
 
-    var d = b*b - 4*a*c;
+    val d = b*b - 4*a*c;
     if (d < 0) {
         print(0);
     } else if (d == 0) {
         print(1);
         print(-b / (2 * a));
     } else {
-        var x1 = (-b - sqrt(d)) / (2 * a);
-        var x2 = (-b + sqrt(d)) / (2 * a);
+        val x1 = (-b - sqrt(d)) / (2 * a);
+        val x2 = (-b + sqrt(d)) / (2 * a);
         print(2);
         print(x1);
         print(x2);
@@ -151,9 +152,9 @@ func solveQuadratic(a, b, c) {
 }
 
 func main() {
-    var a = read();
-    var b = read();
-    var c = read();
+    val a = read();
+    val b = read();
+    val c = read();
 
     solveQuadratic(a, b, c);
 }
@@ -165,7 +166,7 @@ G = OuterScopeStatements '\0'
 OuterScopeStatements = (OuterScopeStatement)*
 FunctionScopeStatements = (FunctionScopeStatement)*
 OuterScopeStatement = FunctionDefinition
-FunctionScopeStatement = Expression ';' | Assignment ';' | VariableDeclaration | Block | IfStatement | WhileStatement | ReturnStatement
+FunctionScopeStatement = Expression ';' | Assignment ';' | VariableDeclaration | ValueDeclaration | Block | IfStatement | WhileStatement | ReturnStatement
 Block = '{' FunctionScopeStatements '}'
 IfStatement = 'if' '(' ComparisonExpression ')' FunctionScopeStatement ('else' FunctionScopeStatement)?
 WhileStatement = 'while' '(' ComparisonExpression ')' FunctionScopeStatement
@@ -174,13 +175,15 @@ FunctionDefinition = 'func' ID '(' ParametersList ')' Block
 ParametersList = ( Variable (',' Variable)* )?
 ReturnStatement = 'return' Expression ';'
 VariableDeclaration = 'var' Variable ('=' Expression)? ';'
+ValueDeclaration = 'val' Value '=' Expression ';'
 Expression = Term ([+ -] Term)*
 Term = Factor ([* /] Factor)*
-Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Variable | FunctionCall
+Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Value | FunctionCall
 Assignment = Variable '=' Expression
 FunctionCall = ID '(' ArgumentsList ')'
 ArgumentsList = ( Expression (',' Expression)* )?
 Variable = ID
+Value = ID
 Number = [0-9]+
 ID = [a-z A-Z] [a-z A-Z 0-9]*
 ```

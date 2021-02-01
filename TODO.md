@@ -2,7 +2,6 @@
 
 ### Language improvements
 * Global variables
-* Constants
 * Logical operators (`||`, `&&`, `!`)
 * Bitwise operators (`|`, `&`, `~`, `^`)
 * Type system

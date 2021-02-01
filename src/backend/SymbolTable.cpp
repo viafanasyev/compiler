@@ -12,8 +12,8 @@
 
 static inline char* copyName(const char* name);
 
-VariableSymbol::VariableSymbol(unsigned int address_, const TokenOrigin& originPos_) :
-    address(address_), originPos(originPos_)
+VariableSymbol::VariableSymbol(unsigned int address_, const TokenOrigin& originPos_, bool isFinal_) :
+    address(address_), originPos(originPos_), isFinal(isFinal_)
 { }
 
 /** Constructor for non-internal functions */
@@ -67,12 +67,12 @@ SymbolTable::~SymbolTable() {
     }
 }
 
-std::shared_ptr<VariableSymbol> SymbolTable::addVariable(char* name, const TokenOrigin& originPos) {
+std::shared_ptr<VariableSymbol> SymbolTable::addVariable(char* name, const TokenOrigin& originPos, bool isFinal) {
     assert(name != nullptr);
 
     if (variables.front().count(name) != 0) throw RedefinitionError(name, originPos, getVariableByName(name)->originPos);
 
-    auto symbol = std::make_shared<VariableSymbol>(nextLocalVariableAddress, originPos);
+    auto symbol = std::make_shared<VariableSymbol>(nextLocalVariableAddress, originPos, isFinal);
     nextLocalVariableAddress += VARIABLE_SIZE_IN_BYTES;
     variables.front()[copyName(name)] = symbol;
     return symbol;

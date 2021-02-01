@@ -37,7 +37,9 @@ add_executable(
         src/backend/Label.cpp
         src/util/constants.h
         src/util/CoercionError.h
-        src/util/CoercionError.cpp)
+        src/util/CoercionError.cpp
+        src/util/ValueReassignmentError.h
+        src/util/ValueReassignmentError.cpp)
 
 add_executable(
         tests

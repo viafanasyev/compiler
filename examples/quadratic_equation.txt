@@ -19,15 +19,15 @@ func solveQuadratic(a, b, c) {
         return 0;
     }
 
-    var d = b*b - 4*a*c;
+    val d = b*b - 4*a*c;
     if (d < 0) {
         print(0);
     } else if (d == 0) {
         print(1);
         print(-b / (2 * a));
     } else {
-        var x1 = (-b - sqrt(d)) / (2 * a);
-        var x2 = (-b + sqrt(d)) / (2 * a);
+        val x1 = (-b - sqrt(d)) / (2 * a);
+        val x2 = (-b + sqrt(d)) / (2 * a);
         print(2);
         print(x1);
         print(x2);
@@ -36,9 +36,9 @@ func solveQuadratic(a, b, c) {
 }
 
 func main() {
-    var a = read();
-    var b = read();
-    var c = read();
+    val a = read();
+    val b = read();
+    val c = read();
 
     solveQuadratic(a, b, c);
 }

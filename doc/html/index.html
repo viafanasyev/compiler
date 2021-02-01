@@ -120,11 +120,12 @@ Language description</h1>
 <p>This language has (almost) a C-style syntax. <br  />
  Each program should have no-arg main function. <br  />
  Each statement should be terminated with <code>;</code>. Each variable should be declared using <code>var</code> keyword: <code>var x = 42;</code>. <br  />
+ There are constant/final variables (a.k.a. values), that can be declared using <code>val</code> keyword: <code>val eps = 0.001;</code>. Values can't be reassigned. <br  />
  There's no global variables. <br  />
  Each function should be defined using <code>func</code> keyword: <code>func foo(a, b, c) { ... }</code>. <br  />
  Each function (except main) should return value. Implicit <code>return 0</code> added to the end of each function, if there's no return. <br  />
 </p>
-<p>Like in C, only function defined above are visible in the current function. <br  />
+<p>Like in C, only functions defined above are visible in the current function. <br  />
  Variables can be shadowed in the nested scopes. For example: </p><div class="fragment"><div class="line">{</div>
 <div class="line">    var x = 0;</div>
 <div class="line">    {</div>
@@ -197,15 +198,15 @@ Quadratic equation solver</h2>
 <div class="line">        return 0;</div>
 <div class="line">    }</div>
 <div class="line"> </div>
-<div class="line">    var d = b*b - 4*a*c;</div>
+<div class="line">    val d = b*b - 4*a*c;</div>
 <div class="line">    if (d &lt; 0) {</div>
 <div class="line">        print(0);</div>
 <div class="line">    } else if (d == 0) {</div>
 <div class="line">        print(1);</div>
 <div class="line">        print(-b / (2 * a));</div>
 <div class="line">    } else {</div>
-<div class="line">        var x1 = (-b - sqrt(d)) / (2 * a);</div>
-<div class="line">        var x2 = (-b + sqrt(d)) / (2 * a);</div>
+<div class="line">        val x1 = (-b - sqrt(d)) / (2 * a);</div>
+<div class="line">        val x2 = (-b + sqrt(d)) / (2 * a);</div>
 <div class="line">        print(2);</div>
 <div class="line">        print(x1);</div>
 <div class="line">        print(x2);</div>
@@ -214,9 +215,9 @@ Quadratic equation solver</h2>
 <div class="line">}</div>
 <div class="line"> </div>
 <div class="line">func main() {</div>
-<div class="line">    var a = read();</div>
-<div class="line">    var b = read();</div>
-<div class="line">    var c = read();</div>
+<div class="line">    val a = read();</div>
+<div class="line">    val b = read();</div>
+<div class="line">    val c = read();</div>
 <div class="line"> </div>
 <div class="line">    solveQuadratic(a, b, c);</div>
 <div class="line">}</div>
@@ -226,7 +227,7 @@ Grammar</h2>
 <div class="line">OuterScopeStatements = (OuterScopeStatement)*</div>
 <div class="line">FunctionScopeStatements = (FunctionScopeStatement)*</div>
 <div class="line">OuterScopeStatement = FunctionDefinition</div>
-<div class="line">FunctionScopeStatement = Expression &#39;;&#39; | Assignment &#39;;&#39; | VariableDeclaration | Block | IfStatement | WhileStatement | ReturnStatement</div>
+<div class="line">FunctionScopeStatement = Expression &#39;;&#39; | Assignment &#39;;&#39; | VariableDeclaration | ValueDeclaration | Block | IfStatement | WhileStatement | ReturnStatement</div>
 <div class="line">Block = &#39;{&#39; FunctionScopeStatements &#39;}&#39;</div>
 <div class="line">IfStatement = &#39;if&#39; &#39;(&#39; ComparisonExpression &#39;)&#39; FunctionScopeStatement (&#39;else&#39; FunctionScopeStatement)?</div>
 <div class="line">WhileStatement = &#39;while&#39; &#39;(&#39; ComparisonExpression &#39;)&#39; FunctionScopeStatement</div>
@@ -235,13 +236,15 @@ Grammar</h2>
 <div class="line">ParametersList = ( Variable (&#39;,&#39; Variable)* )?</div>
 <div class="line">ReturnStatement = &#39;return&#39; Expression &#39;;&#39;</div>
 <div class="line">VariableDeclaration = &#39;var&#39; Variable (&#39;=&#39; Expression)? &#39;;&#39;</div>
+<div class="line">ValueDeclaration = &#39;val&#39; Value &#39;=&#39; Expression &#39;;&#39;</div>
 <div class="line">Expression = Term ([+ -] Term)*</div>
 <div class="line">Term = Factor ([* /] Factor)*</div>
-<div class="line">Factor = (&#39;+&#39; | &#39;-&#39;) Factor | &#39;(&#39; Expression &#39;)&#39; | Number | Variable | FunctionCall</div>
+<div class="line">Factor = (&#39;+&#39; | &#39;-&#39;) Factor | &#39;(&#39; Expression &#39;)&#39; | Number | Value | FunctionCall</div>
 <div class="line">Assignment = Variable &#39;=&#39; Expression</div>
 <div class="line">FunctionCall = ID &#39;(&#39; ArgumentsList &#39;)&#39;</div>
 <div class="line">ArgumentsList = ( Expression (&#39;,&#39; Expression)* )?</div>
 <div class="line">Variable = ID</div>
+<div class="line">Value = ID</div>
 <div class="line">Number = [0-9]+</div>
 <div class="line">ID = [a-z A-Z] [a-z A-Z 0-9]*</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md8"></a>

@@ -28,8 +28,9 @@ static const char* const TypeStrings[] = {
 struct VariableSymbol {
     const unsigned int address;
     const TokenOrigin originPos;
+    const bool isFinal;
 
-    VariableSymbol(unsigned int address_, const TokenOrigin& originPos_);
+    VariableSymbol(unsigned int address_, const TokenOrigin& originPos_, bool isFinal_);
 };
 
 struct FunctionSymbol {
@@ -102,7 +103,7 @@ public:
     SymbolTable();
     ~SymbolTable();
 
-    std::shared_ptr<VariableSymbol> addVariable(char* name, const TokenOrigin& originPos);
+    std::shared_ptr<VariableSymbol> addVariable(char* name, const TokenOrigin& originPos, bool isFinal);
     bool hasVariable(char* name) const;
     std::shared_ptr<VariableSymbol> getVariableByName(char* name) const;
     unsigned int getNextLocalVariableAddress() const;

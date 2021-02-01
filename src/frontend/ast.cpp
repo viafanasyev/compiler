@@ -73,6 +73,19 @@ void VariableNode::dotPrint(FILE* dotFile) const {
     assert(getChildrenNumber() == 0);
 }
 
+void ValueNode::accept(CodegenVisitor* visitor) const {
+    visitor->visitValueNode(this);
+}
+
+void ValueNode::dotPrint(FILE* dotFile) const {
+    constexpr unsigned short maxLabelLen = 11 + MAX_ID_LENGTH; // (strlen("val\nname: ") = 10) + MAX_ID_LENGTH + ('\0')
+    char label[maxLabelLen];
+    snprintf(label, maxLabelLen, "val\nname: %s", name);
+
+    ASTNode::dotPrintCurrent(this, dotFile, label, "#99FF9D");
+    assert(getChildrenNumber() == 0);
+}
+
 void OperatorNode::accept(CodegenVisitor* visitor) const {
     visitor->visitOperatorNode(this);
 }
@@ -220,6 +233,16 @@ void VariableDeclarationNode::accept(CodegenVisitor* visitor) const {
 void VariableDeclarationNode::dotPrint(FILE* dotFile) const {
     ASTNode::dotPrintCurrent(this, dotFile, "var decl", "#59BF5D");
     assert(getChildrenNumber() == 1 || getChildrenNumber() == 2);
+    ASTNode::dotPrintChildren(this, dotFile);
+}
+
+void ValueDeclarationNode::accept(CodegenVisitor* visitor) const {
+    visitor->visitValueDeclarationNode(this);
+}
+
+void ValueDeclarationNode::dotPrint(FILE* dotFile) const {
+    ASTNode::dotPrintCurrent(this, dotFile, "val decl", "#59BF5D");
+    assert(getChildrenNumber() == 2);
     ASTNode::dotPrintChildren(this, dotFile);
 }
 

@@ -34,6 +34,7 @@ public:
 
     void visitConstantValueNode(const ConstantValueNode* node);
     void visitVariableNode(const VariableNode* node);
+    void visitValueNode(const ValueNode* node);
     void visitOperatorNode(const OperatorNode* node);
     void visitAssignmentOperatorNode(const AssignmentOperatorNode* node);
     void visitComparisonOperatorNode(const ComparisonOperatorNode* node);
@@ -47,6 +48,7 @@ public:
     void visitFunctionDefinitionNode(const FunctionDefinitionNode* node);
     void visitFunctionCallNode(const FunctionCallNode* node);
     void visitVariableDeclarationNode(const VariableDeclarationNode* node);
+    void visitValueDeclarationNode(const ValueDeclarationNode* node);
     void visitReturnStatementNode(const ReturnStatementNode* node);
     void visitLabel(const Label* label);
 
@@ -74,7 +76,7 @@ public:
 private:
     static ComparisonOperatorType negateCompOp(ComparisonOperatorType compOp);
 
-    std::shared_ptr<VariableSymbol> addVariable(char* name, const TokenOrigin& originPos);
+    std::shared_ptr<VariableSymbol> addVariable(char* name, const TokenOrigin& originPos, bool isFinal);
 
     void pushDefaultValueForType(Type type);
 

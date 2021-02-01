@@ -116,6 +116,9 @@ std::shared_ptr&lt; <a class="el" href="class_return_statement_node.html">Return
 <tr class="memitem:a02733496ac1d4815d9b58aeefef3fbb9"><td class="memItemLeft" align="right" valign="top"><a id="a02733496ac1d4815d9b58aeefef3fbb9"></a>
 std::shared_ptr&lt; <a class="el" href="class_variable_declaration_node.html">VariableDeclarationNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariableDeclaration</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:a02733496ac1d4815d9b58aeefef3fbb9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a108b27587a30c6e78ec084a2ffab7e00"><td class="memItemLeft" align="right" valign="top"><a id="a108b27587a30c6e78ec084a2ffab7e00"></a>
+std::shared_ptr&lt; <a class="el" href="class_value_declaration_node.html">ValueDeclarationNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getValueDeclaration</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:a108b27587a30c6e78ec084a2ffab7e00"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a87e124fd6ab8f25eecb85fc7ffd10ed8"><td class="memItemLeft" align="right" valign="top"><a id="a87e124fd6ab8f25eecb85fc7ffd10ed8"></a>
 std::shared_ptr&lt; <a class="el" href="class_a_s_t_node.html">ASTNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getExpression</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:a87e124fd6ab8f25eecb85fc7ffd10ed8"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -137,6 +140,9 @@ std::shared_ptr&lt; <a class="el" href="class_arguments_list_node.html">Argument
 <tr class="memitem:a8611f1f67dbdc5863c2fe0a07e114e0d"><td class="memItemLeft" align="right" valign="top"><a id="a8611f1f67dbdc5863c2fe0a07e114e0d"></a>
 std::shared_ptr&lt; <a class="el" href="class_variable_node.html">VariableNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getVariable</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:a8611f1f67dbdc5863c2fe0a07e114e0d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab9132ad46c53b63977dfb4346d82d77"><td class="memItemLeft" align="right" valign="top"><a id="aab9132ad46c53b63977dfb4346d82d77"></a>
+std::shared_ptr&lt; <a class="el" href="class_value_node.html">ValueNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getValue</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
+<tr class="separator:aab9132ad46c53b63977dfb4346d82d77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4f8b182e210641794ad6dec0c7e15a69"><td class="memItemLeft" align="right" valign="top"><a id="a4f8b182e210641794ad6dec0c7e15a69"></a>
 std::shared_ptr&lt; <a class="el" href="class_constant_value_node.html">ConstantValueNode</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>getNumber</b> (const std::vector&lt; std::shared_ptr&lt; <a class="el" href="class_token.html">Token</a> &gt;&gt; &amp;tokens, size_t &amp;pos)</td></tr>
 <tr class="separator:a4f8b182e210641794ad6dec0c7e15a69"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -153,7 +159,7 @@ std::shared_ptr&lt; <a class="el" href="class_statements_node.html">StatementsNo
 OuterScopeStatements = (OuterScopeStatement)*
 FunctionScopeStatements = (FunctionScopeStatement)*
 OuterScopeStatement = FunctionDefinition
-FunctionScopeStatement = Expression ';' | Assignment ';' | VariableDeclaration | Block | IfStatement | WhileStatement | ReturnStatement
+FunctionScopeStatement = Expression ';' | Assignment ';' | VariableDeclaration | ValueDeclaration | Block | IfStatement | WhileStatement | ReturnStatement
 Block = '{' FunctionScopeStatements '}'
 IfStatement = 'if' '(' ComparisonExpression ')' FunctionScopeStatement ('else' FunctionScopeStatement)?
 WhileStatement = 'while' '(' ComparisonExpression ')' FunctionScopeStatement
@@ -162,13 +168,15 @@ FunctionDefinition = 'func' ID '(' ParametersList ')' Block
 ParametersList = ( Variable (',' Variable)* )?
 ReturnStatement = 'return' Expression ';'
 VariableDeclaration = 'var' Variable ('=' Expression)? ';'
+ValueDeclaration = 'val' Value '=' Expression ';'
 Expression = Term ([+ -] Term)*
 Term = Factor ([* /] Factor)*
-Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Variable | FunctionCall
+Factor = ('+' | '-') Factor | '(' Expression ')' | Number | Value | FunctionCall
 Assignment = Variable '=' Expression
 FunctionCall = ID '(' ArgumentsList ')'
 ArgumentsList = ( Expression (',' Expression)* )?
 Variable = ID
+Value = ID
 Number = [0-9]+
 ID = [a-z A-Z] [a-z A-Z 0-9]*
 </pre> </div></div><!-- contents -->

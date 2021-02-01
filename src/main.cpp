@@ -8,6 +8,7 @@
 #include "util/SyntaxError.h"
 #include "util/RedefinitionError.h"
 #include "util/CoercionError.h"
+#include "util/ValueReassignmentError.h"
 #include "MappedFile.h"
 #include "middleend/ast-optimizers.h"
 #include "stack-machine/src/arg-parser.h"
@@ -85,6 +86,9 @@ int main(int argc, char* argv[]) {
         exitCode = -1;
     } catch (const CoercionError& ex) {
         fprintf(stderr, "Coercion error: %s", ex.what());
+        exitCode = -1;
+    } catch (const ValueReassignmentError& ex) {
+        fprintf(stderr, "Value reassignment error: %s", ex.what());
         exitCode = -1;
     }
     return exitCode;

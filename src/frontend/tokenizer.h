@@ -28,6 +28,7 @@ enum TokenType {
     WHILE,
     FUNC,
     VAR,
+    VAL,
     COMMA,
     RETURN,
 };
@@ -46,6 +47,7 @@ static const char* const TokenTypeStrings[] = {
     "WHILE",
     "FUNC",
     "VAR",
+    "VAL",
     "COMMA",
     "RETURN",
 };
@@ -401,6 +403,11 @@ public:
 class VarToken : public Token {
 public:
     explicit VarToken(TokenOrigin originPos_) : Token(VAR, originPos_) { }
+};
+
+class ValToken : public Token {
+public:
+    explicit ValToken(TokenOrigin originPos_) : Token(VAL, originPos_) { }
 };
 
 class CommaToken : public Token {
